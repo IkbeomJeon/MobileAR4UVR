@@ -1,0 +1,10 @@
+﻿
+public enum TourType
+{
+    SERENDIPITOUS,
+    CASUAL,
+    SIGHTSEEING,
+    PURPOSEFUL,
+    INCIDENTAL,
+    HERITAGE_MANAGEMENT
+}

@@ -1,0 +1,6 @@
+diff a/Assets/360VR System/Script/Helper/RWT_Coords.jscript b/Assets/360VR System/Script/Helper/RWT_Coords.jscript	(rejected hunks)
+@@ -0 +0 @@
+-var Coords = {tlx: 126.5209, tly: 33.51501, brx: 126.5233, bry: 33.51296};
+\ No newline at end of file
++var Coords = {tlx: 0, tly: 0, brx: 0, bry: 0};
+\ No newline at end of file
