@@ -20,10 +20,6 @@ public class UIManager : MonoBehaviour
         panels.Add(transform.Find("MapPanel").gameObject);
 
     }
-    public void test()
-    {
-
-    }
     public void ShowPannel(GameObject panelToShow)
     {
         foreach (var panel in panels)
