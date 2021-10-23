@@ -11,40 +11,6 @@ public class IconManager : MonoBehaviour
     Transform cameraTransform;
     public GameObject[] icon_Prefab = new GameObject[6];
 
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        //StartCoroutine("UpdateLookat");
-       
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        //transform.LookAt(cameraTransform);
-        //transform.Rotate(Vector3.up, 180f);
-
-        //float distance = Vector3.Distance(cameraTransform.position, transform.position); ;
-        //if (distance > active_distance)
-        //{
-        //    //gameObject.SetActive(false);
-        //    //StopCoroutine("UpdateLookat");
-        //    //gameObject.GetComponent<Renderer>().enabled = false;
-
-        //}
-
-
-        //else if (distance <= active_distance)
-        //{
-        //    transform.LookAt(cameraTransform);
-        //    transform.Rotate(Vector3.up, 180f);
-        //    //gameObject.SetActive(true);
-        //    //StartCoroutine("UpdateLookat");
-        //    //gameObject.GetComponent<Renderer>().enabled = true;
-        //}
-    }
-
     private void OnEnable()
     {
         StartCoroutine("UpdateLookat");

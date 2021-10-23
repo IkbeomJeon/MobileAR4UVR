@@ -71,7 +71,7 @@ public class TrackerClientManager : MonoBehaviour
         arScenesParent = GameObject.Find("ARSceneParent");
 
         if (TerrainContainer.Instance.Terrain == null)
-            Debug.LogError("Set Terrain First");
+            Debug.LogWarning("Set Terrain First");
 
         TrackerClient.Instance.Connect(server_ip, port);
 
@@ -88,7 +88,7 @@ public class TrackerClientManager : MonoBehaviour
             }
         }catch(NullReferenceException ex)
         {
-            Debug.LogError(ex.Message.ToString());
+            Debug.LogWarning(ex.Message.ToString());
         }
 
 
@@ -114,8 +114,6 @@ public class TrackerClientManager : MonoBehaviour
             //초기 오리진 생성
             mat_Realworld2ARworld = GetInitialGlobalPoseMatrixfromSenser(1.5f).inverse;
             runTracking = true;
-
-
         }
 #endif
         //초기 오리진이 생성되면 트래킹 시작 by 전진우
@@ -143,14 +141,18 @@ public class TrackerClientManager : MonoBehaviour
 
             GlobalARCameraInfo.Instance.altitude = TerrainContainer.Instance.GetHeight(GlobalARCameraInfo.Instance.globalPosition);
 
-            //전달 
-            TransformData data = new TransformData
+            if(TrackerClient.Instance.isConnected)
             {
-                cameraPosition = GlobalARCameraInfo.Instance.globalPosition,
-                cameraRotation = GlobalARCameraInfo.Instance.globalRotation
-            };
-            //TrackerClient.Instance.UpdateCameraPose2Server(data);
-            TrackerClient.Instance.Broadcast(data);
+                //전달 
+                TransformData data = new TransformData
+                {
+                    cameraPosition = GlobalARCameraInfo.Instance.globalPosition,
+                    cameraRotation = GlobalARCameraInfo.Instance.globalRotation
+                };
+                //TrackerClient.Instance.UpdateCameraPose2Server(data);
+                TrackerClient.Instance.Broadcast(data);
+            }
+           
 
         }
     }

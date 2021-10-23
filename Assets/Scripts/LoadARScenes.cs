@@ -5,6 +5,7 @@ using KCTM.Network;
 using KCTM.Network.Data;
 using Newtonsoft.Json;
 using System.Linq;
+using UnityEngine.UI;
 
 public class LoadARScenes : MonoBehaviour
 {
@@ -25,8 +26,8 @@ public class LoadARScenes : MonoBehaviour
     Transform worldParent;
     Transform cameraTransform;
 
-    public GameObject contentIcon;
     public GameObject arScenesParent;
+    public Transform cardContentParent;
     // Start is called before the first frame update
     void Start()
     {
@@ -49,7 +50,6 @@ public class LoadARScenes : MonoBehaviour
     {
         cameraTransform = GameObject.FindWithTag("MainCamera").transform;
         worldParent = GameObject.Find("Real World").transform;
-        contentIcon = Resources.Load("Prefabs/ContentIcon") as GameObject;
 
         arScenesParent = new GameObject("ARSceneParent");
         arScenesParent.transform.parent = worldParent;
@@ -181,4 +181,87 @@ public class LoadARScenes : MonoBehaviour
         Debug.LogError(result.error + " : " + result.msg);
         errorPanel.SetActive(true);
     }
+
+    public void SearchTag(InputField inputfield)
+    {
+        cardContentParent = GameObject.Find("CardContent").transform;
+
+        if (!string.IsNullOrWhiteSpace(inputfield.text))
+        {
+            foreach (Transform child in cardContentParent)
+            {
+                Destroy(child.gameObject);
+            }
+
+            //Debug.Log("Searchtag: " + searchTag);
+            string url = string.Format("/arscene/list?minlatitude={0}&minlongitude={1}&maxlatitude={2}&maxlongitude={3}&tags={4}", minLatitude, minLongitude, maxLatitude, maxLongitude, inputfield.text);
+            NetworkManager.Instance.Get(url, GetSearchTagResultList, FailHandler);
+
+            url = string.Format("/spacetelling/list?minlatitude={0}&minlongitude={1}&maxlatitude={2}&maxlongitude={3}&tags={4}", minLatitude, minLongitude, maxLatitude, maxLongitude, inputfield.text);
+            NetworkManager.Instance.Get(url, GetSearchSpaceTellingTagResultList, FailHandler);
+
+        }
+    }
+
+    public void GetSearchTagResultList(Result result)
+    {
+        var searchList = JsonConvert.DeserializeObject<List<Anchor>>(result.result.ToString());
+
+        for (int i = 0; i < searchList.Count; i++)
+        {
+            var anchor = searchList[i];
+            for (int j = 0; j < anchor.contentinfos.Count; j++)
+            {
+                SetMediaAsset(anchor, j);
+            }
+        }
+    }
+    public void GetSearchSpaceTellingTagResultList(Result result)
+    {
+        string url;
+        var searchList = JsonConvert.DeserializeObject<List<Anchor>>(result.result.ToString());
+        for (int i = 0; i < searchList.Count; i++)
+        {
+            url = string.Format("/spacetelling?id=" + searchList[i].id);
+            NetworkManager.Instance.Get(url, GetSpaceTellingAnchor, FailHandler);
+        }
+    }
+    private void GetSpaceTellingAnchor(Result result)
+    {
+        var anchor = JsonConvert.DeserializeObject<Anchor>(result.result.ToString(), new AnchorConverter(true));
+        var card = Instantiate(ResourceLoader.Instance.card_Group_nav, cardContentParent);
+        var script = card.GetComponent<GroupCard>();
+        script.Init(anchor);
+
+        //card.GetComponent<GroupCardNavPrefab>().arScene = anchor;
+        //card.GetComponent<GroupCardNavPrefab>().cardContent = cards;
+        //card.GetComponent<GroupCardNavPrefab>().navigation = navigation;
+        //card.GetComponent<GroupCardNavPrefab>().searchPanel = searchPanel;
+        //card.GetComponent<GroupCardNavPrefab>().scrollBar = scrollBar;
+    }
+    private void SetMediaAsset(Anchor anchor, int index)
+    {
+        GameObject card;
+        switch (anchor.contentinfos[index].content.mediatype)
+        {
+
+            case "IMAGE":
+                card = Instantiate(ResourceLoader.Instance.card_Image_nav, cardContentParent);
+                //card.GetComponent<ImageCardNavPrefab>().arScene = anchor;
+                //card.GetComponent<ImageCardNavPrefab>().indexContent = index;
+                //card.GetComponent<ImageCardNavPrefab>().navigation = navigation;
+                //card.GetComponent<ImageCardNavPrefab>().searchPanel = searchPanel;
+                break;
+        }
+
+    }
+
+    private void FailHandler(Result result)
+    {
+        // Fail to get ARScene
+        //Debug.Log("Fail");
+        errorPanel.SetActive(true);
+        //errorPanelText.text = "Sorry, server is not responsive... Please try again later.";
+    }
+
 }

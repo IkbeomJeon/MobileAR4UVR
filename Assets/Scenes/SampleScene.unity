@@ -1810,12 +1810,12 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: 
-        m_Mode: 1
+      - m_Target: {fileID: 1158854191}
+        m_MethodName: SearchTag
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgument: {fileID: 1072041092}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.InputField, UnityEngine.UI
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -1823,22 +1823,11 @@ MonoBehaviour:
         m_CallState: 2
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: 
+  m_Text: "\uCEA0\uD37C\uC2A4\uD22C\uC5B4"
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -1931,8 +1920,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1136162867}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1000, y: 1000, z: 1000}
+  m_LocalPosition: {x: 725, y: 0, z: 639}
+  m_LocalScale: {x: 150, y: 150, z: 150}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 5
@@ -1974,8 +1963,8 @@ MonoBehaviour:
   minLongitude: 127.3544
   maxLatitude: 36.3763
   maxLongitude: 127.3722
-  contentIcon: {fileID: 0}
   arScenesParent: {fileID: 0}
+  cardContentParent: {fileID: 0}
 --- !u!4 &1158854192
 Transform:
   m_ObjectHideFlags: 0
@@ -2188,7 +2177,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 
+  m_Text: "\uCEA0\uD37C\uC2A4\uD22C\uC5B4"
 --- !u!222 &1250425644
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2481,6 +2470,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   server_ip: 54.180.31.56
   port: 65432
+  active_distance: 20
+  arScenesParent: {fileID: 0}
 --- !u!114 &1353074051
 MonoBehaviour:
   m_ObjectHideFlags: 0

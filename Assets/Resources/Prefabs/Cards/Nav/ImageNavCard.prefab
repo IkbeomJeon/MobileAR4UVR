@@ -1620,6 +1620,7 @@ GameObject:
   - component: {fileID: 4152423845387711775}
   - component: {fileID: 1374099960426522659}
   - component: {fileID: 7129135896482664282}
+  - component: {fileID: 1128593492831664280}
   m_Layer: 0
   m_Name: ImageNavCard
   m_TagString: Untagged
@@ -1728,6 +1729,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 0
   m_VerticalFit: 1
+--- !u!114 &1128593492831664280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6757255934445863061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5597186d84fa9484b951052a5882cad7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: {fileID: 0}
+  description: {fileID: 0}
+  author: {fileID: 0}
+  upload: {fileID: 0}
+  cardContent: {fileID: 0}
+  image: {fileID: 0}
 --- !u!1 &7070405712004037511
 GameObject:
   m_ObjectHideFlags: 0

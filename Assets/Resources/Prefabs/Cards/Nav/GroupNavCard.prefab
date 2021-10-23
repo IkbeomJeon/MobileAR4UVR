@@ -274,7 +274,7 @@ GameObject:
   - component: {fileID: 4955692785603637997}
   - component: {fileID: 2983583007562409851}
   - component: {fileID: 2167958775327398864}
-  - component: {fileID: -2679372214377767460}
+  - component: {fileID: 33360936202942862}
   m_Layer: 0
   m_Name: GroupNavCard
   m_TagString: Untagged
@@ -350,7 +350,7 @@ MonoBehaviour:
   m_ChildControlHeight: 1
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
---- !u!114 &-2679372214377767460
+--- !u!114 &33360936202942862
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -359,26 +359,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 2943069351153439687}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Script: {fileID: 11500000, guid: 7de173a0fa578ba4789d1d84f4027927, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 35f03bee3455b4e768b0373c4c34bcc5, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  title: {fileID: 0}
+  description: {fileID: 0}
+  author: {fileID: 0}
+  upload: {fileID: 0}
+  cardContent: {fileID: 0}
+  tagParent: {fileID: 0}
+  moreButtonImage: {fileID: 0}
+  timeToExp: {fileID: 0}
 --- !u!1 &3783736652105621734
 GameObject:
   m_ObjectHideFlags: 0
@@ -1281,7 +1272,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 96ae165ae733b450d8d79df2794b5d3f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d0a4f6b00e1aa458ca9a97ad2474e121, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -1653,8 +1644,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: More
+      - m_Target: {fileID: 33360936202942862}
+        m_MethodName: OnMore
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2335,7 +2326,7 @@ GameObject:
   - component: {fileID: 1209469211249647635}
   - component: {fileID: 8315326148845672711}
   m_Layer: 0
-  m_Name: Text
+  m_Name: Description
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
