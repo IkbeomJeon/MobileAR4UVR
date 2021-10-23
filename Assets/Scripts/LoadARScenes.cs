@@ -8,7 +8,6 @@ using System.Linq;
 
 public class LoadARScenes : MonoBehaviour
 {
-    public float active_distance = 20f;
     public float default_height = 1.5f;
 
     // For debuggin login. Set true for login using debug email/password 
@@ -31,8 +30,6 @@ public class LoadARScenes : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-    
-
         NetworkManager.Instance.basicUri = uri;
 
         if (autoLogin)
@@ -53,6 +50,9 @@ public class LoadARScenes : MonoBehaviour
         cameraTransform = GameObject.FindWithTag("MainCamera").transform;
         worldParent = GameObject.Find("Real World").transform;
         contentIcon = Resources.Load("Prefabs/ContentIcon") as GameObject;
+
+        arScenesParent = new GameObject("ARSceneParent");
+        arScenesParent.transform.parent = worldParent;
 
         uri = ServerURL.Instance.uri;
         
@@ -116,36 +116,18 @@ public class LoadARScenes : MonoBehaviour
 
         List<Anchor> anchorList = JsonConvert.DeserializeObject<List<Anchor>>(result.result.ToString());
 
-        arScenesParent = new GameObject("ARSceneParent");
-        arScenesParent.transform.parent = worldParent;
+
 
 
         // We are only interested in anchors where each anchor has "Campus tour tag".
         var campustour_anchors = anchorList.Where(e => e.tags.Exists(e2 => e2.tag == "CampusTour"));
 
         StartCoroutine("CreateAnchorIcon", campustour_anchors.ToList());
-        StartCoroutine("CheckIsIconVisible");
+        //StartCoroutine("CheckIsIconVisible");
         //CreateAnchorIcon2(campustour_anchors.ToList());
         //CreateAnchorIcon(anchor);
     }
-    IEnumerator CheckIsIconVisible()
-    {
-        while (true)
-        {
-            foreach (Transform icon in arScenesParent.transform)
-            {
-                if (Vector3.Distance(GlobalARCameraInfo.Instance.globalPosition, icon.position) < active_distance)
-                {
-                    icon.gameObject.SetActive(true);
-                }
-                else
-                {
-                    icon.gameObject.SetActive(false);
-                }
-            }
-            yield return new WaitForSeconds(0.3f);
-        }
-    }
+
 
     public IEnumerator CreateAnchorIcon(List<Anchor> campustour_anchors)
     {
@@ -183,52 +165,13 @@ public class LoadARScenes : MonoBehaviour
 
                     var script = newIcon.GetComponent<IconManager>();
                     script.Init(anchor, anchor.title, anchor.tags[a].tag, anchor.description, cameraTransform, default_height);
-                    newIcon.SetActive(false);
+                    //newIcon.SetActive(false);
                 }
             }
             yield return null;
         }
     }
-    public void CreateAnchorIcon2(List<Anchor> campustour_anchors)
-    {
-        foreach (Anchor anchor in campustour_anchors)
-        {
-            for (int a = 0; a < anchor.tags.Count; a++)
-            {
-                if (anchor.tags[a].category == "InterestTag")
-                {
-                    //set Tag text
-                    //thubnameText_title.text = anchor.tags[a].tag;
-                    GameObject newIcon;
-                    switch (anchor.tags[a].tag)
-                    {
-                        case "Admission":
-                            newIcon = Instantiate(ResourceLoader.Instance.icon_admission, Vector3.zero, Quaternion.identity, arScenesParent.transform) as GameObject;
-                            break;
-                        case "Research":
-                            newIcon = Instantiate(ResourceLoader.Instance.icon_research, Vector3.zero, Quaternion.identity, arScenesParent.transform) as GameObject;
-                            break;
-                        case "Campus life":
-                            newIcon = Instantiate(ResourceLoader.Instance.icon_campusLife, Vector3.zero, Quaternion.identity, arScenesParent.transform) as GameObject;
-                            break;
-                        case "News":
-                            newIcon = Instantiate(ResourceLoader.Instance.icon_news, Vector3.zero, Quaternion.identity, arScenesParent.transform) as GameObject;
-                            break;
-                        case "Education":
-                        case " Education":
-                            newIcon = Instantiate(ResourceLoader.Instance.icon_education, Vector3.zero, Quaternion.identity, arScenesParent.transform) as GameObject;
-                            break;
-                        default:
-                            newIcon = Instantiate(ResourceLoader.Instance.icon_about, Vector3.zero, Quaternion.identity, arScenesParent.transform) as GameObject;
-                            break;
-                    }
-
-                    var script = newIcon.GetComponent<IconManager>();
-                    script.Init(anchor, anchor.title, anchor.tags[a].tag, anchor.description, cameraTransform, default_height);
-                }
-            }
-        }
-    }
+   
     private void ResponseHandler()
     {
     }

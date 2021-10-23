@@ -400,7 +400,7 @@ GameObject:
   - component: {fileID: 7346468103385229741}
   m_Layer: 0
   m_Name: Icon_Education
-  m_TagString: Untagged
+  m_TagString: Icon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -432,7 +432,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7c85f61ab7bcce4ca95127526bf9935, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  active_distance: 50
   anchor:
     id: 0
     uploadedtime: 0

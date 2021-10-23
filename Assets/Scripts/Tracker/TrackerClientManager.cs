@@ -33,9 +33,11 @@ public class TrackerClientManager : MonoBehaviour
 
     public IDictionary<string, GameObject> dicImageAnchors = new Dictionary<string, GameObject>();
 
+    public float active_distance = 20f;
+    public GameObject arScenesParent;
     private void Awake()
     {
-        arSession = GameObject.Find("AR Session").GetComponent<ARSession>();
+        
 
         trackerManager = GetComponent<ARTrackedImageManager>();
         arCamera = GameObject.FindWithTag("MainCamera");
@@ -65,6 +67,9 @@ public class TrackerClientManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        arSession = GameObject.Find("AR Session").GetComponent<ARSession>();
+        arScenesParent = GameObject.Find("ARSceneParent");
+
         if (TerrainContainer.Instance.Terrain == null)
             Debug.LogError("Set Terrain First");
 
@@ -90,7 +95,9 @@ public class TrackerClientManager : MonoBehaviour
         SensorController.Instance.PreperSensor();
 
         string filename = PlayerPrefs.GetString("email").Replace("@", "_");
+        StartCoroutine(CheckIsIconVisible());
         StartCoroutine(WriteTrajectory(filename + ".txt", 3));
+
     }
 
     // Update is called once per frame
@@ -361,6 +368,25 @@ public class TrackerClientManager : MonoBehaviour
                 TrajectoryWritor.WriteStringToFile(strline, filename);
             }
             yield return new WaitForSeconds(delay);
+        }
+    }
+
+    IEnumerator CheckIsIconVisible()
+    {
+        while (true)
+        {
+            foreach (Transform icon in arScenesParent.transform)
+            {
+                if (Vector3.Distance(GlobalARCameraInfo.Instance.globalPosition, icon.position) < active_distance)
+                {
+                    icon.gameObject.SetActive(true);
+                }
+                else
+                {
+                    icon.gameObject.SetActive(false);
+                }
+            }
+            yield return new WaitForSeconds(0.3f);
         }
     }
 }
