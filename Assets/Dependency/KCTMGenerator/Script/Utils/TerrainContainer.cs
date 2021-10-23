@@ -173,7 +173,7 @@ namespace ARRC_DigitalTwin_Generator
         {
             if (Terrain == null)
             {
-                Debug.LogError("Terrain is null. It returns to 0.");
+                //Debug.LogError("Terrain is null. It returns to 0.");
                 return 0;
             }
 

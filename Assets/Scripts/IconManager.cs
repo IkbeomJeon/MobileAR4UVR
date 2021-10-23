@@ -15,24 +15,53 @@ public class IconManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine("UpdateLookat");
+        //StartCoroutine("UpdateLookat");
+       
     }
 
     // Update is called once per frame
     void Update()
     {
-      
+        //transform.LookAt(cameraTransform);
+        //transform.Rotate(Vector3.up, 180f);
+
+        //float distance = Vector3.Distance(cameraTransform.position, transform.position); ;
+        //if (distance > active_distance)
+        //{
+        //    //gameObject.SetActive(false);
+        //    //StopCoroutine("UpdateLookat");
+        //    //gameObject.GetComponent<Renderer>().enabled = false;
+
+        //}
+
+
+        //else if (distance <= active_distance)
+        //{
+        //    transform.LookAt(cameraTransform);
+        //    transform.Rotate(Vector3.up, 180f);
+        //    //gameObject.SetActive(true);
+        //    //StartCoroutine("UpdateLookat");
+        //    //gameObject.GetComponent<Renderer>().enabled = true;
+        //}
+    }
+
+    private void OnEnable()
+    {
+        StartCoroutine("UpdateLookat");
+    }
+    private void OnDisable()
+    {
+        StopCoroutine("UpdateLookat");
     }
 
     IEnumerator UpdateLookat()
     {
         while (true)
         {
-
             transform.LookAt(cameraTransform);
             transform.Rotate(Vector3.up, 180f);
 
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.3f);
         }
     }
 
