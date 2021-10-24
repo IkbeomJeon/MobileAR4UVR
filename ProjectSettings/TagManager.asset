@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Image Anchor
   - Icon
+  - KAIST Terrain
   layers:
   - Default
   - TransparentFX

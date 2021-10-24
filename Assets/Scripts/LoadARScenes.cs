@@ -60,6 +60,7 @@ public class LoadARScenes : MonoBehaviour
         double latFrom, lonFrom, latTo, lonTo;
         ARRC_DigitalTwin_Generator.TerrainUtils.GetCoord(minLatitude, minLongitude, maxLatitude, maxLongitude, out latFrom, out lonFrom, out latTo, out lonTo);
         ARRC_DigitalTwin_Generator.TerrainContainer.Instance.SetCoordinates(latFrom, lonFrom, latTo, lonTo);
+        ARRC_DigitalTwin_Generator.TerrainContainer.Instance.SetTerrain(GameObject.FindGameObjectWithTag("KAIST Terrain").GetComponent<Terrain>());
     }
 
     /*
@@ -109,6 +110,7 @@ public class LoadARScenes : MonoBehaviour
         string url = string.Format("/arscene/list?minlatitude={0}&minlongitude={1}&maxlatitude={2}&maxlongitude={3}", minLatitude, minLongitude, maxLatitude, maxLongitude);
         NetworkManager.Instance.Get(url, GetARSceneResultList, FailureHandler);
     }
+
     public void GetARSceneResultList(Result result)
     {
         //Recommendation
@@ -127,7 +129,6 @@ public class LoadARScenes : MonoBehaviour
         //CreateAnchorIcon2(campustour_anchors.ToList());
         //CreateAnchorIcon(anchor);
     }
-
 
     public IEnumerator CreateAnchorIcon(List<Anchor> campustour_anchors)
     {
@@ -171,10 +172,11 @@ public class LoadARScenes : MonoBehaviour
             yield return null;
         }
     }
-   
+
     private void ResponseHandler()
     {
     }
+
     private void FailureHandler(Result result)
     {
         // Fail to get ARScene
@@ -216,6 +218,7 @@ public class LoadARScenes : MonoBehaviour
             }
         }
     }
+
     public void GetSearchSpaceTellingTagResultList(Result result)
     {
         string url;
@@ -226,6 +229,7 @@ public class LoadARScenes : MonoBehaviour
             NetworkManager.Instance.Get(url, GetSpaceTellingAnchor, FailHandler);
         }
     }
+
     private void GetSpaceTellingAnchor(Result result)
     {
         var anchor = JsonConvert.DeserializeObject<Anchor>(result.result.ToString(), new AnchorConverter(true));
@@ -239,6 +243,7 @@ public class LoadARScenes : MonoBehaviour
         //card.GetComponent<GroupCardNavPrefab>().searchPanel = searchPanel;
         //card.GetComponent<GroupCardNavPrefab>().scrollBar = scrollBar;
     }
+
     private void SetMediaAsset(Anchor anchor, int index)
     {
         GameObject card;

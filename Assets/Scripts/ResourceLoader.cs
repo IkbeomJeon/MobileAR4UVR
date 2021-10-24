@@ -27,8 +27,9 @@ public class ResourceLoader : MonoBehaviour
     //sprite
     public Sprite moreDown, moreUp;
 
+    //user pin
+    public GameObject pinPoint;
 
-    //small cards
 
     private void Awake()
     {
@@ -54,6 +55,8 @@ public class ResourceLoader : MonoBehaviour
 
         moreUp = Sprite.Create(mUp, new Rect(0, 0, mUp.width, mUp.height), Vector2.one * 0.5f, 1000f);
         moreDown = Sprite.Create(mDown, new Rect(0, 0, mDown.width, mDown.height), Vector2.one * 0.5f, 1000f);
+
+        pinPoint = Resources.Load<GameObject>("Prefabs/PinPoint");
     }
    
 

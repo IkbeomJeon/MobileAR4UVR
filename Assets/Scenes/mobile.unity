@@ -2716,6 +2716,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41bce4492d68cd446909f3ae789d962f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  init: 0
   map: {fileID: 0}
   userPin: {fileID: 0}
 --- !u!222 &1566770932

@@ -37,8 +37,6 @@ public class TrackerClientManager : MonoBehaviour
     public GameObject arScenesParent;
     private void Awake()
     {
-        
-
         trackerManager = GetComponent<ARTrackedImageManager>();
         arCamera = GameObject.FindWithTag("MainCamera");
         arCamera.GetComponent<Camera>().cullingMask &= ~(1 << LayerMask.NameToLayer("Image Anchor"));
@@ -275,7 +273,6 @@ public class TrackerClientManager : MonoBehaviour
     
         return res;
     }
-
 
     Matrix4x4 GetInitialGlobalPoseMatrixfromSenser(float userheight)
     {

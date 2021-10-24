@@ -8,7 +8,6 @@ using System.Xml;
 
 namespace ARRC_DigitalTwin_Generator
 {
-
     public class ARRCDigtalTwinGeneratorWindow : UnityEditor.EditorWindow
     {
         //preference
