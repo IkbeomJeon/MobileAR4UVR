@@ -33,19 +33,16 @@ public class IconManager : MonoBehaviour
 
     public void Init(Anchor anchor, string title, string tag, string decription, Transform cameraTransform, float default_height = 0)
     {
-
         ///// set position
         double lon = anchor.point.longitude;
         double lat = anchor.point.latitude;
 
-            //convert "lon,lat" to "x, y" in unity.
-        Vector3 pos = TerrainUtils.LatLonToWorldWithElevation(TerrainContainer.Instance, lat, lon);
-        transform.localPosition = new Vector3(pos.x, default_height+pos.y, pos.z);
-
+        //convert "lon,lat" to "x, y" in unity.
+        Vector2 pos = TerrainUtils.LatLonToWorld(TerrainContainer.Instance, lat, lon);
+        transform.localPosition = new Vector3(pos.x, default_height, pos.y);
 
         this.cameraTransform = cameraTransform;
         this.anchor = anchor;
-
         
         //get components
         var title_text = transform.Find("Canvas/Summary/Title").GetComponent<TMPro.TextMeshProUGUI>();

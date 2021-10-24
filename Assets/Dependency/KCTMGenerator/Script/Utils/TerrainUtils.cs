@@ -85,6 +85,14 @@ namespace ARRC_DigitalTwin_Generator
 
             MercatToLatLong(mx, mz, out lon, out lat);
         }
+        public static Vector2 LatLonToWorld(TerrainContainer container, double lat, double lon)
+        {
+            LatLongToMercat(lon, lat, out double mx, out double mz);
+
+            Vector2 worldXZ = MercatToWorld(container, mx, mz);
+
+            return worldXZ;
+        }
 
         public static Vector3 LatLonToWorldWithElevation(TerrainContainer container, double lat, double lon)
         {
