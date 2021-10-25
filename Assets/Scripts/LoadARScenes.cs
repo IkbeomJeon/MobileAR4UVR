@@ -235,13 +235,7 @@ public class LoadARScenes : MonoBehaviour
         var anchor = JsonConvert.DeserializeObject<Anchor>(result.result.ToString(), new AnchorConverter(true));
         var card = Instantiate(ResourceLoader.Instance.card_Group_nav, cardContentParent);
         var script = card.GetComponent<GroupCard>();
-        script.Init(anchor);
-
-        //card.GetComponent<GroupCardNavPrefab>().arScene = anchor;
-        //card.GetComponent<GroupCardNavPrefab>().cardContent = cards;
-        //card.GetComponent<GroupCardNavPrefab>().navigation = navigation;
-        //card.GetComponent<GroupCardNavPrefab>().searchPanel = searchPanel;
-        //card.GetComponent<GroupCardNavPrefab>().scrollBar = scrollBar;
+        script.Init(anchor, "Card/");
     }
 
     private void SetMediaAsset(Anchor anchor, int index)
@@ -249,16 +243,17 @@ public class LoadARScenes : MonoBehaviour
         GameObject card;
         switch (anchor.contentinfos[index].content.mediatype)
         {
-
             case "IMAGE":
                 card = Instantiate(ResourceLoader.Instance.card_Image_nav, cardContentParent);
                 //card.GetComponent<ImageCardNavPrefab>().arScene = anchor;
                 //card.GetComponent<ImageCardNavPrefab>().indexContent = index;
                 //card.GetComponent<ImageCardNavPrefab>().navigation = navigation;
                 //card.GetComponent<ImageCardNavPrefab>().searchPanel = searchPanel;
+                //var script = card.GetComponent<ImageCard>();
+                //script.Init(anchor);
                 break;
         }
-
+      
     }
 
     private void FailHandler(Result result)

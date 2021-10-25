@@ -11,21 +11,28 @@ public class BaseCard : MonoBehaviour
     public Text author;
     public Text upload;
 
+    public GameObject loader;
+    public GameObject uiManager;
+    public GameObject mapManager;
 
     public GameObject cardContent;
     public Transform tagParent;
 
     // Start is called before the first frame update
 
-    public virtual void Init(Anchor anchor)
+    public virtual void Init(Anchor anchor, string parentName="")
     {
         cardContent = GameObject.Find("CardContent");
 
-        title = transform.Find("Card/Title").GetComponent<Text>();
-        description = transform.Find("Card/TextObject/ScrollArea/Description").GetComponent<Text>();
-        author = transform.Find("Card/BottomInfo/AuthorText").GetComponent<Text>();
-        upload = transform.Find("Card/BottomInfo/UploadText").GetComponent<Text>();
-        tagParent = transform.Find("Card/Tags/Scroll View/Viewport/TagContent").transform;
+        loader = GameObject.Find("Loader");
+        uiManager = GameObject.Find("UI");
+        mapManager = GameObject.Find("MapManager");
+
+        title = transform.Find(parentName+"Title").GetComponent<Text>();
+        description = transform.Find(parentName + "TextObject/ScrollArea/Description").GetComponent<Text>();
+        author = transform.Find(parentName + "BottomInfo/AuthorText").GetComponent<Text>();
+        upload = transform.Find(parentName + "BottomInfo/UploadText").GetComponent<Text>();
+        tagParent = transform.Find(parentName+"Tags/Scroll View/Viewport/TagContent").transform;
 
         title.text = anchor.title;
         description.text = anchor.description;

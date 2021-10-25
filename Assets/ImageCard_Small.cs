@@ -5,15 +5,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ImageCard : BaseCard
+public class ImageCard_Small : BaseCard
 {
-
+    public Text indexText;
     public Image image;
-    public override void Init(Anchor anchor)
+    public void Init(Anchor anchor,int number)
     {
-        base.Init(anchor);
+        base.Init(anchor, "Card/");
 
         image = transform.Find("Card/ImageObject/Image").GetComponent<Image>();
+        transform.Find("Index/Text").GetComponent<Text>().text = number.ToString();
+
         GetTexture(anchor.contentinfos[0].content.uri);
     }
     void GetTexture(string uri)

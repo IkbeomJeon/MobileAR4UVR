@@ -1,40 +1,28 @@
 ﻿using KCTM.Network;
 using KCTM.Network.Data;
 using Mapbox.Json;
+using Mapbox.Utils;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 
 public class GroupCard : BaseCard
 {
     GameObject stepCard;
     bool moreFlag = false;
     public Image moreButtonImage;
-    private List<Anchor> stories;
+    private List<Vector2d> anchor_posList = new List<Vector2d>();
     public Text timeToExp;
 
 
-    public override void Init(Anchor anchor)
+    public override void Init(Anchor anchor, string parentName="")
     {
-        //title.text = anchor.title;
         //SetIcon();
-        base.Init(anchor);
+        base.Init(anchor, parentName);
 
-        //cardContent = GameObject.Find("CardContent");
-
-        //title = transform.Find("Card/Title").GetComponent<Text>();
-        //description = transform.Find("Card/TextObject/ScrollArea/Text").GetComponent<Text>();
-        //author = transform.Find("Card/BottomInfo/AuthorText").GetComponent<Text>();
-        //upload = transform.Find("Card/BottomInfo/UploadText").GetComponent<Text>();
-
-        title.text = anchor.title;
-        description.text = anchor.description;
-        author.text = anchor.contentinfos[0].content.user.name;
-        upload.text = Util.GetHumanTimeFormatFromMilliseconds(anchor.contentinfos[0].content.updatedtime);
-        //author.text = anchor.
-
-        timeToExp = transform.Find("Card/BottomInfo/TimeText").GetComponent<Text>();
+        timeToExp = transform.Find(parentName+"BottomInfo/TimeText").GetComponent<Text>();
         stepCard = transform.Find("StepCards").gameObject;
         GetStoryTelling(anchor);
     }
@@ -52,7 +40,14 @@ public class GroupCard : BaseCard
             // Now add stories (arscenes)
             for (int j = 0; j < anchor.linkedAnchors[i].linkedAnchors.Count; j++)
             {
-                CreateSmallCardObject(anchor.linkedAnchors[i].linkedAnchors[j], 0, idx++);
+                var linked_anchor = anchor.linkedAnchors[i].linkedAnchors[j];
+                //Debug.Log(linked_anchor.point.latitude.ToString() + ", "+linked_anchor.point.longitude.ToString());
+                ///// set position
+                double lon = linked_anchor.point.longitude;
+                double lat = linked_anchor.point.latitude;
+                anchor_posList.Add(new Vector2d(lat, lon));
+
+                CreateSmallCardObject(linked_anchor, 0, idx++);
             }
         }
         stepCard.SetActive(false);
@@ -80,18 +75,26 @@ public class GroupCard : BaseCard
         cardContent.GetComponent<ContentSizeFitter>().SetLayoutVertical();
     }
 
-    public void AddStepCard(Anchor anchor)
+    public void OnStartNavigation()
     {
+        //메뉴매니저에 UI변경
+        uiManager.GetComponent<UIManager>().ChangeSearchPanelState(false);
+        uiManager.GetComponent<UIManager>().ChangeMapPanelState(true);
 
-        //var card = CreateCardObject(anchor)
+        //uiManager.GetComponent<UIManager>().StartNavigation(anchor_posList);
+        //uiManager.SendMessage("StartNavigation", anchor_posList);
+        //네비게이션 생성
+        mapManager.GetComponent<MapManager>().SetWayPoints(anchor_posList);
+        mapManager.GetComponent<MapManager>().ActivateMap();
     }
+   
     private void CreateSmallCardObject(Anchor anchor, int indexCount, int index)
     {
         switch (anchor.contentinfos[indexCount].content.mediatype)
         {
             case "IMAGE":
                 var small_card = Instantiate(ResourceLoader.Instance.card_Image_small, stepCard.transform);
-                small_card.GetComponent<ImageCard>().Init(anchor);
+                small_card.GetComponent<ImageCard_Small>().Init(anchor, index+1);
 
                 //card.GetComponent<ImageCardNavPrefab>().arScene = anchor;
                 //card.GetComponent<ImageCardNavPrefab>().indexContent = index;
