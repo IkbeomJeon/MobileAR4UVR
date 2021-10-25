@@ -11,48 +11,53 @@ public class UIManager : MonoBehaviour
     public GameObject capturePanel;
     public GameObject searchPanel;
     public GameObject mapPanel;
+    public GameObject navStopButton;
 
     //public List<GameObject> panels = new List<GameObject>();
-    public Dictionary<GameObject, bool> panelState = new Dictionary<GameObject, bool>();
-
     public void Awake()
     {
         capturePanel = transform.Find("CapturePanel").gameObject;
         searchPanel = transform.Find("SearchPanel").gameObject;
         mapPanel = transform.Find("MapPanel").gameObject;
+        navStopButton = transform.Find("StopNavButton").gameObject;
 
-        panelState.Add(capturePanel, false);
-        panelState.Add(searchPanel, false);
-        panelState.Add(mapPanel, false);
-
-        foreach (var panel in panelState.Keys)
-            panel.SetActive(false);
+        capturePanel.SetActive(false);
+        searchPanel.SetActive(false);
+        mapPanel.SetActive(false);
+        navStopButton.SetActive(false);
 
     }
-    public void SwitchPanelState(GameObject panel)
+ 
+    public void SwitchSearchPanelState()
     {
-        if (panelState[panel])
-        {
-            panelState[panel] = false;
-            panel.SetActive(false);
-        }
+        if (searchPanel.activeSelf)
+            searchPanel.SetActive(false);
         else
-        {
-            panelState[panel] = true;
-            panel.SetActive(true);
-        }
+            searchPanel.SetActive(true);
+
+
     }
+    public void SwitchMapPanelState()
+    {
+        if (mapPanel.activeSelf)
+            mapPanel.SetActive(false);
+
+        else
+            mapPanel.SetActive(true);
+    }
+
     public void ChangeSearchPanelState(bool flag)
     {
         searchPanel.SetActive(flag);
-        panelState[searchPanel] = flag;
     }
     public void ChangeMapPanelState(bool flag)
     {
         mapPanel.SetActive(flag);
-        panelState[mapPanel] = flag;
     }
-
+    public void ChangeARButtonState(bool flag)
+    {
+        navStopButton.SetActive(flag);
+    }
     
     //public void StartNavigation(List<Vector2d> waypoints)
     //{

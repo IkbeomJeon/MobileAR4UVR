@@ -80,6 +80,7 @@ public class GroupCard : BaseCard
         //메뉴매니저에 UI변경
         uiManager.GetComponent<UIManager>().ChangeSearchPanelState(false);
         uiManager.GetComponent<UIManager>().ChangeMapPanelState(true);
+        uiManager.GetComponent<UIManager>().ChangeARButtonState(true);
 
         //uiManager.GetComponent<UIManager>().StartNavigation(anchor_posList);
         //uiManager.SendMessage("StartNavigation", anchor_posList);
