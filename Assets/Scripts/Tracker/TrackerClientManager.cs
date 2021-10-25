@@ -103,8 +103,12 @@ public class TrackerClientManager : MonoBehaviour
     {
 
 #if UNITY_EDITOR
-        LocalizationbyImageTracker_Psuedo();
-        runTracking = true;
+        if (!runTracking)
+        {
+            LocalizationbyImageTracker_Psuedo();
+            runTracking = true;
+        }
+
 #else
         //초기 트래킹 시작 감지 중 by 전진우
         if (!runTracking && SensorController.Instance.bInit)
@@ -114,6 +118,8 @@ public class TrackerClientManager : MonoBehaviour
             runTracking = true;
         }
 #endif
+
+
         //초기 오리진이 생성되면 트래킹 시작 by 전진우
         //마커 기반으로 자기 자신 위치 업데이트
         //DebugText.Instance.strArray[0] = "Sensor init : " + SensorController.Instance.bInit.ToString();
@@ -376,7 +382,7 @@ public class TrackerClientManager : MonoBehaviour
         {
             foreach (Transform icon in arScenesParent.transform)
             {
-                if (Vector3.Distance(GlobalARCameraInfo.Instance.globalPosition, icon.position) < active_distance)
+                if (Vector3.Distance(GlobalARCameraInfo.Instance.globalPosition, icon.localPosition) < active_distance)
                 {
                     icon.gameObject.SetActive(true);
                 }
