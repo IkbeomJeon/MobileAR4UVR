@@ -73,21 +73,21 @@ public class TrackerClientManager : MonoBehaviour
 
         TrackerClient.Instance.Connect(server_ip, port);
 
-        try
-        {
-            //Reqeust Image Anchor Pose.
-            List<XRReferenceImage>.Enumerator em = trackerManager.referenceLibrary.GetEnumerator();
+        //try
+        //{
+        //    //Reqeust Image Anchor Pose.
+        //    List<XRReferenceImage>.Enumerator em = trackerManager.referenceLibrary.GetEnumerator();
 
-            while (em.MoveNext())
-            {
-                XRReferenceImage val = em.Current;
-                string guid_library = val.guid.ToString();
-                TrackerClient.Instance.RequestImageAnchorPose(guid_library);
-            }
-        }catch(NullReferenceException ex)
-        {
-            Debug.LogWarning(ex.Message.ToString());
-        }
+        //    while (em.MoveNext())
+        //    {
+        //        XRReferenceImage val = em.Current;
+        //        string guid_library = val.guid.ToString();
+        //        TrackerClient.Instance.RequestImageAnchorPose(guid_library);
+        //    }
+        //}catch(NullReferenceException ex)
+        //{
+        //    Debug.LogWarning(ex.Message.ToString());
+        //}
 
 
         SensorController.Instance.PreperSensor();
