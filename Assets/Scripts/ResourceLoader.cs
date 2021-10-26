@@ -26,7 +26,7 @@ public class ResourceLoader : MonoBehaviour
 
     //sprite
     public Sprite moreDown, moreUp;
-
+    public Sprite likedSprite;
     //user pin
     public GameObject pinPoint;
 
@@ -55,6 +55,9 @@ public class ResourceLoader : MonoBehaviour
 
         moreUp = Sprite.Create(mUp, new Rect(0, 0, mUp.width, mUp.height), Vector2.one * 0.5f, 1000f);
         moreDown = Sprite.Create(mDown, new Rect(0, 0, mDown.width, mDown.height), Vector2.one * 0.5f, 1000f);
+
+        Texture2D likedTex = Resources.Load<Texture2D>("Textures/like - selected");
+        likedSprite = Sprite.Create(likedTex, new Rect(0, 0, likedTex.width, likedTex.height), Vector2.one * 0.5f, 100f);
 
         pinPoint = Resources.Load<GameObject>("Prefabs/PinPoint");
     }

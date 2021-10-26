@@ -10,21 +10,41 @@ using UnityEngine.UI;
 
 public class GroupCard : BaseCard
 {
+
     GameObject stepCard;
     bool moreFlag = false;
     public Image moreButtonImage;
     private List<Vector2d> anchor_posList = new List<Vector2d>();
     public Text timeToExp;
 
+    public Text description;
+    public Text author;
+    public Text upload;
+    public Transform tagParent;
 
-    public override void Init(Anchor anchor, string parentName="")
+    public void Init(Anchor anchor)
     {
         //SetIcon();
-        base.Init(anchor, parentName);
+        base.Init(anchor, "Card/");
 
-        timeToExp = transform.Find(parentName+"BottomInfo/TimeText").GetComponent<Text>();
+        author = transform.Find("Card/BottomInfo/AuthorText").GetComponent<Text>();
+        upload = transform.Find("Card/BottomInfo/UploadText").GetComponent<Text>();
+        timeToExp = transform.Find("Card/BottomInfo/TimeText").GetComponent<Text>();
         stepCard = transform.Find("StepCards").gameObject;
+        description = transform.Find("Card/TextObject/ScrollArea/Description").GetComponent<Text>();
+        description.text = anchor.description;
+        author.text = anchor.contentinfos[0].content.user.name;
+        upload.text = Util.GetHumanTimeFormatFromMilliseconds(anchor.contentinfos[0].content.updatedtime);
+
         GetStoryTelling(anchor);
+
+        // Loading Tags
+        tagParent = transform.Find("Card/Tags/Scroll View/Viewport/TagContent").transform;
+        for (int i = 0; i < anchor.tags.Count; i++)
+        {
+            GameObject tag = Instantiate(ResourceLoader.Instance.tagObj, tagParent);
+            tag.transform.GetChild(0).GetComponent<Text>().text = anchor.tags[i].tag;
+        }
     }
  
     private void GetStoryTelling(Anchor anchor)

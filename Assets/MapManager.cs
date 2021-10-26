@@ -9,6 +9,7 @@ using UnityEngine;
 public class MapManager : MonoBehaviour
 {
     public bool mapActive = false;
+    public Transform realworldTransform;
     public LineRenderer lr2D;
     public LineRenderer lr3D;
     public AbstractMap map;
@@ -17,11 +18,12 @@ public class MapManager : MonoBehaviour
     public List<Vector2d> waypoints;
 
     public bool navigationOn;
-    public float height_way3D = 0.2f;
+    public float height_way3D = 0.5f;
     public float height_way2D = 1;
 
     void Awake()
     {
+        realworldTransform = GameObject.Find("Real World").transform;
         map = transform.Find("Map").gameObject.GetComponent<AbstractMap>();
         mapCamera = transform.Find("Map Camera").gameObject;
         //amapaamera = transform.Find("Map Camera").gameObject;
@@ -55,8 +57,7 @@ public class MapManager : MonoBehaviour
                 
         else if(navigationOn)
         {
-            var worldPos_user = GlobalARCameraInfo.Instance.globalPosition;
-            lr3D.SetPosition(0, new Vector3(worldPos_user.x, height_way3D, worldPos_user.z));
+            DrawNavigationRouteOnWorld();
         }
     }
     public void ActivateMap()
@@ -118,16 +119,21 @@ public class MapManager : MonoBehaviour
         lr3D.positionCount = waypoints.Count + 1;
 
         var worldPos_user = GlobalARCameraInfo.Instance.globalPosition;
-        lr3D.SetPosition(0, new Vector3(worldPos_user.x, height_way3D, worldPos_user.z));
+        Matrix4x4 mat_Realworld2ARworld = realworldTransform.localToWorldMatrix;
+        //Debug.Log(mat_Realworld2ARworld.ToString());
+        Vector3 result_pos = mat_Realworld2ARworld.MultiplyPoint(new Vector4(worldPos_user.x, worldPos_user.y - 1.5f + height_way3D, worldPos_user.z));
+        lr3D.SetPosition(0, new Vector3(result_pos.x, result_pos.y, result_pos.z));
 
         for (int i = 0; i < waypoints.Count; i++)
         {
             //Debug.Log(waypoints[i].ToString());
-            Vector2 wpos_wp = TerrainUtils.LatLonToWorld(TerrainContainer.Instance, waypoints[i].x, waypoints[i].y);
-            var worldPos_wp = new Vector3(wpos_wp.x, height_way3D, wpos_wp.y);
-            lr3D.SetPosition(i + 1, worldPos_wp);
+            Vector3 wpos_wp = TerrainUtils.LatLonToWorldWithElevation(TerrainContainer.Instance, waypoints[i].x, waypoints[i].y);
+            var worldPos_wp = new Vector3(wpos_wp.x, wpos_wp.y + height_way3D, wpos_wp.z);
+            Vector3 result_pos_wp = mat_Realworld2ARworld.MultiplyPoint(new Vector4(worldPos_wp.x, worldPos_wp.y, worldPos_wp.z));
+            lr3D.SetPosition(i + 1, result_pos_wp);
         }
     }
+
     public void StopNavigation()
     {
         navigationOn = false;

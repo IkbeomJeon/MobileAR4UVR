@@ -131,8 +131,8 @@ public class TrackerClientManager : MonoBehaviour
                 LocalizationbyImageTracker();
 
             // real world를 ar world에 맞게 변환한다.(ARFoundation의 다양한 기능들을 사용하려면 AR Session Origin은 바뀌어선 안되기 때문에)
-            realworldTransform.position = mat_Realworld2ARworld.GetColumn(3);
-            realworldTransform.rotation = mat_Realworld2ARworld.rotation;
+            //realworldTransform.position = mat_Realworld2ARworld.GetColumn(3);
+            //realworldTransform.rotation = mat_Realworld2ARworld.rotation;
 
             Matrix4x4 mat_transformed = mat_Realworld2ARworld.inverse * arCamera.transform.localToWorldMatrix;
 

@@ -38,8 +38,8 @@ public class IconManager : MonoBehaviour
         double lat = anchor.point.latitude;
 
         //convert "lon,lat" to "x, y" in unity.
-        Vector2 pos = TerrainUtils.LatLonToWorld(TerrainContainer.Instance, lat, lon);
-        transform.localPosition = new Vector3(pos.x, default_height, pos.y);
+        Vector3 pos = TerrainUtils.LatLonToWorldWithElevation(TerrainContainer.Instance, lat, lon);
+        transform.localPosition = new Vector3(pos.x, pos.y + default_height, pos.z);
 
         this.cameraTransform = cameraTransform;
         this.anchor = anchor;
@@ -86,5 +86,10 @@ public class IconManager : MonoBehaviour
         }
 
         return color;
+    }
+    public void ShowPreviewCard()
+    {
+        GameObject previewCard = Instantiate(ResourceLoader.Instance.card_Image_preview);
+        previewCard.GetComponent<ImageCard_Preview>().Init(anchor);
     }
 }
