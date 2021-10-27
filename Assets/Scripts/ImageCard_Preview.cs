@@ -10,11 +10,11 @@ public class ImageCard_Preview : PreviewCard
 {
     public Image image;
     // Start is called before the first frame update
-    public override void Init(Anchor anchor)
+    public override void Init(Anchor anchor, bool isSP)
     {
-        base.Init(anchor);
+        base.Init(anchor, isSP);
 
-        image = transform.Find("ImageObject/Image").GetComponent<Image>();
+        image = transform.Find("Card/ImageObject/Image").GetComponent<Image>();
 
         string url = string.Format("/arscene?id={0}&secret=false", anchor.id);
         NetworkManager.Instance.Get(url, GetARScene, FailHandler);
@@ -75,8 +75,11 @@ public class ImageCard_Preview : PreviewCard
         float scale = rect.width / rect.height;
         Sprite sprite = Sprite.Create(texture, rect, Vector2.one * 0.5f);
 
-        image.GetComponent<AspectRatioFitter>().aspectRatio = scale;
-        image.sprite = sprite;
+        if(image!=null)
+        {
+            image.GetComponent<AspectRatioFitter>().aspectRatio = scale;
+            image.sprite = sprite;
+        }
     }
 
     private void FailTextCallback(string result)

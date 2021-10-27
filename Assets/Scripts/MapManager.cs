@@ -15,8 +15,8 @@ public class MapManager : MonoBehaviour
     public AbstractMap map;
     public GameObject mapCamera;
     public GameObject userPin;
-    public List<WayPoint> waypoints;
-
+    public List<WayPoint> waypoints = new List<WayPoint>();
+    public float distance_remove_waypoint = 5;
     public bool navigationOn;
     public float height_way3D = 0.5f;
     public float height_way2D = 1;
@@ -29,9 +29,10 @@ public class MapManager : MonoBehaviour
         //amapaamera = transform.Find("Map Camera").gameObject;
         lr2D = transform.Find("Line Renderer_2D").GetComponent<LineRenderer>();
         lr3D = transform.Find("Line Renderer_3D").GetComponent<LineRenderer>();
-        userPin = Instantiate(ResourceLoader.Instance.pinPoint, map.transform);
+        userPin = transform.Find("Map/PinPoint").gameObject;
        
     }
+    
     // Update is called once per frame
     void Update()
     {
@@ -51,13 +52,13 @@ public class MapManager : MonoBehaviour
 
             if (navigationOn)
             {
-                DrawNavigationRouteOnMap(map.transform.localScale.x);
+                DrawNavigationRouteOn2DMap(map.transform.localScale.x);
             }
         }
                 
         else if(navigationOn)
         {
-            ReDrawUserPositionOn3DMap();
+            DrawNavigationRouteOnWorld();
         }
     }
     public void ActivateMap()
@@ -83,17 +84,21 @@ public class MapManager : MonoBehaviour
         else
             ActivateMap();
     }
-    public void SetWayPoints(List<WayPoint> points)
+    public void DrawNavigationRoute(List<WayPoint> points)
     {
         navigationOn = true;
-        waypoints = points;
 
-        DrawNavigationRouteOnMap(map.transform.localScale.x);
-        DrawNavigationRouteOnWorld();
+        waypoints.Clear();
+        for(int i=0; i<points.Count; i++)
+        {
+            waypoints.Add(points[i]);
+        }
+
+        //DrawNavigationRouteOn2DMap(map.transform.localScale.x);
+        //DrawNavigationRouteOnWorld();
     }
 
-   
-    public void DrawNavigationRouteOnMap(float scale)
+    public void DrawNavigationRouteOn2DMap(float scale)
     {
         lr2D.positionCount = waypoints.Count + 1;
 
@@ -106,7 +111,7 @@ public class MapManager : MonoBehaviour
         lr2D.SetPosition(0, mapPos_user);
 
         int countPOI = 0;
-        for (int i=0; i<waypoints.Count; i++)
+        for (int i=0; i< waypoints.Count; i++)
         {
             if(waypoints[i].isPOI)
             {
@@ -119,45 +124,66 @@ public class MapManager : MonoBehaviour
         }
     }
 
-    public void ReDrawUserPositionOn3DMap()
-    {
-        var worldPos_user = GlobalARCameraInfo.Instance.globalPosition;
-        Matrix4x4 mat_Realworld2ARworld = realworldTransform.localToWorldMatrix;
-        Vector3 result_pos = mat_Realworld2ARworld.MultiplyPoint(new Vector4(worldPos_user.x, worldPos_user.y - 1.5f + height_way3D, worldPos_user.z));
-        lr3D.SetPosition(0, new Vector3(result_pos.x, result_pos.y, result_pos.z));
 
-    }
     public void DrawNavigationRouteOnWorld()
     {
+        //float a = Time.time;
         lr2D.startWidth = 5f;
         lr2D.endWidth = 5f;
-
         Matrix4x4 mat_Realworld2ARworld = realworldTransform.localToWorldMatrix;
 
         lr3D.positionCount = waypoints.Count + 1;
 
-        ReDrawUserPositionOn3DMap();
+        //ReDrawUserPositionOnWorld();
 
-        int countPOI = 0;
+        var worldPos_user = GlobalARCameraInfo.Instance.globalPosition;
+        Vector3 result_pos_user = mat_Realworld2ARworld.MultiplyPoint(new Vector4(worldPos_user.x, worldPos_user.y - 1.5f + height_way3D, worldPos_user.z));
+        lr3D.SetPosition(0, new Vector3(result_pos_user.x, result_pos_user.y, result_pos_user.z));
+
+        if (waypoints.Count > 0)
+        {
+            //remove waypoint by distance, if it is not poi.
+            if (!waypoints[0].isPOI)
+            {
+                Vector3 wpos_wp = TerrainUtils.LatLonToWorldWithElevation(TerrainContainer.Instance, waypoints[0].pos.x, waypoints[0].pos.y);
+                var worldPos_wp = new Vector3(wpos_wp.x, wpos_wp.y + height_way3D, wpos_wp.z);
+                Vector3 result_pos_wp = mat_Realworld2ARworld.MultiplyPoint(new Vector4(worldPos_wp.x, worldPos_wp.y, worldPos_wp.z));
+
+                if (Vector3.Distance(result_pos_user, result_pos_wp) < distance_remove_waypoint)
+                    waypoints.RemoveAt(0);
+            }
+        }
+
         for (int i = 0; i < waypoints.Count; i++)
         {
-            if (waypoints[i].isPOI)
-            {
-                //draw icon.
-            }
-
             Vector3 wpos_wp = TerrainUtils.LatLonToWorldWithElevation(TerrainContainer.Instance, waypoints[i].pos.x, waypoints[i].pos.y);
             var worldPos_wp = new Vector3(wpos_wp.x, wpos_wp.y + height_way3D, wpos_wp.z);
             Vector3 result_pos_wp = mat_Realworld2ARworld.MultiplyPoint(new Vector4(worldPos_wp.x, worldPos_wp.y, worldPos_wp.z));
+
             lr3D.SetPosition(i + 1, result_pos_wp);
         }
+        //Debug.Log(string.Format("{0}", Time.time - a));
     }
 
     public void StopNavigation()
     {
         navigationOn = false;
+        waypoints.Clear();
         lr2D.positionCount = 0;
         lr3D.positionCount = 0;
+    }
+
+    public void RemoveCurrentPOI()
+    {
+        
+        if(waypoints.Count>0)
+        {
+            if(waypoints[0].isPOI)
+            {
+                waypoints.RemoveAt(0);
+            }
+            
+        }
     }
 
 

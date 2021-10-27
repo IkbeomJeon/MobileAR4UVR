@@ -32,9 +32,10 @@ public class ImageCard_Small : BaseCard
 
         GetTexture(anchor.contentinfos[0].content.uri);
 
+        var rs = GameObject.Find("ResourceLoader").GetComponent<ResourceLoader>();
         for (int i = 0; i < anchor.tags.Count; i++)
         {
-            GameObject tag = Instantiate(ResourceLoader.Instance.tagObj, tagParent);
+            GameObject tag = Instantiate(rs.tagObj, tagParent);
             tag.transform.GetChild(0).GetComponent<Text>().text = anchor.tags[i].tag;
         }
     }

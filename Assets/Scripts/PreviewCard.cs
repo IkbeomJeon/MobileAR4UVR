@@ -12,16 +12,19 @@ public class PreviewCard : BaseCard
     public Text likeNumber;
     public Image likeImage;
     public Button likeButton;
+    public ResourceLoader rl;
 
-    public virtual void Init(Anchor anchor)
+    public virtual void Init(Anchor anchor, bool isSpacetelling)
     {
-        base.Init(anchor, "");
-        likeNumber = transform.Find("LikeNumber").gameObject.GetComponent<Text>();
-        likeImage = transform.Find("Like").GetComponent<Image>();
-        likeButton = transform.Find("Like").GetComponent<Button>();
+        base.Init(anchor, "Card/");
+        likeNumber = transform.Find("Card/LikeNumber").gameObject.GetComponent<Text>();
+        likeImage = transform.Find("Card/Like").GetComponent<Image>();
+        likeButton = transform.Find("Card/Like").GetComponent<Button>();
+        
+        if(isSpacetelling)
+            transform.Find("Card/Button_Next").gameObject.SetActive(true);
 
-      
-
+        rl = GameObject.Find("ResourceLoader").GetComponent<ResourceLoader>();
     }
 
    
@@ -32,6 +35,10 @@ public class PreviewCard : BaseCard
     public void OnMore()
     {
 
+    }
+    public void OnNext()
+    {
+        mapManager.GetComponent<MapManager>().RemoveCurrentPOI();
     }
     public void OnLike()
     {
@@ -51,7 +58,7 @@ public class PreviewCard : BaseCard
             userLiked = 0;
 
             Texture2D likedTex = Resources.Load<Texture2D>("UI/Icon/Authoring/like - selected");
-            likeImage.sprite = ResourceLoader.Instance.likedSprite;
+            likeImage.sprite = rl.likedSprite;
             likeButton.interactable = false;
         }
         else
@@ -78,7 +85,7 @@ public class PreviewCard : BaseCard
     {
         Debug.Log("LikeSuccess");
         Texture2D likedTex = Resources.Load<Texture2D>("UI/Icon/Authoring/like - selected");
-        likeImage.sprite = ResourceLoader.Instance.likedSprite;
+        likeImage.sprite = rl.likedSprite;
         likeButton.interactable = false;
     }
 

@@ -32,7 +32,7 @@ public class GroupCard : BaseCard
     public Text author;
     public Text upload;
     public Transform tagParent;
-
+    ResourceLoader resourceLoader;
     public void Init(Anchor anchor)
     {
         //SetIcon();
@@ -46,14 +46,17 @@ public class GroupCard : BaseCard
         description.text = anchor.description;
         author.text = anchor.contentinfos[0].content.user.name;
         upload.text = Util.GetHumanTimeFormatFromMilliseconds(anchor.contentinfos[0].content.updatedtime);
+        resourceLoader = GameObject.Find("ResourceLoader").GetComponent<ResourceLoader>();
 
         GetStoryTelling(anchor);
 
         // Loading Tags
         tagParent = transform.Find("Card/Tags/Scroll View/Viewport/TagContent").transform;
+      
+
         for (int i = 0; i < anchor.tags.Count; i++)
         {
-            GameObject tag = Instantiate(ResourceLoader.Instance.tagObj, tagParent);
+            GameObject tag = Instantiate(resourceLoader.tagObj, tagParent);
             tag.transform.GetChild(0).GetComponent<Text>().text = anchor.tags[i].tag;
         }
     }
@@ -90,13 +93,18 @@ public class GroupCard : BaseCard
 
                 anchor_posList.Add(new WayPoint(new Vector2d(lat, lon), true));
 
-                CreateSmallCardObject(linked_anchor, 0, idx++);
+                CreateSmallCardObject(linked_anchor, 0, idx);
+               
+                idx++;
             }
             
         }
         stepCard.SetActive(false);
     }
-
+    void CreatePOIAnchorIcon(Anchor anchor, int idx)
+    {
+       
+    }
     public void OnMore()
     {
         if (!moreFlag)
@@ -129,8 +137,27 @@ public class GroupCard : BaseCard
         //uiManager.GetComponent<UIManager>().StartNavigation(anchor_posList);
         //uiManager.SendMessage("StartNavigation", anchor_posList);
         //네비게이션 생성
-        mapManager.GetComponent<MapManager>().SetWayPoints(anchor_posList);
+        mapManager.GetComponent<MapManager>().DrawNavigationRoute(anchor_posList);
         mapManager.GetComponent<MapManager>().ActivateMap();
+
+        
+        //Create POI Icons.
+        var parentTargetARScene = GameObject.Find("ARSceneParent_Target").transform;
+        foreach (Transform child in parentTargetARScene)
+            DestroyImmediate(child.gameObject);
+
+        int idx = 0;
+        for (int i = 0; i < anchor.linkedAnchors.Count; i++)
+        {
+            //case : poi
+            for (int j = 0; j < anchor.linkedAnchors[i].linkedAnchors.Count; j++)
+            {
+                var linked_anchor = anchor.linkedAnchors[i].linkedAnchors[j];
+                var poi = Instantiate(resourceLoader.icon_poi, parentTargetARScene);
+                poi.GetComponent<IconManager>().Init(linked_anchor, "", GameObject.FindGameObjectWithTag("MainCamera").transform, 1.5f, ++idx);
+            }
+
+        }
     }
    
     private void CreateSmallCardObject(Anchor anchor, int indexCount, int index)
@@ -138,7 +165,7 @@ public class GroupCard : BaseCard
         switch (anchor.contentinfos[indexCount].content.mediatype)
         {
             case "IMAGE":
-                var small_card = Instantiate(ResourceLoader.Instance.card_Image_small, stepCard.transform);
+                var small_card = Instantiate(resourceLoader.card_Image_small, stepCard.transform);
                 small_card.GetComponent<ImageCard_Small>().Init(anchor, index+1);
 
                 //card.GetComponent<ImageCardNavPrefab>().arScene = anchor;

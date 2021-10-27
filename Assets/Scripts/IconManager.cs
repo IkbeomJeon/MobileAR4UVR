@@ -9,15 +9,14 @@ public class IconManager : MonoBehaviour
 {
     public Anchor anchor;
     Transform cameraTransform;
-    public GameObject[] icon_Prefab = new GameObject[6];
 
     private void OnEnable()
     {
-        StartCoroutine("UpdateLookat");
+        StartCoroutine(UpdateLookat());
     }
     private void OnDisable()
     {
-        StopCoroutine("UpdateLookat");
+        StopCoroutine(UpdateLookat());
     }
 
     IEnumerator UpdateLookat()
@@ -31,7 +30,7 @@ public class IconManager : MonoBehaviour
         }
     }
 
-    public void Init(Anchor anchor, string title, string tag, string decription, Transform cameraTransform, float default_height = 0)
+    public void Init(Anchor anchor, string tag, Transform cameraTransform, float default_height = 0, int index = 0)
     {
         ///// set position
         double lon = anchor.point.longitude;
@@ -46,16 +45,25 @@ public class IconManager : MonoBehaviour
         
         //get components
         var title_text = transform.Find("Canvas/Summary/Title").GetComponent<TMPro.TextMeshProUGUI>();
-        title_text.text = title;
+        title_text.text = anchor.title;
 
-        var tag_image= transform.Find("Canvas/Summary/Tag_Image").GetComponent<Image>();
-        tag_image.color = getTagColor(tag);
+        if(!string.IsNullOrEmpty(tag)) //if it's null, it is poi anchor.
+        {
+            var tag_image = transform.Find("Canvas/Summary/Tag_Image").GetComponent<Image>();
+            tag_image.color = getTagColor(tag);
 
-        var tag_text = transform.Find("Canvas/Summary/Tag_Image/Tag").GetComponent<TMPro.TextMeshProUGUI>();
-        tag_text.text = tag;
+            var tag_text = transform.Find("Canvas/Summary/Tag_Image/Tag").GetComponent<TMPro.TextMeshProUGUI>();
+            tag_text.text = tag;
+        }
 
         var desc_text = transform.Find("Canvas/Summary/Description").GetComponent<TMPro.TextMeshProUGUI>();
-        desc_text.text = decription;
+        desc_text.text = anchor.description;
+
+        if(index!=0)//poi icon.
+        {
+            var index_text = transform.Find("Canvas/Number/Text").GetComponent<TMPro.TextMeshProUGUI>();
+            index_text.text = index.ToString();
+        }
     }
 
     private Color32 getTagColor(string tag)
@@ -87,9 +95,10 @@ public class IconManager : MonoBehaviour
 
         return color;
     }
-    public void ShowPreviewCard()
+    public void ShowPreviewCard(bool isSP=false)
     {
-        GameObject previewCard = Instantiate(ResourceLoader.Instance.card_Image_preview);
-        previewCard.GetComponent<ImageCard_Preview>().Init(anchor);
+        var resourceLoader = GameObject.Find("ResourceLoader").GetComponent<ResourceLoader>();
+        GameObject previewCard = Instantiate(resourceLoader.card_Image_preview);
+        previewCard.GetComponent<ImageCard_Preview>().Init(anchor, isSP);
     }
 }

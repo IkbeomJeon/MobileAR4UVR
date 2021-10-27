@@ -23,6 +23,7 @@ public class ResourceLoader : MonoBehaviour
     public GameObject icon_education;
     public GameObject icon_news;
     public GameObject icon_research;
+    public GameObject icon_poi;
 
     //sprite
     public Sprite moreDown, moreUp;
@@ -31,7 +32,7 @@ public class ResourceLoader : MonoBehaviour
     public GameObject pinPoint;
 
 
-    private void Awake()
+    public void Awake()
     {
         //cards
         card_Group_nav = Resources.Load<GameObject>("Prefabs/Cards/Nav/GroupNavCard");
@@ -48,6 +49,7 @@ public class ResourceLoader : MonoBehaviour
         icon_education = Resources.Load<GameObject>("Prefabs/Icons/Icon_Education");
         icon_news = Resources.Load<GameObject>("Prefabs/Icons/Icon_News");
         icon_research = Resources.Load<GameObject>("Prefabs/Icons/Icon_Research");
+        icon_poi = Resources.Load<GameObject>("Prefabs/Icons/Icon_POI");
 
         //textures
         Texture2D mUp = Resources.Load<Texture2D>("Textures/more - reversedarrow@3x");
@@ -63,29 +65,29 @@ public class ResourceLoader : MonoBehaviour
     }
    
 
-    private static ResourceLoader instance;
+    //private static ResourceLoader instance;
 
-    public static ResourceLoader Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                GameObject obj = GameObject.Find("ResourceLoader");
-                if (obj == null)
-                {
-                    obj = new GameObject("ResourceLoader");
-                    instance = obj.AddComponent<ResourceLoader>();
-                }
-                else
-                {
-                    instance = obj.GetComponent<ResourceLoader>();
-                }
-                DontDestroyOnLoad(obj);
-            }
+    //public static ResourceLoader Instance
+    //{
+    //    get
+    //    {
+    //        if (instance == null)
+    //        {
+    //            GameObject obj = GameObject.Find("ResourceLoader");
+    //            if (obj == null)
+    //            {
+    //                obj = new GameObject("ResourceLoader");
+    //                instance = obj.AddComponent<ResourceLoader>();
+    //            }
+    //            else
+    //            {
+    //                instance = obj.GetComponent<ResourceLoader>();
+    //            }
+    //            DontDestroyOnLoad(obj);
+    //        }
 
-            return instance;
-        }
-    }
+    //        return instance;
+    //    }
+    //}
 
 }

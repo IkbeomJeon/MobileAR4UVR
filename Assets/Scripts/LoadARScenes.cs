@@ -27,7 +27,9 @@ public class LoadARScenes : MonoBehaviour
     Transform cameraTransform;
 
     public Transform arScenesParent;
+    public Transform arScenesParent_poi;
     public Transform cardContentParent;
+    public ResourceLoader resourceLoader;
     // Start is called before the first frame update
     
     void Start()
@@ -52,7 +54,8 @@ public class LoadARScenes : MonoBehaviour
         worldParent = GameObject.Find("Real World").transform;
 
         arScenesParent = GameObject.Find("ARSceneParent").transform;
-
+        arScenesParent_poi = GameObject.Find("ARSceneParent_Target").transform;
+        resourceLoader = GameObject.Find("ResourceLoader").GetComponent<ResourceLoader>();
         uri = ServerURL.Instance.uri;
         
         //Initialize coordinate system.
@@ -157,28 +160,28 @@ public class LoadARScenes : MonoBehaviour
                             switch (anchor.tags[a].tag)
                             {
                                 case "Admission":
-                                    newIcon = Instantiate(ResourceLoader.Instance.icon_admission, Vector3.zero, Quaternion.identity, arScenesParent);
+                                    newIcon = Instantiate(resourceLoader.icon_admission, Vector3.zero, Quaternion.identity, arScenesParent);
                                     break;
                                 case "Research":
-                                    newIcon = Instantiate(ResourceLoader.Instance.icon_research, Vector3.zero, Quaternion.identity, arScenesParent);
+                                    newIcon = Instantiate(resourceLoader.icon_research, Vector3.zero, Quaternion.identity, arScenesParent);
                                     break;
                                 case "Campus life":
-                                    newIcon = Instantiate(ResourceLoader.Instance.icon_campusLife, Vector3.zero, Quaternion.identity, arScenesParent);
+                                    newIcon = Instantiate(resourceLoader.icon_campusLife, Vector3.zero, Quaternion.identity, arScenesParent);
                                     break;
                                 case "News":
-                                    newIcon = Instantiate(ResourceLoader.Instance.icon_news, Vector3.zero, Quaternion.identity, arScenesParent);
+                                    newIcon = Instantiate(resourceLoader.icon_news, Vector3.zero, Quaternion.identity, arScenesParent);
                                     break;
                                 case "Education":
                                 case " Education":
-                                    newIcon = Instantiate(ResourceLoader.Instance.icon_education, Vector3.zero, Quaternion.identity, arScenesParent);
+                                    newIcon = Instantiate(resourceLoader.icon_education, Vector3.zero, Quaternion.identity, arScenesParent);
                                     break;
                                 default:
-                                    newIcon = Instantiate(ResourceLoader.Instance.icon_about, Vector3.zero, Quaternion.identity, arScenesParent);
+                                    newIcon = Instantiate(resourceLoader.icon_about, Vector3.zero, Quaternion.identity, arScenesParent);
                                     break;
                             }
 
                             var script = newIcon.GetComponent<IconManager>();
-                            script.Init(anchor, anchor.title, anchor.tags[a].tag, anchor.description, cameraTransform, default_height);
+                            script.Init(anchor,anchor.tags[a].tag, cameraTransform, default_height);
                             //newIcon.SetActive(false);
                         }
                     }
@@ -224,7 +227,10 @@ public class LoadARScenes : MonoBehaviour
             {
                 Destroy(child.gameObject);
             }
-
+            foreach (Transform child in arScenesParent_poi)
+            {
+                Destroy(child.gameObject);
+            }
 
             //Debug.Log("Searchtag: " + searchTag);
             string url = string.Format("/arscene/list?minlatitude={0}&minlongitude={1}&maxlatitude={2}&maxlongitude={3}&tags={4}", minLatitude, minLongitude, maxLatitude, maxLongitude, inputfield.text);
@@ -272,7 +278,7 @@ public class LoadARScenes : MonoBehaviour
     private void GetSpaceTellingAnchor(Result result)
     {
         var anchor = JsonConvert.DeserializeObject<Anchor>(result.result.ToString(), new AnchorConverter(true));
-        var card = Instantiate(ResourceLoader.Instance.card_Group_nav, cardContentParent);
+        var card = Instantiate(resourceLoader.card_Group_nav, cardContentParent);
         var script = card.GetComponent<GroupCard>();
         script.Init(anchor);
     }
@@ -283,7 +289,7 @@ public class LoadARScenes : MonoBehaviour
         switch (anchor.contentinfos[index].content.mediatype)
         {
             case "IMAGE":
-                card = Instantiate(ResourceLoader.Instance.card_Image_nav, cardContentParent);
+                card = Instantiate(resourceLoader.card_Image_nav, cardContentParent);
                 //card.GetComponent<ImageCardNavPrefab>().arScene = anchor;
                 //card.GetComponent<ImageCardNavPrefab>().indexContent = index;
                 //card.GetComponent<ImageCardNavPrefab>().navigation = navigation;

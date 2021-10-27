@@ -68,7 +68,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 92f7aa01ffda34f28a09b0fe4f5446f6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 244024b989ddd324e867fbbcf967e712, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -201,7 +201,7 @@ MonoBehaviour:
       - m_Target: {fileID: -3566913273837873698}
         m_TargetAssemblyTypeName: IconManager, Assembly-CSharp
         m_MethodName: ShowPreviewCard
-        m_Mode: 1
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -274,13 +274,6 @@ MonoBehaviour:
     prefertime: 0
     companion: 0
     status: new
-  icon_Prefab:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!1 &3914678015778563782
 GameObject:
   m_ObjectHideFlags: 0
