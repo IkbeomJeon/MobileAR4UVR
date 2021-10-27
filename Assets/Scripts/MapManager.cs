@@ -4,6 +4,7 @@ using Mapbox.Unity.Map;
 using Mapbox.Utils;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class MapManager : MonoBehaviour
@@ -13,24 +14,27 @@ public class MapManager : MonoBehaviour
     public LineRenderer lr2D;
     public LineRenderer lr3D;
     public AbstractMap map;
+    public Transform poiNumParent;
     public GameObject mapCamera;
     public GameObject userPin;
     public List<WayPoint> waypoints = new List<WayPoint>();
+    public List<GameObject> poi_num = new List<GameObject>();
     public float distance_remove_waypoint = 5;
     public bool navigationOn;
     public float height_way3D = 0.5f;
     public float height_way2D = 1;
-
+    public ResourceLoader rl;
     void Awake()
     {
         realworldTransform = GameObject.Find("Real World").transform;
         map = transform.Find("Map").gameObject.GetComponent<AbstractMap>();
+        poiNumParent = transform.Find("Map/POIParent").transform;
         mapCamera = transform.Find("Map Camera").gameObject;
         //amapaamera = transform.Find("Map Camera").gameObject;
         lr2D = transform.Find("Line Renderer_2D").GetComponent<LineRenderer>();
         lr3D = transform.Find("Line Renderer_3D").GetComponent<LineRenderer>();
         userPin = transform.Find("Map/PinPoint").gameObject;
-       
+        rl = GameObject.Find("ResourceLoader").GetComponent<ResourceLoader>();
     }
     
     // Update is called once per frame
@@ -66,7 +70,7 @@ public class MapManager : MonoBehaviour
         mapActive = true;
         mapCamera.SetActive(mapActive);
       
-        Debug.Log("SwitchMapState");
+        //Debug.Log("SwitchMapState");
         var pos = new Vector2d(GlobalARCameraInfo.Instance.latitude, GlobalARCameraInfo.Instance.longitude);
         //map.SetZoom(17);
         map.SetCenterLatitudeLongitude(pos);
@@ -86,41 +90,68 @@ public class MapManager : MonoBehaviour
     }
     public void DrawNavigationRoute(List<WayPoint> points)
     {
+        StopNavigation();
+
         navigationOn = true;
 
         waypoints.Clear();
-        for(int i=0; i<points.Count; i++)
+        
+        int poiNum = 0;
+
+        for (int i=0; i<points.Count; i++)
         {
             waypoints.Add(points[i]);
+            if (waypoints[i].isPOI)
+            {
+                //draw icon.
+                GameObject poiPoint = Instantiate(rl.poiPoint, poiNumParent);
+
+                var wPos = map.GeoToWorldPosition(waypoints[i].pos);
+                var mapPos_waypoint = new Vector3(wPos.x, height_way2D, wPos.z);
+
+                poiPoint.transform.position = mapPos_waypoint;
+                poiPoint.transform.Find("Text").GetComponent<TextMeshPro>().text = (++poiNum).ToString();
+
+                poi_num.Add(poiPoint);
+
+            }
         }
 
-        //DrawNavigationRouteOn2DMap(map.transform.localScale.x);
-        //DrawNavigationRouteOnWorld();
+     
+
+            //DrawNavigationRouteOn2DMap(map.transform.localScale.x);
+            //DrawNavigationRouteOnWorld();
     }
 
     public void DrawNavigationRouteOn2DMap(float scale)
     {
         lr2D.positionCount = waypoints.Count + 1;
 
-        lr2D.startWidth = 2f * scale;
-        lr2D.endWidth = 2f * scale;
+        lr2D.startWidth = 1f * scale;
+        lr2D.endWidth = 1f * scale;
 
         var geoPos_user = new Vector2d(GlobalARCameraInfo.Instance.latitude, GlobalARCameraInfo.Instance.longitude);
         var wPos_user = map.GeoToWorldPosition(geoPos_user);
         var mapPos_user = new Vector3(wPos_user.x, height_way2D, wPos_user.z);
         lr2D.SetPosition(0, mapPos_user);
 
-        int countPOI = 0;
+        int poiNum = 0;
         for (int i=0; i< waypoints.Count; i++)
         {
-            if(waypoints[i].isPOI)
-            {
-                //draw icon.
-            }
-
             var wPos = map.GeoToWorldPosition(waypoints[i].pos);
             var mapPos_waypoint = new Vector3(wPos.x, height_way2D, wPos.z);
+
+            if (waypoints[i].isPOI)
+            {
+                poi_num[poiNum].transform.position = mapPos_waypoint;
+                Vector3 ex_scale = poi_num[poiNum].transform.localScale;
+                poi_num[poiNum].transform.localScale = new Vector3(5 / scale, 5 / scale, 5 / scale); ;
+                poiNum++;
+            }
+
             lr2D.SetPosition(i+1, mapPos_waypoint);
+
+
         }
     }
 
@@ -168,9 +199,15 @@ public class MapManager : MonoBehaviour
     public void StopNavigation()
     {
         navigationOn = false;
+
+        foreach (GameObject poi in poi_num)
+            DestroyImmediate(poi);
+
         waypoints.Clear();
+        poi_num.Clear();
         lr2D.positionCount = 0;
         lr3D.positionCount = 0;
+       
     }
 
     public void RemoveCurrentPOI()

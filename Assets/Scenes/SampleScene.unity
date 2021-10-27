@@ -1444,12 +1444,15 @@ MonoBehaviour:
   lr2D: {fileID: 0}
   lr3D: {fileID: 0}
   map: {fileID: 0}
+  poiNumParent: {fileID: 0}
   mapCamera: {fileID: 0}
   userPin: {fileID: 0}
+  poi_num: []
   distance_remove_waypoint: 5
   navigationOn: 0
   height_way3D: 0.5
   height_way2D: 1
+  rl: {fileID: 0}
 --- !u!4 &758345948
 Transform:
   m_ObjectHideFlags: 0
@@ -1711,6 +1714,7 @@ MonoBehaviour:
   moreUp: {fileID: 0}
   likedSprite: {fileID: 0}
   pinPoint: {fileID: 0}
+  poiPoint: {fileID: 0}
 --- !u!4 &824284214
 Transform:
   m_ObjectHideFlags: 0
@@ -2242,7 +2246,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!64 &1136162868
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -3636,6 +3640,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1566770929}
   m_CullTransparentMesh: 0
+--- !u!1 &1630691438
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1630691439}
+  m_Layer: 8
+  m_Name: POIParent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1630691439
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1630691438}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 6149786980846771343}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1642393274
 GameObject:
   m_ObjectHideFlags: 0
@@ -4178,7 +4212,7 @@ MonoBehaviour:
   _options:
     locationOptions:
       latitudeLongitude: 36.3662690191301, 127.363416247444
-      zoom: 17
+      zoom: 15
     extentOptions:
       extentType: 0
       defaultExtents:
@@ -4363,6 +4397,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 936155056}
+  - {fileID: 1630691439}
   m_Father: {fileID: 758345948}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

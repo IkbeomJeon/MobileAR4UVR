@@ -30,26 +30,27 @@ public class ResourceLoader : MonoBehaviour
     public Sprite likedSprite;
     //user pin
     public GameObject pinPoint;
+    public GameObject poiPoint;
 
 
     public void Awake()
     {
         //cards
-        card_Group_nav = Resources.Load<GameObject>("Prefabs/Cards/Nav/GroupNavCard");
+        card_Group_nav = Resources.Load("Prefabs/Cards/Nav/GroupNavCard") as GameObject;
 
-        card_Image_nav = Resources.Load<GameObject>("Prefabs/Cards/Nav/ImageNavCard");
-        card_Image_preview = Resources.Load<GameObject>("Prefabs/Cards/Preview/ImagePreviewCard");
-        card_Image_small = Resources.Load<GameObject>("Prefabs/Cards/Small/ImageCard_small");
-        tagObj = Resources.Load<GameObject>("Prefabs/Cards/TagObj");
+        card_Image_nav = Resources.Load("Prefabs/Cards/Nav/ImageNavCard") as GameObject;
+        card_Image_preview = Resources.Load("Prefabs/Cards/Preview/ImagePreviewCard") as GameObject;
+        card_Image_small = Resources.Load("Prefabs/Cards/Small/ImageCard_small") as GameObject;
+        tagObj = Resources.Load("Prefabs/Cards/TagObj") as GameObject;
 
         //icons
-        icon_about = Resources.Load<GameObject>("Prefabs/Icons/Icon_About");
-        icon_admission = Resources.Load<GameObject>("Prefabs/Icons/Icon_Admission");
-        icon_campusLife = Resources.Load<GameObject>("Prefabs/Icons/Icon_CampusLife");
-        icon_education = Resources.Load<GameObject>("Prefabs/Icons/Icon_Education");
-        icon_news = Resources.Load<GameObject>("Prefabs/Icons/Icon_News");
-        icon_research = Resources.Load<GameObject>("Prefabs/Icons/Icon_Research");
-        icon_poi = Resources.Load<GameObject>("Prefabs/Icons/Icon_POI");
+        icon_about = Resources.Load("Prefabs/Icons/Icon_About") as GameObject;
+        icon_admission = Resources.Load("Prefabs/Icons/Icon_Admission") as GameObject;
+        icon_campusLife = Resources.Load("Prefabs/Icons/Icon_CampusLife") as GameObject;
+        icon_education = Resources.Load("Prefabs/Icons/Icon_Education") as GameObject;
+        icon_news = Resources.Load("Prefabs/Icons/Icon_News") as GameObject;
+        icon_research = Resources.Load("Prefabs/Icons/Icon_Research") as GameObject;
+        icon_poi = Resources.Load("Prefabs/Icons/Icon_POI") as GameObject;
 
         //textures
         Texture2D mUp = Resources.Load<Texture2D>("Textures/more - reversedarrow@3x");
@@ -61,7 +62,8 @@ public class ResourceLoader : MonoBehaviour
         Texture2D likedTex = Resources.Load<Texture2D>("Textures/like - selected");
         likedSprite = Sprite.Create(likedTex, new Rect(0, 0, likedTex.width, likedTex.height), Vector2.one * 0.5f, 100f);
 
-        pinPoint = Resources.Load<GameObject>("Prefabs/PinPoint");
+        pinPoint = Resources.Load("Prefabs/PinPoint") as GameObject;
+        poiPoint = Resources.Load("Prefabs/POIPoint") as GameObject;
     }
    
 
