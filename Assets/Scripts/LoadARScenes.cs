@@ -215,11 +215,15 @@ public class LoadARScenes : MonoBehaviour
 
         if (!string.IsNullOrWhiteSpace(inputfield.text))
         {
+            StopCoroutine("CreateAnchorIcon");
+
             foreach (Transform child in cardContentParent)
                 Destroy(child.gameObject);
 
             foreach (Transform child in arScenesParent)
+            {
                 Destroy(child.gameObject);
+            }
 
 
             //Debug.Log("Searchtag: " + searchTag);
