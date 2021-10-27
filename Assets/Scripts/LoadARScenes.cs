@@ -26,9 +26,10 @@ public class LoadARScenes : MonoBehaviour
     Transform worldParent;
     Transform cameraTransform;
 
-    public GameObject arScenesParent;
+    public Transform arScenesParent;
     public Transform cardContentParent;
     // Start is called before the first frame update
+    
     void Start()
     {
         NetworkManager.Instance.basicUri = uri;
@@ -40,7 +41,6 @@ public class LoadARScenes : MonoBehaviour
         {
             Debug.Log("Email: " + PlayerPrefs.GetString("email"));
             Debug.Log("password: " + PlayerPrefs.GetString("password"));
-            LoadARScene();
         }
     }
 
@@ -51,7 +51,7 @@ public class LoadARScenes : MonoBehaviour
         cameraTransform = GameObject.FindWithTag("MainCamera").transform;
         worldParent = GameObject.Find("Real World").transform;
 
-        arScenesParent = GameObject.Find("ARSceneParent");
+        arScenesParent = GameObject.Find("ARSceneParent").transform;
 
         uri = ServerURL.Instance.uri;
         
@@ -82,7 +82,7 @@ public class LoadARScenes : MonoBehaviour
  * Function: SiginCallback
  *
  * Details:
- * - Function used to login using debug account: saves login info to PlayerPrefs and calls LoadARScene
+ * - Function used to login using debug account: saves login info to PlayerPrefs and calls LoadARIcons
  */
     private void SiginCallback(Result result)
     {
@@ -93,67 +93,56 @@ public class LoadARScenes : MonoBehaviour
 
         PlayerPrefs.Save();
 
-        LoadARScene();
+        
     }
 
     /*
-   * Function: LoadARScene
+   * Function: LoadARIcons
    *
    * Details:
    * - Function that calls server to send ARScene within GPS range.
    * - If success, go to GetARSceneResultList function.
    * - If fail, go to FailureHandler.
    */
-    private void LoadARScene()
+    private void LoadARIcons_Campustour()
     {
         string url = string.Format("/arscene/list?minlatitude={0}&minlongitude={1}&maxlatitude={2}&maxlongitude={3}", minLatitude, minLongitude, maxLatitude, maxLongitude);
-        NetworkManager.Instance.Get(url, GetARSceneResultList, FailureHandler);
+        NetworkManager.Instance.Get(url, GetARSceneResultList_Campustour, FailureHandler);
     }
-
-    public void GetARSceneResultList(Result result)
+    private void LoadARIcons_DramaKAIST()
     {
-        //Recommendation
-        List<Anchor> recommendedList = new List<Anchor>();
+        string url = string.Format("/arscene/list?minlatitude={0}&minlongitude={1}&maxlatitude={2}&maxlongitude={3}", minLatitude, minLongitude, maxLatitude, maxLongitude);
+        NetworkManager.Instance.Get(url, GetARSceneResultList_DramaKAIST, FailureHandler);
+    }
+    public void GetARSceneResultList_Campustour(Result result)
+    {
+        var anchorList = JsonConvert.DeserializeObject<List<Anchor>>(result.result.ToString());
 
-        List<Anchor> anchorList = JsonConvert.DeserializeObject<List<Anchor>>(result.result.ToString());
-
-        // We are only interested in anchors where each anchor has "Campus tour tag".
-        //var campustour_anchors = anchorList.Where(e => (e.tags.Exists(e2 => e2.tag == "CampusTour") && e.contentinfos.Count != 0));
-
-        var campustour_anchors = new List<Anchor>();
-        for (int i = 0; i < anchorList.Count; i++)
-        {
-            if (anchorList[i].contentinfos.Count == 0)
-                continue;
-
-            /// removed some anchors in ?2?5?6?1?7?6
-            /// id: 1323, 1326, 1328, 1327, 1254, 1325, 1195, 1329
-            if (anchorList[i].id == 1323 || anchorList[i].id == 1326 || anchorList[i].id == 1327 || anchorList[i].id == 1328 || anchorList[i].id == 1254 || anchorList[i].id == 1195 || anchorList[i].id == 1329)
-                continue;
-
-            bool isCampusContentTour = false;
-            for (int a = 0; a < anchorList[i].tags.Count; a++)
-            {
-                if (anchorList[i].tags[a].tag == "CampusTour")
-                    isCampusContentTour = true;
-            }
-
-            if (!isCampusContentTour)
-                continue;
-
-            campustour_anchors.Add(anchorList[i]);
-               
-        }
-        StartCoroutine("CreateAnchorIcon", campustour_anchors);
+        var campustour_anchors = anchorList.Where(e => (e.tags.Exists(e2 => e2.tag == "CampusTour") && e.contentinfos.Count != 0));
+     
+        StartCoroutine("CreateAnchorIcon", campustour_anchors.ToList());
         //StartCoroutine("CheckIsIconVisible");
         //CreateAnchorIcon2(campustour_anchors.ToList());
         //CreateAnchorIcon(anchor);
+    }
+
+    public void GetARSceneResultList_DramaKAIST(Result result)
+    {
+        var anchorList = JsonConvert.DeserializeObject<List<Anchor>>(result.result.ToString());
+
+        // We are only interested in anchors where each anchor has "Campus tour tag".
+        var campustour_anchors = anchorList.Where(e => (e.tags.Exists(e2 => e2.tag == "DramaKAIST") && e.contentinfos.Count != 0));
+ 
+        StartCoroutine("CreateAnchorIcon", campustour_anchors.ToList());
     }
 
     public IEnumerator CreateAnchorIcon(List<Anchor> campustour_anchors)
     {
         foreach (Anchor anchor in campustour_anchors)
         {
+            if (anchor.contentinfos.Count == 0)
+                continue;
+
             switch(anchor.contentinfos[0].content.mediatype)
             {
                 case "IMAGE":
@@ -168,23 +157,23 @@ public class LoadARScenes : MonoBehaviour
                             switch (anchor.tags[a].tag)
                             {
                                 case "Admission":
-                                    newIcon = Instantiate(ResourceLoader.Instance.icon_admission, Vector3.zero, Quaternion.identity, arScenesParent.transform) as GameObject;
+                                    newIcon = Instantiate(ResourceLoader.Instance.icon_admission, Vector3.zero, Quaternion.identity, arScenesParent);
                                     break;
                                 case "Research":
-                                    newIcon = Instantiate(ResourceLoader.Instance.icon_research, Vector3.zero, Quaternion.identity, arScenesParent.transform) as GameObject;
+                                    newIcon = Instantiate(ResourceLoader.Instance.icon_research, Vector3.zero, Quaternion.identity, arScenesParent);
                                     break;
                                 case "Campus life":
-                                    newIcon = Instantiate(ResourceLoader.Instance.icon_campusLife, Vector3.zero, Quaternion.identity, arScenesParent.transform) as GameObject;
+                                    newIcon = Instantiate(ResourceLoader.Instance.icon_campusLife, Vector3.zero, Quaternion.identity, arScenesParent);
                                     break;
                                 case "News":
-                                    newIcon = Instantiate(ResourceLoader.Instance.icon_news, Vector3.zero, Quaternion.identity, arScenesParent.transform) as GameObject;
+                                    newIcon = Instantiate(ResourceLoader.Instance.icon_news, Vector3.zero, Quaternion.identity, arScenesParent);
                                     break;
                                 case "Education":
                                 case " Education":
-                                    newIcon = Instantiate(ResourceLoader.Instance.icon_education, Vector3.zero, Quaternion.identity, arScenesParent.transform) as GameObject;
+                                    newIcon = Instantiate(ResourceLoader.Instance.icon_education, Vector3.zero, Quaternion.identity, arScenesParent);
                                     break;
                                 default:
-                                    newIcon = Instantiate(ResourceLoader.Instance.icon_about, Vector3.zero, Quaternion.identity, arScenesParent.transform) as GameObject;
+                                    newIcon = Instantiate(ResourceLoader.Instance.icon_about, Vector3.zero, Quaternion.identity, arScenesParent);
                                     break;
                             }
 
@@ -206,6 +195,7 @@ public class LoadARScenes : MonoBehaviour
             
             yield return null;
         }
+        Debug.Log("Icon Creation Done.");
     }
 
     private void ResponseHandler()
@@ -226,9 +216,11 @@ public class LoadARScenes : MonoBehaviour
         if (!string.IsNullOrWhiteSpace(inputfield.text))
         {
             foreach (Transform child in cardContentParent)
-            {
                 Destroy(child.gameObject);
-            }
+
+            foreach (Transform child in arScenesParent)
+                Destroy(child.gameObject);
+
 
             //Debug.Log("Searchtag: " + searchTag);
             string url = string.Format("/arscene/list?minlatitude={0}&minlongitude={1}&maxlatitude={2}&maxlongitude={3}&tags={4}", minLatitude, minLongitude, maxLatitude, maxLongitude, inputfield.text);
@@ -237,6 +229,14 @@ public class LoadARScenes : MonoBehaviour
             url = string.Format("/spacetelling/list?minlatitude={0}&minlongitude={1}&maxlatitude={2}&maxlongitude={3}&tags={4}", minLatitude, minLongitude, maxLatitude, maxLongitude, inputfield.text);
             NetworkManager.Instance.Get(url, GetSearchSpaceTellingTagResultList, FailHandler);
 
+            if (inputfield.text == "캠퍼스투어")
+            {
+                LoadARIcons_Campustour();
+            }
+            else if(inputfield.text == "드라마 카이스트")
+            {
+                LoadARIcons_DramaKAIST();
+            }
         }
     }
 

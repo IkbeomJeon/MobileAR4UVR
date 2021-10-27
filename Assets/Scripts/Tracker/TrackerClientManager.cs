@@ -34,7 +34,7 @@ public class TrackerClientManager : MonoBehaviour
     public IDictionary<string, GameObject> dicImageAnchors = new Dictionary<string, GameObject>();
 
     public float active_distance = 20f;
-    public GameObject arScenesParent;
+    public Transform arScenesParent;
     private void Awake()
     {
         trackerManager = GetComponent<ARTrackedImageManager>();
@@ -66,7 +66,7 @@ public class TrackerClientManager : MonoBehaviour
     void Start()
     {
         arSession = GameObject.Find("AR Session").GetComponent<ARSession>();
-        arScenesParent = GameObject.Find("ARSceneParent");
+        arScenesParent = GameObject.Find("ARSceneParent").transform;
 
         if (TerrainContainer.Instance.Terrain == null)
             Debug.LogWarning("Set Terrain First");
@@ -380,7 +380,7 @@ public class TrackerClientManager : MonoBehaviour
     {
         while (true)
         {
-            foreach (Transform icon in arScenesParent.transform)
+            foreach (Transform icon in arScenesParent)
             {
                 if (Vector3.Distance(GlobalARCameraInfo.Instance.globalPosition, icon.localPosition) < active_distance)
                 {
