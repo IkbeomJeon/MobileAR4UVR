@@ -97,8 +97,9 @@ public class IconManager : MonoBehaviour
     }
     public void ShowPreviewCard(bool isSP=false)
     {
-        var resourceLoader = GameObject.Find("ResourceLoader").GetComponent<ResourceLoader>();
-        GameObject previewCard = Instantiate(resourceLoader.card_Image_preview);
+        //var resourceLoader = GameObject.Find("ResourceLoader").GetComponent<ResourceLoader>();
+        //GameObject previewCard = Instantiate(resourceLoader.card_Image_preview);
+        GameObject previewCard = Instantiate(ResourceLoader.Instance.card_Image_preview);
         previewCard.GetComponent<ImageCard_Preview>().Init(anchor, isSP);
     }
 }

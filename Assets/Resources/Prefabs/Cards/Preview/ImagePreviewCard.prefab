@@ -1026,7 +1026,6 @@ MonoBehaviour:
   likeNumber: {fileID: 0}
   likeImage: {fileID: 0}
   likeButton: {fileID: 0}
-  rl: {fileID: 0}
   image: {fileID: 0}
 --- !u!1 &6955778885656103227
 GameObject:
@@ -1082,7 +1081,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8959726008720695216
 RectTransform:
   m_ObjectHideFlags: 0

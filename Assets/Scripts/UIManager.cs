@@ -1,7 +1,9 @@
-﻿using Mapbox.Utils;
+﻿using KCTM.Network.Data;
+using Mapbox.Utils;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum PanelType { search, map };
 public class UIManager : MonoBehaviour
@@ -11,6 +13,8 @@ public class UIManager : MonoBehaviour
     public GameObject capturePanel;
     public GameObject searchPanel;
     public GameObject mapPanel;
+    public GameObject contentPanel;
+
     public GameObject navStopButton;
 
     //public List<GameObject> panels = new List<GameObject>();
@@ -20,11 +24,13 @@ public class UIManager : MonoBehaviour
         searchPanel = transform.Find("SearchPanel").gameObject;
         mapPanel = transform.Find("MapPanel").gameObject;
         navStopButton = transform.Find("StopNavButton").gameObject;
+        contentPanel = transform.Find("ContentPanel").gameObject;
 
         capturePanel.SetActive(false);
         searchPanel.SetActive(false);
         mapPanel.SetActive(false);
         navStopButton.SetActive(false);
+        contentPanel.SetActive(false);
 
     }
  
@@ -53,6 +59,26 @@ public class UIManager : MonoBehaviour
     public void ChangeMapPanelState(bool flag)
     {
         mapPanel.SetActive(flag);
+    }
+    public void ShowContentPanel(Anchor anchor)
+    {
+        CloseContentPanel();
+
+        contentPanel.transform.Find("Title").GetComponent<Text>().text = anchor.contentinfos[0].content.mediatype;
+        
+        var cardParent = contentPanel.transform.Find("CardObject/Scroll View/Viewport/Card");
+        var newCard = Instantiate(ResourceLoader.Instance.card_Image_nav, cardParent);
+        newCard.GetComponent<ImageCard>().Init(anchor, "", false);
+
+        contentPanel.SetActive(true);
+    }
+    public void CloseContentPanel()
+    {
+        var cardParent = contentPanel.transform.Find("CardObject/Scroll View/Viewport/Card");
+        foreach (Transform child in cardParent)
+            DestroyImmediate(child.gameObject);
+
+        contentPanel.SetActive(false);
     }
     public void ChangeARButtonState(bool flag)
     {

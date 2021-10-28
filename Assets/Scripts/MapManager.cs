@@ -23,7 +23,7 @@ public class MapManager : MonoBehaviour
     public bool navigationOn;
     public float height_way3D = 0.5f;
     public float height_way2D = 1;
-    public ResourceLoader rl;
+    //public ResourceLoader rl;
     void Awake()
     {
         realworldTransform = GameObject.Find("Real World").transform;
@@ -34,7 +34,7 @@ public class MapManager : MonoBehaviour
         lr2D = transform.Find("Line Renderer_2D").GetComponent<LineRenderer>();
         lr3D = transform.Find("Line Renderer_3D").GetComponent<LineRenderer>();
         userPin = transform.Find("Map/PinPoint").gameObject;
-        rl = GameObject.Find("ResourceLoader").GetComponent<ResourceLoader>();
+        //rl = GameObject.Find("ResourceLoader").GetComponent<ResourceLoader>();
     }
     
     // Update is called once per frame
@@ -104,7 +104,7 @@ public class MapManager : MonoBehaviour
             if (waypoints[i].isPOI)
             {
                 //draw icon.
-                GameObject poiPoint = Instantiate(rl.poiPoint, poiNumParent);
+                GameObject poiPoint = Instantiate(ResourceLoader.Instance.poiPoint, poiNumParent);
 
                 var wPos = map.GeoToWorldPosition(waypoints[i].pos);
                 var mapPos_waypoint = new Vector3(wPos.x, height_way2D, wPos.z);

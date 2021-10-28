@@ -367,16 +367,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   title: {fileID: 0}
-  description: {fileID: 0}
-  author: {fileID: 0}
-  upload: {fileID: 0}
+  anchor:
+    id: 0
+    uploadedtime: 0
+    updatedtime: 0
+    sharingtype: 
+    description: 
+    title: 
+    enablelike: 0
+    enablecomment: 0
+    linkedAnchors: []
+    contentinfos: []
+    contenttype: 
+    contentdepth: 
+    age: 0
+    experiencetime: 0
+    season: 0
+    weather: 0
+    prefertime: 0
+    companion: 0
+    status: new
   loader: {fileID: 0}
   uiManager: {fileID: 0}
   mapManager: {fileID: 0}
   cardContent: {fileID: 0}
-  tagParent: {fileID: 0}
   moreButtonImage: {fileID: 0}
   timeToExp: {fileID: 0}
+  description: {fileID: 0}
+  author: {fileID: 0}
+  upload: {fileID: 0}
+  tagParent: {fileID: 0}
 --- !u!1 &3783736652105621734
 GameObject:
   m_ObjectHideFlags: 0

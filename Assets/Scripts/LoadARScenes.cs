@@ -29,7 +29,7 @@ public class LoadARScenes : MonoBehaviour
     public Transform arScenesParent;
     public Transform arScenesParent_poi;
     public Transform cardContentParent;
-    public ResourceLoader resourceLoader;
+    //public ResourceLoader resourceLoader;
     // Start is called before the first frame update
     
     void Start()
@@ -55,7 +55,7 @@ public class LoadARScenes : MonoBehaviour
 
         arScenesParent = GameObject.Find("ARSceneParent").transform;
         arScenesParent_poi = GameObject.Find("ARSceneParent_Target").transform;
-        resourceLoader = GameObject.Find("ResourceLoader").GetComponent<ResourceLoader>();
+        //resourceLoader = GameObject.Find("ResourceLoader").GetComponent<ResourceLoader>();
         uri = ServerURL.Instance.uri;
         
         //Initialize coordinate system.
@@ -160,23 +160,23 @@ public class LoadARScenes : MonoBehaviour
                             switch (anchor.tags[a].tag)
                             {
                                 case "Admission":
-                                    newIcon = Instantiate(resourceLoader.icon_admission, Vector3.zero, Quaternion.identity, arScenesParent);
+                                    newIcon = Instantiate(ResourceLoader.Instance.icon_admission, Vector3.zero, Quaternion.identity, arScenesParent);
                                     break;
                                 case "Research":
-                                    newIcon = Instantiate(resourceLoader.icon_research, Vector3.zero, Quaternion.identity, arScenesParent);
+                                    newIcon = Instantiate(ResourceLoader.Instance.icon_research, Vector3.zero, Quaternion.identity, arScenesParent);
                                     break;
                                 case "Campus life":
-                                    newIcon = Instantiate(resourceLoader.icon_campusLife, Vector3.zero, Quaternion.identity, arScenesParent);
+                                    newIcon = Instantiate(ResourceLoader.Instance.icon_campusLife, Vector3.zero, Quaternion.identity, arScenesParent);
                                     break;
                                 case "News":
-                                    newIcon = Instantiate(resourceLoader.icon_news, Vector3.zero, Quaternion.identity, arScenesParent);
+                                    newIcon = Instantiate(ResourceLoader.Instance.icon_news, Vector3.zero, Quaternion.identity, arScenesParent);
                                     break;
                                 case "Education":
                                 case " Education":
-                                    newIcon = Instantiate(resourceLoader.icon_education, Vector3.zero, Quaternion.identity, arScenesParent);
+                                    newIcon = Instantiate(ResourceLoader.Instance.icon_education, Vector3.zero, Quaternion.identity, arScenesParent);
                                     break;
                                 default:
-                                    newIcon = Instantiate(resourceLoader.icon_about, Vector3.zero, Quaternion.identity, arScenesParent);
+                                    newIcon = Instantiate(ResourceLoader.Instance.icon_about, Vector3.zero, Quaternion.identity, arScenesParent);
                                     break;
                             }
 
@@ -278,9 +278,10 @@ public class LoadARScenes : MonoBehaviour
     private void GetSpaceTellingAnchor(Result result)
     {
         var anchor = JsonConvert.DeserializeObject<Anchor>(result.result.ToString(), new AnchorConverter(true));
-        var card = Instantiate(resourceLoader.card_Group_nav, cardContentParent);
+
+        var card = Instantiate(ResourceLoader.Instance.card_Group, cardContentParent);
         var script = card.GetComponent<GroupCard>();
-        script.Init(anchor);
+        script.Init(anchor, true);
     }
 
     private void SetMediaAsset(Anchor anchor, int index)
@@ -289,7 +290,7 @@ public class LoadARScenes : MonoBehaviour
         switch (anchor.contentinfos[index].content.mediatype)
         {
             case "IMAGE":
-                card = Instantiate(resourceLoader.card_Image_nav, cardContentParent);
+                card = Instantiate(ResourceLoader.Instance.card_Image, cardContentParent);
                 //card.GetComponent<ImageCardNavPrefab>().arScene = anchor;
                 //card.GetComponent<ImageCardNavPrefab>().indexContent = index;
                 //card.GetComponent<ImageCardNavPrefab>().navigation = navigation;

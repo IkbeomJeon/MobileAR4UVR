@@ -58,6 +58,7 @@ namespace KCTM
                 public int companion;
 
                 public string status = "new";
+
             }
         }
     }
