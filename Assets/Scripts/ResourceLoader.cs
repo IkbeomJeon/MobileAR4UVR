@@ -9,8 +9,6 @@ public class ResourceLoader : MonoBehaviour
     //cards
     public GameObject card_Image;
     public GameObject card_Group;
-    public GameObject card_Group_nav;
-    public GameObject card_Image_nav;
     public GameObject card_Image_preview;
     public GameObject card_Image_small;
     public GameObject tagObj;
@@ -27,6 +25,7 @@ public class ResourceLoader : MonoBehaviour
     public GameObject icon_news;
     public GameObject icon_research;
     public GameObject icon_poi;
+    public GameObject icon_recommendation;
 
     //sprite
     public Sprite moreDown, moreUp;
@@ -44,11 +43,9 @@ public class ResourceLoader : MonoBehaviour
             instance = this;
 
             //cards
-            card_Image = Resources.Load("Prefabs/Cards/Normal/ImageCard") as GameObject;
             card_Group = Resources.Load("Prefabs/Cards/Normal/GroupCard") as GameObject;
 
-            card_Group_nav = Resources.Load("Prefabs/Cards/Nav/GroupNavCard") as GameObject;
-            card_Image_nav = Resources.Load("Prefabs/Cards/Nav/ImageNavCard") as GameObject;
+            card_Image = Resources.Load("Prefabs/Cards/Normal/ImageCard") as GameObject;
             card_Image_preview = Resources.Load("Prefabs/Cards/Preview/ImagePreviewCard") as GameObject;
             card_Image_small = Resources.Load("Prefabs/Cards/Small/ImageCard_small") as GameObject;
             tagObj = Resources.Load("Prefabs/Cards/TagObj") as GameObject;
@@ -61,6 +58,7 @@ public class ResourceLoader : MonoBehaviour
             icon_news = Resources.Load("Prefabs/Icons/Icon_News") as GameObject;
             icon_research = Resources.Load("Prefabs/Icons/Icon_Research") as GameObject;
             icon_poi = Resources.Load("Prefabs/Icons/Icon_POI") as GameObject;
+            icon_recommendation = Resources.Load("Prefabs/Icons/icon_Recommendation") as GameObject;
 
             //textures
             Texture2D mUp = Resources.Load<Texture2D>("Textures/more - reversedarrow@3x");

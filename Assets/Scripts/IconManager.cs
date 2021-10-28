@@ -30,7 +30,7 @@ public class IconManager : MonoBehaviour
         }
     }
 
-    public void Init(Anchor anchor, string tag, Transform cameraTransform, float default_height = 0, int index = 0)
+    public void Init(Anchor anchor, string category, Transform cameraTransform, float default_height = 0, int index_poi = 0)
     {
         ///// set position
         double lon = anchor.point.longitude;
@@ -47,23 +47,24 @@ public class IconManager : MonoBehaviour
         var title_text = transform.Find("Canvas/Summary/Title").GetComponent<TMPro.TextMeshProUGUI>();
         title_text.text = anchor.title;
 
-        if(!string.IsNullOrEmpty(tag)) //if it's null, it is poi anchor.
+        if(!string.IsNullOrEmpty(category)) //if it's null, it is poi anchor.
         {
             var tag_image = transform.Find("Canvas/Summary/Tag_Image").GetComponent<Image>();
-            tag_image.color = getTagColor(tag);
+            tag_image.color = getTagColor(category);
 
             var tag_text = transform.Find("Canvas/Summary/Tag_Image/Tag").GetComponent<TMPro.TextMeshProUGUI>();
-            tag_text.text = tag;
+            tag_text.text = category;
         }
 
         var desc_text = transform.Find("Canvas/Summary/Description").GetComponent<TMPro.TextMeshProUGUI>();
         desc_text.text = anchor.description;
 
-        if(index!=0)//poi icon.
+        if (index_poi != 0)//poi icon.
         {
             var index_text = transform.Find("Canvas/Number/Text").GetComponent<TMPro.TextMeshProUGUI>();
-            index_text.text = index.ToString();
+            index_text.text = index_poi.ToString();
         }
+
     }
 
     private Color32 getTagColor(string tag)
@@ -86,6 +87,9 @@ public class IconManager : MonoBehaviour
             case "Education":
             case " Education":
                 color = new Color32(255, 165, 0, 100);
+                break;
+            case "Recommenation":
+                color = new Color32(245, 247, 103, 100);
                 break;
             default: //About
                 color = new Color32(253, 192, 138, 100);

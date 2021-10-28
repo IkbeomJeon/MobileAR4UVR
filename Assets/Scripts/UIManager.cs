@@ -67,7 +67,7 @@ public class UIManager : MonoBehaviour
         contentPanel.transform.Find("Title").GetComponent<Text>().text = anchor.contentinfos[0].content.mediatype;
         
         var cardParent = contentPanel.transform.Find("CardObject/Scroll View/Viewport/Card");
-        var newCard = Instantiate(ResourceLoader.Instance.card_Image_nav, cardParent);
+        var newCard = Instantiate(ResourceLoader.Instance.card_Image, cardParent);
         newCard.GetComponent<ImageCard>().Init(anchor, "", false);
 
         contentPanel.SetActive(true);

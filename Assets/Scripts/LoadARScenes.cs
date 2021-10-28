@@ -28,6 +28,7 @@ public class LoadARScenes : MonoBehaviour
 
     public Transform arScenesParent;
     public Transform arScenesParent_poi;
+    public Transform recommendedParent;
     public Transform cardContentParent;
     //public ResourceLoader resourceLoader;
     // Start is called before the first frame update
@@ -55,7 +56,11 @@ public class LoadARScenes : MonoBehaviour
 
         arScenesParent = GameObject.Find("ARSceneParent").transform;
         arScenesParent_poi = GameObject.Find("ARSceneParent_Target").transform;
-        //resourceLoader = GameObject.Find("ResourceLoader").GetComponent<ResourceLoader>();
+
+        recommendedParent = new GameObject("RecommendedParent").transform;
+        recommendedParent.transform.parent = worldParent;
+
+
         uri = ServerURL.Instance.uri;
         
         //Initialize coordinate system.
@@ -112,6 +117,11 @@ public class LoadARScenes : MonoBehaviour
         string url = string.Format("/arscene/list?minlatitude={0}&minlongitude={1}&maxlatitude={2}&maxlongitude={3}", minLatitude, minLongitude, maxLatitude, maxLongitude);
         NetworkManager.Instance.Get(url, GetARSceneResultList_Campustour, FailureHandler);
     }
+    private void LoadARIcons_Recommendation()
+    {
+        string url = string.Format("/arscene/list?minlatitude={0}&minlongitude={1}&maxlatitude={2}&maxlongitude={3}", minLatitude, minLongitude, maxLatitude, maxLongitude);
+        NetworkManager.Instance.Get(url, GetARSceneResultList_Recommendation, FailureHandler);
+    }
     private void LoadARIcons_DramaKAIST()
     {
         string url = string.Format("/arscene/list?minlatitude={0}&minlongitude={1}&maxlatitude={2}&maxlongitude={3}", minLatitude, minLongitude, maxLatitude, maxLongitude);
@@ -121,14 +131,21 @@ public class LoadARScenes : MonoBehaviour
     {
         var anchorList = JsonConvert.DeserializeObject<List<Anchor>>(result.result.ToString());
 
-        var campustour_anchors = anchorList.Where(e => (e.tags.Exists(e2 => e2.tag == "CampusTour") && e.contentinfos.Count != 0));
-     
-        StartCoroutine("CreateAnchorIcon", campustour_anchors.ToList());
-        //StartCoroutine("CheckIsIconVisible");
-        //CreateAnchorIcon2(campustour_anchors.ToList());
-        //CreateAnchorIcon(anchor);
+        //compustour anchors.
+        var campustour_anchors = anchorList.Where(anchors => (anchors.tags.Exists(tags => tags.tag == "CampusTour") && anchors.contentinfos.Count != 0));
+
+        StartCoroutine(CreateAnchorIcon(campustour_anchors.ToList(), false));
     }
 
+    public void GetARSceneResultList_Recommendation(Result result)
+    {
+        var anchorList = JsonConvert.DeserializeObject<List<Anchor>>(result.result.ToString());
+
+        //recommendation anchors.
+        var recommendation_anchors = anchorList.Where(_anchors => (_anchors.tags.Exists(tags => tags.tag == "recommendation") && _anchors.contentinfos.Count != 0));
+
+        StartCoroutine(CreateAnchorIcon(recommendation_anchors.ToList(), true));
+    }
     public void GetARSceneResultList_DramaKAIST(Result result)
     {
         var anchorList = JsonConvert.DeserializeObject<List<Anchor>>(result.result.ToString());
@@ -136,67 +153,57 @@ public class LoadARScenes : MonoBehaviour
         // We are only interested in anchors where each anchor has "Campus tour tag".
         var campustour_anchors = anchorList.Where(e => (e.tags.Exists(e2 => e2.tag == "DramaKAIST") && e.contentinfos.Count != 0));
  
-        StartCoroutine("CreateAnchorIcon", campustour_anchors.ToList());
+        StartCoroutine(CreateAnchorIcon(campustour_anchors.ToList(), false));
     }
 
-    public IEnumerator CreateAnchorIcon(List<Anchor> campustour_anchors)
+    public IEnumerator CreateAnchorIcon(List<Anchor> anchors, bool isRecommended)
     {
-        foreach (Anchor anchor in campustour_anchors)
+        foreach (Anchor anchor in anchors)
         {
-            if (anchor.contentinfos.Count == 0)
-                continue;
-
-            switch(anchor.contentinfos[0].content.mediatype)
+            if (isRecommended)
             {
-                case "IMAGE":
-
-                    for (int a = 0; a < anchor.tags.Count; a++)
-                    {
-                        if (anchor.tags[a].category == "InterestTag")
-                        {
-                            //set Tag text
-                            //thubnameText_title.text = anchor.tags[a].tag;
-                            GameObject newIcon;
-                            switch (anchor.tags[a].tag)
-                            {
-                                case "Admission":
-                                    newIcon = Instantiate(ResourceLoader.Instance.icon_admission, Vector3.zero, Quaternion.identity, arScenesParent);
-                                    break;
-                                case "Research":
-                                    newIcon = Instantiate(ResourceLoader.Instance.icon_research, Vector3.zero, Quaternion.identity, arScenesParent);
-                                    break;
-                                case "Campus life":
-                                    newIcon = Instantiate(ResourceLoader.Instance.icon_campusLife, Vector3.zero, Quaternion.identity, arScenesParent);
-                                    break;
-                                case "News":
-                                    newIcon = Instantiate(ResourceLoader.Instance.icon_news, Vector3.zero, Quaternion.identity, arScenesParent);
-                                    break;
-                                case "Education":
-                                case " Education":
-                                    newIcon = Instantiate(ResourceLoader.Instance.icon_education, Vector3.zero, Quaternion.identity, arScenesParent);
-                                    break;
-                                default:
-                                    newIcon = Instantiate(ResourceLoader.Instance.icon_about, Vector3.zero, Quaternion.identity, arScenesParent);
-                                    break;
-                            }
-
-                            var script = newIcon.GetComponent<IconManager>();
-                            script.Init(anchor,anchor.tags[a].tag, cameraTransform, default_height);
-                            //newIcon.SetActive(false);
-                        }
-                    }
-                    break;
-                case "VIDEO":
-                    //"not  implement yet."
-                    //ar script = newIcon.GetComponent<IconManager>();
-                    //script.Init(anchor, anchor.title, anchor.tags[a].tag, anchor.description, cameraTransform, default_height);
-                    break;
-
-                default:
-                    break;
+                Debug.Log("recommendation anchor count : " + anchors.Count.ToString());
+                GameObject newIcon = Instantiate(ResourceLoader.Instance.icon_recommendation, Vector3.zero, Quaternion.identity, recommendedParent);
+                var script = newIcon.GetComponent<IconManager>();
+                script.Init(anchor, "recommendation", cameraTransform, default_height);
             }
-            
-            yield return null;
+
+            else
+            {
+                string mediaType = anchor.contentinfos[0].content.mediatype;
+                string category = anchor.tags.Where(t1 => t1.category == "InterestTag").Select(t2=>t2.tag).ToArray()[0];
+
+                if(mediaType == "IMAGE")
+                {
+                    GameObject newIcon;
+                    switch (category)
+                    {
+                        case "Admission":
+                            newIcon = Instantiate(ResourceLoader.Instance.icon_admission, Vector3.zero, Quaternion.identity, arScenesParent);
+                            break;
+                        case "Research":
+                            newIcon = Instantiate(ResourceLoader.Instance.icon_research, Vector3.zero, Quaternion.identity, arScenesParent);
+                            break;
+                        case "Campus life":
+                            newIcon = Instantiate(ResourceLoader.Instance.icon_campusLife, Vector3.zero, Quaternion.identity, arScenesParent);
+                            break;
+                        case "News":
+                            newIcon = Instantiate(ResourceLoader.Instance.icon_news, Vector3.zero, Quaternion.identity, arScenesParent);
+                            break;
+                        case "Education":
+                        case " Education":
+                            newIcon = Instantiate(ResourceLoader.Instance.icon_education, Vector3.zero, Quaternion.identity, arScenesParent);
+                            break;
+                        default:
+                            newIcon = Instantiate(ResourceLoader.Instance.icon_about, Vector3.zero, Quaternion.identity, arScenesParent);
+                            break;
+                    }
+                    var script = newIcon.GetComponent<IconManager>();
+                    script.Init(anchor, category, cameraTransform, default_height);
+                    newIcon.SetActive(false);
+                }
+                yield return null;
+            }
         }
         Debug.Log("Icon Creation Done.");
     }
@@ -239,13 +246,20 @@ public class LoadARScenes : MonoBehaviour
             url = string.Format("/spacetelling/list?minlatitude={0}&minlongitude={1}&maxlatitude={2}&maxlongitude={3}&tags={4}", minLatitude, minLongitude, maxLatitude, maxLongitude, inputfield.text);
             NetworkManager.Instance.Get(url, GetSearchSpaceTellingTagResultList, FailHandler);
 
+            //Mariam's icons.
             if (inputfield.text == "캠퍼스투어")
             {
                 LoadARIcons_Campustour();
             }
-            else if(inputfield.text == "드라마 카이스트")
+            //Hyerim's icons.
+            else if (inputfield.text == "드라마 카이스트")
             {
                 LoadARIcons_DramaKAIST();
+            }
+            //For debuging.
+            else if (inputfield.text == "rec")
+            {
+                LoadARIcons_Recommendation();
             }
         }
     }
