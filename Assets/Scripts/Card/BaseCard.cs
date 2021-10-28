@@ -31,6 +31,13 @@ public class BaseCard : MonoBehaviour
         title.text = anchor.title;
         
     }
+    public virtual void FailHandler(Result result)
+    {
+        if (result != null)
+        {
+            Debug.Log("result: " + result.msg);
+        }
+    }
     public  virtual void FailTextCallback(string result)
     {
         //Debug.Log("error in: " + arScene.id);

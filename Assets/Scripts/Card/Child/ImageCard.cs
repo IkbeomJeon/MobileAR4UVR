@@ -39,8 +39,12 @@ public class ImageCard : NormalCard
         float scale = rect.width / rect.height;
         Sprite sprite = Sprite.Create(texture, rect, Vector2.one * 0.5f);
 
-        image.GetComponent<AspectRatioFitter>().aspectRatio = scale;
-        image.sprite = sprite;
+        if(image!=null)
+        {
+            image.GetComponent<AspectRatioFitter>().aspectRatio = scale;
+            image.sprite = sprite;
+        }
+  
     }
 
     private void FailTextCallback(string result)

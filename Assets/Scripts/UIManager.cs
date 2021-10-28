@@ -1,5 +1,6 @@
 ﻿using KCTM.Network.Data;
 using Mapbox.Utils;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +17,9 @@ public class UIManager : MonoBehaviour
     public GameObject contentPanel;
 
     public GameObject navStopButton;
+
+
+    public delegate void ButtonCallBack();
 
     //public List<GameObject> panels = new List<GameObject>();
     public void Awake()
@@ -60,25 +64,39 @@ public class UIManager : MonoBehaviour
     {
         mapPanel.SetActive(flag);
     }
-    public void ShowContentPanel(Anchor anchor)
+    public void ShowContentPanel(PreviewCard previewCard)
     {
-        CloseContentPanel();
-
-        contentPanel.transform.Find("Title").GetComponent<Text>().text = anchor.contentinfos[0].content.mediatype;
-        
+        //remove exsisting card.
         var cardParent = contentPanel.transform.Find("CardObject/Scroll View/Viewport/Card");
+        foreach (Transform child in cardParent)
+            DestroyImmediate(child.gameObject);
+        
+        //reset canvas and create card.
+        contentPanel.transform.Find("Title").GetComponent<Text>().text = previewCard.anchor.contentinfos[0].content.mediatype;
+        Button close_button = contentPanel.transform.Find("DownButton").gameObject.GetComponent<Button>();
+        close_button.onClick.RemoveAllListeners();
+
+        close_button.onClick.AddListener(delegate {
+            CloseContentPanel(previewCard);
+        });
+
         var newCard = Instantiate(ResourceLoader.Instance.card_Image, cardParent);
-        newCard.GetComponent<ImageCard>().Init(anchor, "", false);
+        newCard.GetComponent<ImageCard>().Init(previewCard.anchor, "", false);
 
         contentPanel.SetActive(true);
     }
-    public void CloseContentPanel()
+
+    public void CloseContentPanel(PreviewCard previewCard)
     {
         var cardParent = contentPanel.transform.Find("CardObject/Scroll View/Viewport/Card");
         foreach (Transform child in cardParent)
             DestroyImmediate(child.gameObject);
 
+        //Recommendation
+        previewCard.addToVisitedContent();
+        DestroyImmediate(previewCard.gameObject);
         contentPanel.SetActive(false);
+        
     }
     public void ChangeARButtonState(bool flag)
     {

@@ -23,6 +23,11 @@ public class MapManager : MonoBehaviour
     public bool navigationOn;
     public float height_way3D = 0.5f;
     public float height_way2D = 1;
+
+    //for recommendation.
+    public List<Anchor> stories = new List<Anchor>();
+    public int spaceTellingIndex = 0;
+
     //public ResourceLoader rl;
     void Awake()
     {
@@ -88,37 +93,40 @@ public class MapManager : MonoBehaviour
         else
             ActivateMap();
     }
-    public void DrawNavigationRoute(List<WayPoint> points)
+
+  
+    public void StartNavigation(List<WayPoint> points, List<Anchor> stories)
     {
         StopNavigation();
 
         navigationOn = true;
 
-        waypoints.Clear();
-        
-        int poiNum = 0;
-
-        for (int i=0; i<points.Count; i++)
+        //deep copy.
+        foreach(var anchor in stories)
         {
-            waypoints.Add(points[i]);
-            if (waypoints[i].isPOI)
-            {
-                //draw icon.
-                GameObject poiPoint = Instantiate(ResourceLoader.Instance.poiPoint, poiNumParent);
+            this.stories.Add(anchor);
+        }
 
-                var wPos = map.GeoToWorldPosition(waypoints[i].pos);
+        //deep copy.
+        int poiNum = 0;
+        foreach (var point in points)
+        {
+            waypoints.Add(point);
+
+            if(point.isPOI)
+            {
+                //create number object.
+                GameObject poiPoint = Instantiate(ResourceLoader.Instance.poiPoint, poiNumParent);
+                var wPos = map.GeoToWorldPosition(point.pos);
                 var mapPos_waypoint = new Vector3(wPos.x, height_way2D, wPos.z);
 
                 poiPoint.transform.position = mapPos_waypoint;
                 poiPoint.transform.Find("Text").GetComponent<TextMeshPro>().text = (++poiNum).ToString();
 
                 poi_num.Add(poiPoint);
-
             }
+          
         }
-
-     
-
             //DrawNavigationRouteOn2DMap(map.transform.localScale.x);
             //DrawNavigationRouteOnWorld();
     }
@@ -151,10 +159,8 @@ public class MapManager : MonoBehaviour
 
             lr2D.SetPosition(i+1, mapPos_waypoint);
 
-
         }
     }
-
 
     public void DrawNavigationRouteOnWorld()
     {
@@ -204,22 +210,25 @@ public class MapManager : MonoBehaviour
             DestroyImmediate(poi);
 
         waypoints.Clear();
+        stories.Clear();
         poi_num.Clear();
+        spaceTellingIndex = 0;
+
         lr2D.positionCount = 0;
         lr3D.positionCount = 0;
+
        
     }
 
     public void RemoveCurrentPOI()
     {
-        
         if(waypoints.Count>0)
         {
             if(waypoints[0].isPOI)
             {
                 waypoints.RemoveAt(0);
+                spaceTellingIndex++;
             }
-            
         }
     }
 

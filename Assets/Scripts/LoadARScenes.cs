@@ -56,9 +56,7 @@ public class LoadARScenes : MonoBehaviour
 
         arScenesParent = GameObject.Find("ARSceneParent").transform;
         arScenesParent_poi = GameObject.Find("ARSceneParent_Target").transform;
-
-        recommendedParent = new GameObject("RecommendedParent").transform;
-        recommendedParent.transform.parent = worldParent;
+        recommendedParent = GameObject.Find("RecommendedParent").transform;
 
 
         uri = ServerURL.Instance.uri;
@@ -132,7 +130,13 @@ public class LoadARScenes : MonoBehaviour
         var anchorList = JsonConvert.DeserializeObject<List<Anchor>>(result.result.ToString());
 
         //compustour anchors.
-        var campustour_anchors = anchorList.Where(anchors => (anchors.tags.Exists(tags => tags.tag == "CampusTour") && anchors.contentinfos.Count != 0));
+        var media_anchor = anchorList.Where(e => e.contentinfos[0].content.mediatype == "IMAGE");
+        var campustour_anchors = media_anchor.Where(anchors => (anchors.tags.Exists(tags => tags.tag == "CampusTour") && anchors.contentinfos.Count != 0));
+
+        //Recommendation
+        GameObject recom = GameObject.Find("Recommendation");
+        recom.GetComponent<Recommendation>().anchorList = campustour_anchors.ToList();
+        recom.GetComponent<Recommendation>().loadUserHistory();
 
         StartCoroutine(CreateAnchorIcon(campustour_anchors.ToList(), false));
     }
@@ -149,15 +153,14 @@ public class LoadARScenes : MonoBehaviour
     public void GetARSceneResultList_DramaKAIST(Result result)
     {
         var anchorList = JsonConvert.DeserializeObject<List<Anchor>>(result.result.ToString());
-
-        // We are only interested in anchors where each anchor has "Campus tour tag".
-        var campustour_anchors = anchorList.Where(e => (e.tags.Exists(e2 => e2.tag == "DramaKAIST") && e.contentinfos.Count != 0));
+        var target_anchors = anchorList.Where(e => (e.tags.Exists(e2 => e2.tag == "DramaKAIST") && e.contentinfos.Count != 0));
  
-        StartCoroutine(CreateAnchorIcon(campustour_anchors.ToList(), false));
+        StartCoroutine(CreateAnchorIcon(target_anchors.ToList(), false));
     }
 
     public IEnumerator CreateAnchorIcon(List<Anchor> anchors, bool isRecommended)
     {
+
         foreach (Anchor anchor in anchors)
         {
             if (isRecommended)
@@ -202,10 +205,15 @@ public class LoadARScenes : MonoBehaviour
                     script.Init(anchor, category, cameraTransform, default_height);
                     newIcon.SetActive(false);
                 }
+                else
+                {
+                    Debug.LogError("WWW");
+                }
                 yield return null;
             }
         }
         Debug.Log("Icon Creation Done.");
+       
     }
 
     private void ResponseHandler()

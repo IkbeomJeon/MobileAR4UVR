@@ -26,6 +26,8 @@ public class GroupCard : NormalCard
     public Image moreButtonImage;
     public Text moreButtonText;
     private List<WayPoint> anchor_posList = new List<WayPoint>();
+    List<Anchor> story = new List<Anchor>();
+
     public Text timeToExp;
 
     //ResourceLoader resourceLoader;
@@ -57,18 +59,11 @@ public class GroupCard : NormalCard
  
     private void GetStoryTelling(Anchor anchor)
     {
-        /// This is where order for anchor is determined
-
-        //// 순서: spacetelling - POIs(arscenes) - stories(arscenes)
-        //stories.Add(anchor);
         int idx = 0;
-  
+
         for (int i = 0; i < anchor.linkedAnchors.Count; i++)
         {
-            // Now add stories (arscenes)
             //Debug.Log(linked_anchor.point.latitude.ToString() + ", "+linked_anchor.point.longitude.ToString());
-            ///// set position
-            ///
             
             //case : just middle point not poi.
             if (anchor.linkedAnchors[i].linkedAnchors.Count == 0)
@@ -82,6 +77,8 @@ public class GroupCard : NormalCard
             for (int j = 0; j < anchor.linkedAnchors[i].linkedAnchors.Count; j++)
             {
                 var linked_anchor = anchor.linkedAnchors[i].linkedAnchors[j];
+                story.Add(linked_anchor);
+
                 double lon = linked_anchor.point.longitude;
                 double lat = linked_anchor.point.latitude;
 
@@ -128,7 +125,8 @@ public class GroupCard : NormalCard
         //uiManager.GetComponent<UIManager>().StartNavigation(anchor_posList);
         //uiManager.SendMessage("StartNavigation", anchor_posList);
         //네비게이션 생성
-        mapManager.GetComponent<MapManager>().DrawNavigationRoute(anchor_posList);
+
+        mapManager.GetComponent<MapManager>().StartNavigation(anchor_posList, story);
         mapManager.GetComponent<MapManager>().ActivateMap();
 
         
@@ -137,18 +135,12 @@ public class GroupCard : NormalCard
         foreach (Transform child in parentTargetARScene)
             DestroyImmediate(child.gameObject);
 
-        int idx = 0;
-        for (int i = 0; i < anchor.linkedAnchors.Count; i++)
+        for(int i=0; i<story.Count;i++)
         {
-            //case : poi
-            for (int j = 0; j < anchor.linkedAnchors[i].linkedAnchors.Count; j++)
-            {
-                var linked_anchor = anchor.linkedAnchors[i].linkedAnchors[j];
-                var poi = Instantiate(ResourceLoader.Instance.icon_poi, parentTargetARScene);
-                poi.GetComponent<IconManager>().Init(linked_anchor, "", GameObject.FindGameObjectWithTag("MainCamera").transform, 1.5f, ++idx);
-            }
-
+            var poi = Instantiate(ResourceLoader.Instance.icon_poi, parentTargetARScene);
+            poi.GetComponent<IconManager>().Init(story[i], "", GameObject.FindGameObjectWithTag("MainCamera").transform, 1.5f, true, i+1);
         }
+       
     }
    
     private void CreateSmallCardObject(Anchor anchor, int indexCount, int index)

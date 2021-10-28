@@ -417,11 +417,11 @@ MonoBehaviour:
     m_MaxSize: 40
     m_Alignment: 3
     m_AlignByGeometry: 0
-    m_RichText: 1
+    m_RichText: 0
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uC81C\uBAA9"
+  m_Text: "\uC81C\uBAA9\uC81C\uBAA9\uC81C\uBAA9\uC81C\uBAA9\uC81C\uBAA9\uC81C\uBAA9\uC81C\uBAA9\uC81C\uBAA9\uC81C\uBAA9\uC81C\uBAA9\uC81C\uBAA9"
 --- !u!1 &2362215658590736973
 GameObject:
   m_ObjectHideFlags: 0
@@ -999,6 +999,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   title: {fileID: 0}
+  author: {fileID: 0}
+  upload: {fileID: 0}
   anchor:
     id: 0
     uploadedtime: 0

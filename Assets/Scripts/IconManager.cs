@@ -4,11 +4,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using ARRC_DigitalTwin_Generator;
 using UnityEngine.UI;
+using System;
+using KCTM.Recommendation;
+using Newtonsoft.Json;
 
 public class IconManager : MonoBehaviour
 {
     public Anchor anchor;
     Transform cameraTransform;
+
+
+    public bool isSpacetelling;
+    public int index_spacetelling;
+
+
+    bool recommended;
+    // recommendation -- Maryam
+    private int userLiked = 1;
+    
+
 
     private void OnEnable()
     {
@@ -30,7 +44,7 @@ public class IconManager : MonoBehaviour
         }
     }
 
-    public void Init(Anchor anchor, string category, Transform cameraTransform, float default_height = 0, int index_poi = 0)
+    public void Init(Anchor anchor, string category, Transform cameraTransform, float default_height = 0, bool spacetelling = false, int index_poi = 0)
     {
         ///// set position
         double lon = anchor.point.longitude;
@@ -59,13 +73,28 @@ public class IconManager : MonoBehaviour
         var desc_text = transform.Find("Canvas/Summary/Description").GetComponent<TMPro.TextMeshProUGUI>();
         desc_text.text = anchor.description;
 
-        if (index_poi != 0)//poi icon.
+        if (spacetelling)//poi icon.
         {
+            isSpacetelling = true;
+            index_spacetelling = index_poi;
+
             var index_text = transform.Find("Canvas/Number/Text").GetComponent<TMPro.TextMeshProUGUI>();
             index_text.text = index_poi.ToString();
         }
 
+        if(category == "Recommenation")
+        {
+
+        }
     }
+    //Recommendation -- Maryam
+    public void updateIcon()
+    {
+        recommended = true;
+        //SetIcon(arScene.contentinfos[0].content.mediatype);
+    }
+
+   
 
     private Color32 getTagColor(string tag)
     {
@@ -99,11 +128,41 @@ public class IconManager : MonoBehaviour
 
         return color;
     }
-    public void ShowPreviewCard(bool isSP=false)
+
+    /*
+  * Function: SaveHistory
+  *
+  * Details:
+  * - Save clicked arscene id.
+  * - Not used since server keeps track of requests.
+  */
+    private void SaveHistory()
     {
-        //var resourceLoader = GameObject.Find("ResourceLoader").GetComponent<ResourceLoader>();
-        //GameObject previewCard = Instantiate(resourceLoader.card_Image_preview);
-        GameObject previewCard = Instantiate(ResourceLoader.Instance.card_Image_preview);
-        previewCard.GetComponent<ImageCard_Preview>().Init(anchor, isSP);
+        List<History> history;
+        if (PlayerPrefs.HasKey("history"))
+        {
+            history = JsonConvert.DeserializeObject<List<History>>(PlayerPrefs.GetString("history"));
+        }
+        else
+        {
+            history = new List<History>();
+        }
+        history.Add(new History(anchor.id, anchor.contenttype, anchor.contentdepth));
+
+        PlayerPrefs.SetString("history", JsonConvert.SerializeObject(history));
+        PlayerPrefs.Save();
+    }
+
+    public void ShowPreviewCard()
+    {
+        SaveHistory();
+
+        switch(anchor.contentinfos[0].content.mediatype)
+        {
+            case "IMAGE":
+                GameObject previewCard = Instantiate(ResourceLoader.Instance.card_Image_preview);
+                previewCard.GetComponent<ImageCard_Preview>().Init(anchor, isSpacetelling, index_spacetelling);
+                break;
+        }
     }
 }

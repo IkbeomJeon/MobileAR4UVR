@@ -123,7 +123,7 @@ MonoBehaviour:
       - m_Target: {fileID: -98855620864179859}
         m_TargetAssemblyTypeName: IconManager, Assembly-CSharp
         m_MethodName: ShowPreviewCard
-        m_Mode: 6
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -196,6 +196,8 @@ MonoBehaviour:
     prefertime: 0
     companion: 0
     status: new
+  isSpacetelling: 0
+  index_spacetelling: 0
 --- !u!1 &3649892399629416244
 GameObject:
   m_ObjectHideFlags: 0
