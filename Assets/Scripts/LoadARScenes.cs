@@ -210,7 +210,7 @@ public class LoadARScenes : MonoBehaviour
                 {
                     GameObject newIcon = Instantiate(ResourceLoader.Instance.icon_video, Vector3.zero, Quaternion.identity, arScenesParent);
                     var script = newIcon.GetComponent<IconManager>();
-                    script.Init(anchor, null, cameraTransform, default_height);
+                    script.Init(anchor, null, cameraTransform);
                     newIcon.SetActive(false);
                 }
                 else
