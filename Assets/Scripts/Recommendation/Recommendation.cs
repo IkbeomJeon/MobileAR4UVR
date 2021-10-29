@@ -31,7 +31,7 @@ public class Recommendation : MonoBehaviour
     private List<VisitedContent> latestVisistedContents;
     private List<VisitedContent> allVisistedContents;
     private Dictionary<long, StoringInfo> userhistory;
-    private Dictionary<long, Anchor> userHistoryAnchor;
+    //private Dictionary<long, Anchor> userHistoryAnchor;
     private double maxUserFactor;
     private List<String> storyPlaceTags;
 
@@ -43,7 +43,7 @@ public class Recommendation : MonoBehaviour
     void Start()
     {
         maxUserFactor = 0.0;
-        recommendationType = 2;
+        recommendationType = 1;
         Dictionary<long, Anchor> userHistoryAnchor = new Dictionary<long, Anchor>();
         
         //postRequest = new PostRequest();
@@ -294,17 +294,17 @@ public class Recommendation : MonoBehaviour
                 Debug.Log("AR scene: " + arScene.id);
 
                 double sumScores = 0.0;
-                foreach (var anchor_id in userHistoryAnchor.Keys)
+                foreach (var anchor_id in userhistory.Keys)
                 {
 
-                    double s = getSimilarity(arScene, userHistoryAnchor[anchor_id]);
+                    double s = getSimilarity(arScene, userhistory[anchor_id]);
                     sumScores += s;
                 }
 
                 double score = 0.0;
                 if (sumScores != 0)
                 {
-                    score = sumScores / userHistoryAnchor.Count;
+                    score = sumScores / userhistory.Count;
                 }
 
                 if (score > recomScore)
@@ -356,11 +356,13 @@ public class Recommendation : MonoBehaviour
 
         Anchor currentFixed = stories[index];
         Anchor nextFixed = stories[index + 1];
-        List<double> boundingBox = getBoundingBox(currentFixed.point, nextFixed.point);
-        List<double> recomPosition = getMidddle(currentFixed.point, nextFixed.point);
-
         String anchor_trajectory_ids = currentFixed.id.ToString() + "-" + nextFixed.id.ToString();
         List<AnchorRecom> anchor_recoms = new List<AnchorRecom>();
+
+
+        List<double> boundingBox = getBoundingBox(currentFixed.point, nextFixed.point);
+        //List<double> recomPosition = getMidddle(currentFixed.point, nextFixed.point);
+        List<double> recomPosition = getMidddle(anchor_trajectory_ids);
 
         int recomIndex = -1;
         double recomScore = -1;
@@ -377,10 +379,10 @@ public class Recommendation : MonoBehaviour
 
                 double sumScores = 0.0;
                 double sumSimilarities = 0.0;
-                foreach (var anchor_id in userHistoryAnchor.Keys)
+                foreach (var anchor_id in userhistory.Keys)
                 {
 
-                    double s = getSimilarity(arScene, userHistoryAnchor[anchor_id]);
+                    double s = getSimilarity(arScene, userhistory[anchor_id]);
                     sumScores += s * userhistory[anchor_id].user_like;
                     sumSimilarities += s;
                 }
@@ -477,17 +479,17 @@ public class Recommendation : MonoBehaviour
 
 
                 double sumHistoryScores = 0.0;
-                foreach (var anchor_id in userHistoryAnchor.Keys)
+                foreach (var anchor_id in userhistory.Keys)
                 {
                     //userhistory[j].getAnchor(anchorList);
-                    double s = getSimilarity(arScene, userHistoryAnchor[anchor_id]);
+                    double s = getSimilarity(arScene, userhistory[anchor_id]);
                     sumHistoryScores += s;
                 }
 
                 double historyScore = 0.0;
                 if (sumHistoryScores != 0)
                 {
-                    historyScore = sumHistoryScores / userHistoryAnchor.Count;
+                    historyScore = sumHistoryScores / userhistory.Count;
                 }
 
 
@@ -578,10 +580,10 @@ public class Recommendation : MonoBehaviour
 
                 double sumHistoryScores = 0.0;
                 double sumHistorySimilarities = 0.0;
-                foreach (var anchor_id in userHistoryAnchor.Keys)
+                foreach (var anchor_id in userhistory.Keys)
                 {
                     //userhistory[j].getAnchor(anchorList);
-                    double s = getSimilarity(arScene, userHistoryAnchor[anchor_id]);
+                    double s = getSimilarity(arScene, userhistory[anchor_id]);
                     sumHistoryScores += (s * userhistory[anchor_id].user_like);
                     sumHistorySimilarities += s;
                 }
@@ -624,6 +626,27 @@ public class Recommendation : MonoBehaviour
         }
     }
 
+    private List<double> getMidddle(String trajectorySegment)
+    {
+        List<double> recomPosition = new List<double>();
+
+        Dictionary<String, double[]> midpoints = new Dictionary<String, double[]>();
+        midpoints["1663-1665"] = new double[] {36.368605, 127.364395};
+        midpoints["1665-1668"] = new double[] {36.36854754, 127.3631116};
+        midpoints["1668-1672"] = new double[] {36.37049389, 127.3620723};
+        
+        midpoints["1649-1651"] = new double[] {36.37356649, 127.3610764};
+        midpoints["1651-1653"] = new double[] {36.37356675, 127.3599696};
+        midpoints["1653-1655"] = new double[] {36.37283422, 127.3596441};
+
+        double[] position = midpoints[trajectorySegment];
+
+        recomPosition.Add(position[0]);
+        recomPosition.Add(position[1]);
+
+        return recomPosition;
+    }
+   
     private List<double> getMidddle(Point point1, Point point2)
     {
         List<double> recomPosition = new List<double>();
@@ -821,39 +844,50 @@ public class Recommendation : MonoBehaviour
     private double getSimilarity(Anchor arScene1, Anchor arScene2)
     {
 
-        double textSimilarity = getTextSimilarity(arScene1, arScene2);
-        double tagSimilarity = getTagSimilarity(arScene1, arScene2);
+        double textSimilarity = getTextSimilarity(arScene1.id.ToString(), arScene2.id.ToString());
+        double tagSimilarity = getTagSimilarity(arScene1.tags, arScene2.tags);
 
 
         double similarity = (textSimilarity + tagSimilarity)/2;
         return similarity;
     }
 
-    private double getTagSimilarity(Anchor arScene1, Anchor arScene2)
+    private double getSimilarity(Anchor arScene1, StoringInfo arScene2)
+    {
+
+        double textSimilarity = getTextSimilarity(arScene1.id.ToString(), arScene2.anchor_id.ToString());
+        double tagSimilarity = getTagSimilarity(arScene1.tags, arScene2.tags);
+
+
+        double similarity = (textSimilarity + tagSimilarity) / 2;
+        return similarity;
+    }
+
+    private double getTagSimilarity(List<Tag> arScene1, List<Tag> arScene2)
     {
         double similarity = 0.0;
         double sum = 0.0;
 
-        if (arScene1.tags.Count > 0 && arScene2.tags.Count > 0)
+        if (arScene1.Count > 0 && arScene2.Count > 0)
         {
-            for (int i = 0; i < arScene1.tags.Count; i++)
+            for (int i = 0; i < arScene1.Count; i++)
             {
-                for (int j = 0; j < arScene2.tags.Count; j++)
+                for (int j = 0; j < arScene2.Count; j++)
                 {
-                    if (arScene1.tags[i].tag == arScene2.tags[j].tag)
+                    if (arScene1[i].tag == arScene2[j].tag)
                     {
                         sum += 1;
                     }
                 }
             }
 
-            similarity = sum / (Math.Sqrt(arScene1.tags.Count) * Math.Sqrt(arScene2.tags.Count));
+            similarity = sum / (Math.Sqrt(arScene1.Count) * Math.Sqrt(arScene2.Count));
         }
 
         return similarity;
     }
     
-    private double getTextSimilarity(Anchor arScene1, Anchor arScene2)
+    private double getTextSimilarity(String arSceneId1, String arSceneId2)
     {
         double similarity = 0.0;
         double sum = 0.0;
@@ -861,8 +895,8 @@ public class Recommendation : MonoBehaviour
         double sumWeights1 = 0.0;
         double sumWeights2 = 0.0;
 
-        List<Token> sceneTokens1 = getAnchorTokenList(arScene1.id.ToString());
-        List<Token> sceneTokens2 = getAnchorTokenList(arScene2.id.ToString());
+        List<Token> sceneTokens1 = getAnchorTokenList(arSceneId1);
+        List<Token> sceneTokens2 = getAnchorTokenList(arSceneId2);
 
         if (sceneTokens1.Count > 0 && sceneTokens2.Count > 0)
         {
@@ -1003,7 +1037,9 @@ public class Recommendation : MonoBehaviour
         
         var script = newIcon.GetComponent<IconManager>();
 
-        string category = anchor.tags.Where(t1 => t1.category == "InterestTag").Select(t2 => t2.tag).ToArray()[0];
+
+        //string category = anchor.tags.Where(t1 => t1.category == "InterestTag").Select(t2 => t2.tag).ToArray()[0];
+        string category = "Recommenation";
         script.Init(anchor, category, arCamera.transform, default_height);
 
         newIcon.transform.localPosition = new Vector3(pos.x, pos.y + default_height, pos.z);
@@ -1090,53 +1126,15 @@ public class Recommendation : MonoBehaviour
             history = JsonConvert.DeserializeObject<List<StoringInfo>>(www.downloadHandler.text.ToString());
 
             userhistory = new Dictionary<long, StoringInfo>();
-            userHistoryAnchor = new Dictionary<long, Anchor>();
+            //userHistoryAnchor = new Dictionary<long, Anchor>();
 
             for (int i = 0; i < history.Count; i++)
             {
                 userhistory [history[i].anchor_id] = history[i];
-
-                for (int j = 0; j < anchorList.Count; j++)
-                {
-                    if (anchorList[j].id == history[i].anchor_id)
-                    {
-                        userHistoryAnchor[history[i].anchor_id] =  anchorList[j];
-                        break;
-                    }
-                }
             }
 
             Debug.Log("Maryam Post Request " + history.Count);
             Debug.Log(userhistory.Count);
         }
-    }
-
-    public void GetVisitedContentContent(Result result)
-    {
-        //userhistory = new List<StoringInfo>();
-        //Debug.Log("Maryam Get Request " + result.result.ToString());
-        //userhistory = JsonConvert.DeserializeObject<List<StoringInfo>>(result.result.ToString());
-        //userHistoryAnchor = new Dictionary<long, Anchor>();
-
-        for (int i = 0; i < userhistory.Count; i++)
-        {
-            for (int j = 0; j < anchorList.Count; j++)
-            {
-                if (anchorList[j].id == userhistory[i].anchor_id)
-                {
-                    userHistoryAnchor.Add(userhistory[i].anchor_id, anchorList[i]);
-                    break;
-                }
-            }
-        }
-
-        Debug.Log("Maryam Get Request " + userhistory.Count);
-        Debug.Log(userhistory.Count);
-    }
-
-    private void FailureHandler(Result result)
-    {
-        // Fail to get ARScene
-        Debug.LogError(result.error + " : " + result.msg);
     }
 }

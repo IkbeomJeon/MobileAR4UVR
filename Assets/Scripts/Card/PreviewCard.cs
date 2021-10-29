@@ -69,7 +69,7 @@ public class PreviewCard : BaseCard
         if (likedBefore)
         {
             //Recommendation
-            userLiked = 0;
+            userLiked = 1;
 
             Texture2D likedTex = Resources.Load<Texture2D>("UI/Icon/Authoring/like - selected");
             likeImage.sprite = ResourceLoader.Instance.likedSprite;
@@ -78,7 +78,7 @@ public class PreviewCard : BaseCard
         else
         {
             //Recommendation
-            userLiked = 1;
+            userLiked = 10;
 
             WWWForm formData = new WWWForm();
             formData.AddField("anchorid", anchor.id.ToString());

@@ -28,6 +28,9 @@ namespace KCTM
             [SerializeField]
             public int user_like;
 
+            [SerializeField]
+            public List<Tag> tags;
+
             public StoringInfo()
             {
                 
