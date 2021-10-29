@@ -23,8 +23,8 @@ public class ImageCard : NormalCard
         }
 
         image = transform.Find(parentName+"ImageObject/Image").GetComponent<Image>();
-       
 
+        Debug.Log(anchor.contentinfos[0].content.uri);
         GetTexture(anchor.contentinfos[0].content.uri);
    
     }

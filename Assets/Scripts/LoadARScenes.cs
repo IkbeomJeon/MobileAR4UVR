@@ -177,7 +177,7 @@ public class LoadARScenes : MonoBehaviour
                 string mediaType = anchor.contentinfos[0].content.mediatype;
                 string category = anchor.tags.Where(t1 => t1.category == "InterestTag").Select(t2=>t2.tag).ToArray()[0];
 
-                if(mediaType == "IMAGE")
+                if (mediaType == "IMAGE")
                 {
                     GameObject newIcon;
                     switch (category)
@@ -204,6 +204,13 @@ public class LoadARScenes : MonoBehaviour
                     }
                     var script = newIcon.GetComponent<IconManager>();
                     script.Init(anchor, category, cameraTransform);
+                    newIcon.SetActive(false);
+                }
+                else if (mediaType == "VIDEO")
+                {
+                    GameObject newIcon = Instantiate(ResourceLoader.Instance.icon_video, Vector3.zero, Quaternion.identity, arScenesParent);
+                    var script = newIcon.GetComponent<IconManager>();
+                    script.Init(anchor, null, cameraTransform, default_height);
                     newIcon.SetActive(false);
                 }
                 else

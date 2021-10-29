@@ -26,6 +26,7 @@ public class ResourceLoader : MonoBehaviour
     public GameObject icon_research;
     public GameObject icon_poi;
     public GameObject icon_recommendation;
+    public GameObject icon_video;
 
     //sprite
     public Sprite moreDown, moreUp;
@@ -59,6 +60,8 @@ public class ResourceLoader : MonoBehaviour
             icon_research = Resources.Load("Prefabs/Icons/Icon_Research") as GameObject;
             icon_poi = Resources.Load("Prefabs/Icons/Icon_POI") as GameObject;
             icon_recommendation = Resources.Load("Prefabs/Icons/icon_Recommendation") as GameObject;
+            icon_about = Resources.Load("Prefabs/Icons/Icon_About") as GameObject;
+            icon_video = Resources.Load("Prefabs/Icons/Icon_Video") as GameObject;
 
             //textures
             Texture2D mUp = Resources.Load<Texture2D>("Textures/more - reversedarrow@3x");
