@@ -631,13 +631,13 @@ public class Recommendation : MonoBehaviour
         List<double> recomPosition = new List<double>();
 
         Dictionary<String, double[]> midpoints = new Dictionary<String, double[]>();
-        midpoints["1663-1665"] = new double[] {36.368605, 127.364395};
-        midpoints["1665-1668"] = new double[] {36.36854754, 127.3631116};
-        midpoints["1668-1672"] = new double[] {36.37049389, 127.3620723};
+        midpoints["3144-3147"] = new double[] {36.368605, 127.364395};
+        midpoints["3147-3151"] = new double[] {36.36854754, 127.3631116};
+        midpoints["3151-3171"] = new double[] {36.37049389, 127.3620723};
         
-        midpoints["1649-1651"] = new double[] {36.37356649, 127.3610764};
-        midpoints["1651-1653"] = new double[] {36.37356675, 127.3599696};
-        midpoints["1653-1655"] = new double[] {36.37283422, 127.3596441};
+        midpoints["3161-3165"] = new double[] {36.37356649, 127.3610764};
+        midpoints["3165-3168"] = new double[] {36.37356675, 127.3599696};
+        midpoints["3168-3170"] = new double[] {36.37283422, 127.3596441};
 
         double[] position = midpoints[trajectorySegment];
 
@@ -1090,7 +1090,7 @@ public class Recommendation : MonoBehaviour
     {
         string url = "http://kctmrecomapp-env.eba-6p3axegk.us-east-1.elasticbeanstalk.com/insertvisitedcontent";
         string storingJson = JsonUtility.ToJson(storingInfo);
-        Debug.Log("Storing Json: " + storingJson);
+        //Debug.Log("Storing Json: " + storingJson);
 
         var request = new UnityWebRequest(url, "POST");
         byte[] bodyRaw = Encoding.UTF8.GetBytes(storingJson);
