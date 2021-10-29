@@ -12,7 +12,7 @@ public class IconManager : MonoBehaviour
 {
     public Anchor anchor;
     Transform cameraTransform;
-
+    public Transform buttonTransform;
 
     public bool isSpacetelling;
     public int index_spacetelling;
@@ -44,7 +44,7 @@ public class IconManager : MonoBehaviour
         }
     }
 
-    public void Init(Anchor anchor, string category, Transform cameraTransform, float default_height = 0, bool spacetelling = false, int index_poi = 0)
+    public void Init(Anchor anchor, string category, Transform cameraTransform, bool spacetelling = false, int index_poi = 0)
     {
         ///// set position
         double lon = anchor.point.longitude;
@@ -52,12 +52,15 @@ public class IconManager : MonoBehaviour
 
         //convert "lon,lat" to "x, y" in unity.
         Vector3 pos = TerrainUtils.LatLonToWorldWithElevation(TerrainContainer.Instance, lat, lon);
-        transform.localPosition = new Vector3(pos.x, pos.y + default_height, pos.z);
-
+        transform.localPosition = new Vector3(pos.x, pos.y, pos.z);
+        float size = ConfigurationManager.Instance.size_anchors;
+        transform.localScale = new Vector3(size, size, size);
         this.cameraTransform = cameraTransform;
         this.anchor = anchor;
-        
+
         //get components
+
+        buttonTransform = transform.Find("Canvas/Button").transform;
         var title_text = transform.Find("Canvas/Summary/Title").GetComponent<TMPro.TextMeshProUGUI>();
         title_text.text = anchor.title;
 

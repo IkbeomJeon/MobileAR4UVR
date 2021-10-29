@@ -16,7 +16,7 @@ using System.Linq;
 public class Recommendation : MonoBehaviour
 {
     //added by jeon.
-    public float default_height = 1.5f;
+    //public float default_height = 1.5f;
 
 
     public GameObject navOptions;
@@ -1040,9 +1040,9 @@ public class Recommendation : MonoBehaviour
 
         //string category = anchor.tags.Where(t1 => t1.category == "InterestTag").Select(t2 => t2.tag).ToArray()[0];
         string category = "Recommenation";
-        script.Init(anchor, category, arCamera.transform, default_height);
+        script.Init(anchor, category, arCamera.transform);
 
-        newIcon.transform.localPosition = new Vector3(pos.x, pos.y + default_height, pos.z);
+        newIcon.transform.localPosition = new Vector3(pos.x, pos.y, pos.z);
     }
 
     private void getAnchorTokens()

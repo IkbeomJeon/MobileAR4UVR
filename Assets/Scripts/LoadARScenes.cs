@@ -9,8 +9,6 @@ using UnityEngine.UI;
 
 public class LoadARScenes : MonoBehaviour
 {
-    public float default_height = 1.5f;
-
     // For debuggin login. Set true for login using debug email/password 
     public bool autoLogin = false;
     // Debug login info
@@ -58,6 +56,9 @@ public class LoadARScenes : MonoBehaviour
         arScenesParent_poi = GameObject.Find("ARSceneParent_Target").transform;
         recommendedParent = GameObject.Find("RecommendedParent").transform;
 
+        arScenesParent.localPosition = new Vector3(0, ConfigurationManager.Instance.height_anchors, 0);
+        arScenesParent_poi.localPosition = new Vector3(0, ConfigurationManager.Instance.height_anchors, 0);
+        recommendedParent.localPosition = new Vector3(0, ConfigurationManager.Instance.height_anchors, 0);
 
         uri = ServerURL.Instance.uri;
         
@@ -168,7 +169,7 @@ public class LoadARScenes : MonoBehaviour
                 Debug.Log("recommendation anchor count : " + anchors.Count.ToString());
                 GameObject newIcon = Instantiate(ResourceLoader.Instance.icon_recommendation, Vector3.zero, Quaternion.identity, recommendedParent);
                 var script = newIcon.GetComponent<IconManager>();
-                script.Init(anchor, "recommendation", cameraTransform, default_height);
+                script.Init(anchor, "recommendation", cameraTransform);
             }
 
             else
@@ -202,7 +203,7 @@ public class LoadARScenes : MonoBehaviour
                             break;
                     }
                     var script = newIcon.GetComponent<IconManager>();
-                    script.Init(anchor, category, cameraTransform, default_height);
+                    script.Init(anchor, category, cameraTransform);
                     newIcon.SetActive(false);
                 }
                 else

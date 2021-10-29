@@ -100,8 +100,12 @@ namespace ARRC_DigitalTwin_Generator
 
             Vector2 worldXZ = MercatToWorld(container, mx, mz);
 
-            //float elevation = container.GetHeight(worldXZ);
-            float elevation = 0;
+            float elevation;
+            if (ConfigurationManager.Instance.use_terrain_height == 1)
+                elevation = container.GetHeight(worldXZ);
+
+            else
+                elevation = 0;
 
             return new Vector3(worldXZ.x, elevation, worldXZ.y);
         }

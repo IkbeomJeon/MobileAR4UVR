@@ -11,8 +11,9 @@ using UnityEngine.XR.ARSubsystems;
 
 public class TrackerClientManager : MonoBehaviour
 {
-    public string server_ip;
-    public int port;
+    public Vector2 test_start_latlon = new Vector2(36.368241f, 127.364744f);
+    public string server_ip = "54.180.31.56";
+    public int port = 65432;
 
     Transform realworldTransform;
     GameObject arCamera;
@@ -33,8 +34,7 @@ public class TrackerClientManager : MonoBehaviour
     GameObject completeHandler;
 
     public IDictionary<string, GameObject> dicImageAnchors = new Dictionary<string, GameObject>();
-
-    public float active_distance = 20f;
+    
     public Transform arScenesParent;
     private void Awake()
     {
@@ -66,6 +66,7 @@ public class TrackerClientManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         arSession = GameObject.Find("AR Session").GetComponent<ARSession>();
         arScenesParent = GameObject.Find("ARSceneParent").transform;
 
@@ -106,7 +107,9 @@ public class TrackerClientManager : MonoBehaviour
 #if UNITY_EDITOR
         if (!runTracking)
         {
-            mat_Realworld2ARworld = LocalizationbyImageTracker_Psuedo();
+            //mat_Realworld2ARworld = LocalizationbyImageTracker_Psuedo();
+            float user_height = ConfigurationManager.Instance.height_user;
+            mat_Realworld2ARworld = GetInitialGlobalPoseMatrixfromSenser_pesudo(user_height, test_start_latlon.x, test_start_latlon.y, 0).inverse;
             runTracking = true;
         }
 
@@ -115,7 +118,8 @@ public class TrackerClientManager : MonoBehaviour
         if (!runTracking && SensorController.Instance.bInit)
         {
             //초기 오리진 생성
-            mat_Realworld2ARworld = GetInitialGlobalPoseMatrixfromSenser(1.5f).inverse;
+            float user_height = ConfigurationManager.Instance.height_user;
+            mat_Realworld2ARworld = GetInitialGlobalPoseMatrixfromSenser(user_height).inverse;
             runTracking = true;
         }
 #endif
@@ -292,6 +296,18 @@ public class TrackerClientManager : MonoBehaviour
         return globalOrigin;
     }
 
+    Matrix4x4 GetInitialGlobalPoseMatrixfromSenser_pesudo(float userheight, double lat, double lon, float heading)
+    {
+        // 필터링을 통해 카메라의 초기 position과 orientation을 추정.
+        Vector3 pos = TerrainUtils.LatLonToWorldWithElevation(TerrainContainer.Instance, lat, lon);
+        Vector4 colPos = new Vector4(pos.x, pos.y + userheight, pos.z, 1f);
+        Matrix4x4 globalOrigin = Matrix4x4.Rotate(Quaternion.Euler(0f, heading, 0f));
+        globalOrigin.SetColumn(3, colPos);
+
+        return globalOrigin;
+    }
+
+
     public void StartScanMode(GameObject _completehandler)
     {
         Debug.Log("in StartScanMode");
@@ -320,52 +336,45 @@ public class TrackerClientManager : MonoBehaviour
 
     public void UpdateGlobalPositionManually(int dir)
     {
-        float dist = 1f; //20cm
-        Vector3 addedPos = Vector3.zero;
+        float dist = ConfigurationManager.Instance.stepsize_position;
+        float rot = ConfigurationManager.Instance.stepsize_rotation;
+        
+        Vector3 addPos = Vector3.zero;
         Quaternion addRot = Quaternion.identity;
+
         switch(dir)
         {
             case 0:
-                addedPos = Vector3.left * dist;
+                addPos = Vector3.left * dist;
                 break;
             case 1:
-                addedPos = Vector3.right * dist;
+                addPos = Vector3.right * dist;
                 break;
 
             case 2:
-                addedPos = Vector3.forward * dist;
+                addPos = Vector3.forward * dist;
                 break;
 
             case 3:
-                addedPos = Vector3.back * dist;
+                addPos = Vector3.back * dist;
                 break;
 
             case 4:
-                addRot = Quaternion.Euler(0, -5, 0);
+                addRot = Quaternion.Euler(0, -rot, 0);
                 break;
             case 5:
-                addRot = Quaternion.Euler(0, 5, 0);
+                addRot = Quaternion.Euler(0, rot, 0);
                 break;
 
         }
-        Vector3 gl_pos = GlobalARCameraInfo.Instance.globalPosition;
-        Quaternion gl_rot = GlobalARCameraInfo.Instance.globalRotation;
 
-        Matrix4x4 gl_mat = Matrix4x4.TRS(gl_pos, gl_rot, new Vector3(1, 1, 1));
+        
+        Matrix4x4 mat_pos= Matrix4x4.TRS(addPos, Quaternion.identity, new Vector3(1, 1, 1));
+        Matrix4x4 mat_rot = Matrix4x4.TRS(Vector3.zero, addRot, new Vector3(1, 1, 1));
+        Matrix4x4 mat_ar = Matrix4x4.identity;
+        mat_ar.SetTRS(arCamera.transform.position, Quaternion.identity, new Vector3(1, 1, 1));
 
-        Matrix4x4 add_mat = Matrix4x4.TRS(addedPos, addRot, new Vector3(1, 1, 1));
-
-        mat_Realworld2ARworld = arCamera.transform.localToWorldMatrix * add_mat.inverse * gl_mat.inverse;
-
-        realworldTransform.position = mat_Realworld2ARworld.GetColumn(3);
-        realworldTransform.rotation = mat_Realworld2ARworld.rotation;
-
-        //Matrix4x4 positionMat = Matrix4x4.identity;
-        //positionMat.SetColumn(3, new Vector4(addedPos.x, addedPos.y, addedPos.z, 1));
-
-        //mat_Realworld2ARworld *= positionMat.inverse;
-
-
+        mat_Realworld2ARworld = mat_pos.inverse * mat_ar * mat_rot.inverse  * mat_ar.inverse * mat_Realworld2ARworld;
     }
     public IEnumerator WriteTrajectory(string filename, float delay)
     {
@@ -405,7 +414,7 @@ public class TrackerClientManager : MonoBehaviour
         {
             foreach (Transform icon in arScenesParent)
             {
-                if (Vector3.Distance(GlobalARCameraInfo.Instance.globalPosition, icon.localPosition) < active_distance)
+                if (Vector3.Distance(GlobalARCameraInfo.Instance.globalPosition, icon.localPosition) < ConfigurationManager.Instance.distance_visible_anchor)
                 {
                     icon.gameObject.SetActive(true);
                 }

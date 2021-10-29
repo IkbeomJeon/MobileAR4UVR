@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
     public GameObject capturePanel;
     public GameObject searchPanel;
     public GameObject mapPanel;
+    public GameObject configurationPanel;
     public GameObject contentPanel;
 
     public GameObject navStopButton;
@@ -29,12 +30,14 @@ public class UIManager : MonoBehaviour
         mapPanel = transform.Find("MapPanel").gameObject;
         navStopButton = transform.Find("StopNavButton").gameObject;
         contentPanel = transform.Find("ContentPanel").gameObject;
+        configurationPanel = transform.Find("ConfigPanel").gameObject;
 
         capturePanel.SetActive(false);
         searchPanel.SetActive(false);
         mapPanel.SetActive(false);
         navStopButton.SetActive(false);
         contentPanel.SetActive(false);
+        configurationPanel.SetActive(false);
 
     }
  
@@ -54,6 +57,15 @@ public class UIManager : MonoBehaviour
 
         else
             mapPanel.SetActive(true);
+    }
+
+    public void SwitchConfigurationPanelState()
+    {
+        if (configurationPanel.activeSelf)
+            configurationPanel.SetActive(false);
+
+        else
+            configurationPanel.SetActive(true);
     }
 
     public void ChangeSearchPanelState(bool flag)

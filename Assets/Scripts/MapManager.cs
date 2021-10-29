@@ -21,7 +21,7 @@ public class MapManager : MonoBehaviour
     public List<GameObject> poi_num = new List<GameObject>();
     public float distance_remove_waypoint = 5;
     public bool navigationOn;
-    public float height_way3D = 0.5f;
+    //public float height_way3D = 0.5f;
     public float height_way2D = 1;
 
     //for recommendation.
@@ -173,8 +173,10 @@ public class MapManager : MonoBehaviour
 
         //ReDrawUserPositionOnWorld();
 
+        float height_way3D = ConfigurationManager.Instance.height_navigation_3d;
         var worldPos_user = GlobalARCameraInfo.Instance.globalPosition;
-        Vector3 result_pos_user = mat_Realworld2ARworld.MultiplyPoint(new Vector4(worldPos_user.x, worldPos_user.y - 1.5f + height_way3D, worldPos_user.z));
+        float user_height = ConfigurationManager.Instance.height_user;
+        Vector3 result_pos_user = mat_Realworld2ARworld.MultiplyPoint(new Vector4(worldPos_user.x, worldPos_user.y - user_height + height_way3D, worldPos_user.z));
         lr3D.SetPosition(0, new Vector3(result_pos_user.x, result_pos_user.y, result_pos_user.z));
 
         if (waypoints.Count > 0)
