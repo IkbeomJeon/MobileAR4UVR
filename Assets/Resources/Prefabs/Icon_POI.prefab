@@ -468,6 +468,7 @@ MonoBehaviour:
     prefertime: 0
     companion: 0
     status: new
+  buttonImage: {fileID: 0}
   isSpacetelling: 0
   index_spacetelling: 0
 --- !u!1 &4197390957235197523

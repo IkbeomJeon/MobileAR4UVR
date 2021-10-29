@@ -319,8 +319,10 @@ public class TrackerClientManager : MonoBehaviour
 
     public void UpdateGlobalPositionManually(int dir)
     {
-        float dist = 0.2f; //20cm
+        float dist = 1f; //20cm
         Vector3 addedPos = Vector3.zero;
+        Quaternion rotation = Quaternion.identity;
+
         switch(dir)
         {
             case 0:
@@ -337,12 +339,29 @@ public class TrackerClientManager : MonoBehaviour
             case 3:
                 addedPos = Vector3.back * dist;
                 break;
+
+            case 4:
+                rotation = Quaternion.Euler(0, 5, 0);
+                break;
+
+            case 5:
+                rotation = Quaternion.Euler(0, -5, 0);
+                break;
+
         }
 
-        Matrix4x4 positionMat = Matrix4x4.identity;
-        positionMat.SetColumn(3, new Vector4(addedPos.x, addedPos.y, addedPos.z, 1));
+        Matrix4x4 mat = Matrix4x4.identity;
 
-        mat_Realworld2ARworld *= positionMat.inverse;
+        mat.SetTRS(addedPos, rotation, new Vector3(1, 1, 1));
+
+        // positionMat.SetColumn(3, new Vector4(addedPos.x, addedPos.y, addedPos.z, 1));
+
+
+        Vector4 cp =  mat_Realworld2ARworld.GetColumn(3);
+        
+
+
+        mat_Realworld2ARworld *= mat.inverse;
     }
     public IEnumerator WriteTrajectory(string filename, float delay)
     {

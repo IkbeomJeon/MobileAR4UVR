@@ -999,9 +999,8 @@ public class Recommendation : MonoBehaviour
 
         GameObject recommendedParent = GameObject.Find("Real World/RecommendedParent");
 
-        GameObject newIcon = Instantiate(ResourceLoader.Instance.icon_recommendation, recommendedParent.transform) as GameObject;
-        
-        var script = newIcon.GetComponent<IconManager>();
+        GameObject newIcon = Instantiate(ResourceLoader.Instance.icon, recommendedParent.transform) as GameObject;
+        var script = newIcon.AddComponent<IconManager_Maryam>();
 
         string category = anchor.tags.Where(t1 => t1.category == "InterestTag").Select(t2 => t2.tag).ToArray()[0];
         script.Init(anchor, category, arCamera.transform, default_height);

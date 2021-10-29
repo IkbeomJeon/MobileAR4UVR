@@ -163,54 +163,16 @@ public class LoadARScenes : MonoBehaviour
 
         foreach (Anchor anchor in anchors)
         {
-            if (isRecommended)
-            {
-                Debug.Log("recommendation anchor count : " + anchors.Count.ToString());
-                GameObject newIcon = Instantiate(ResourceLoader.Instance.icon_recommendation, Vector3.zero, Quaternion.identity, recommendedParent);
-                var script = newIcon.GetComponent<IconManager>();
-                script.Init(anchor, "recommendation", cameraTransform, default_height);
-            }
+            //string mediaType = anchor.contentinfos[0].content.mediatype; //must be "IMAGE"
+            string category = anchor.tags.Where(t1 => t1.category == "InterestTag").Select(t2=>t2.tag).ToArray()[0];
 
-            else
-            {
-                string mediaType = anchor.contentinfos[0].content.mediatype;
-                string category = anchor.tags.Where(t1 => t1.category == "InterestTag").Select(t2=>t2.tag).ToArray()[0];
-
-                if(mediaType == "IMAGE")
-                {
-                    GameObject newIcon;
-                    switch (category)
-                    {
-                        case "Admission":
-                            newIcon = Instantiate(ResourceLoader.Instance.icon_admission, Vector3.zero, Quaternion.identity, arScenesParent);
-                            break;
-                        case "Research":
-                            newIcon = Instantiate(ResourceLoader.Instance.icon_research, Vector3.zero, Quaternion.identity, arScenesParent);
-                            break;
-                        case "Campus life":
-                            newIcon = Instantiate(ResourceLoader.Instance.icon_campusLife, Vector3.zero, Quaternion.identity, arScenesParent);
-                            break;
-                        case "News":
-                            newIcon = Instantiate(ResourceLoader.Instance.icon_news, Vector3.zero, Quaternion.identity, arScenesParent);
-                            break;
-                        case "Education":
-                        case " Education":
-                            newIcon = Instantiate(ResourceLoader.Instance.icon_education, Vector3.zero, Quaternion.identity, arScenesParent);
-                            break;
-                        default:
-                            newIcon = Instantiate(ResourceLoader.Instance.icon_about, Vector3.zero, Quaternion.identity, arScenesParent);
-                            break;
-                    }
-                    var script = newIcon.GetComponent<IconManager>();
-                    script.Init(anchor, category, cameraTransform, default_height);
-                    newIcon.SetActive(false);
-                }
-                else
-                {
-                    Debug.LogError("WWW");
-                }
-                yield return null;
-            }
+            GameObject newIcon = Instantiate(ResourceLoader.Instance.icon, Vector3.zero, Quaternion.identity, arScenesParent);
+            var script = newIcon.AddComponent<IconManager_Maryam>();
+            script.Init(anchor, category, cameraTransform, default_height);
+            newIcon.SetActive(false);
+          
+            yield return null;
+            
         }
         Debug.Log("Icon Creation Done.");
        

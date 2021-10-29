@@ -138,7 +138,7 @@ public class GroupCard : NormalCard
         for(int i=0; i<story.Count;i++)
         {
             var poi = Instantiate(ResourceLoader.Instance.icon_poi, parentTargetARScene);
-            poi.GetComponent<IconManager>().Init(story[i], "", GameObject.FindGameObjectWithTag("MainCamera").transform, 1.5f, true, i+1);
+            poi.AddComponent<IconManager>().Init(story[i], "", GameObject.FindGameObjectWithTag("MainCamera").transform, 1.5f, true, i+1);
         }
        
     }
