@@ -22,6 +22,7 @@ public class TrackerClientManager : MonoBehaviour
     ARTrackedImage lastestTrackedImage;
     string lastestTrackedImage_guid = "null";
     Matrix4x4 mat_ImageAnchorfromARworld = Matrix4x4.identity;
+
     Matrix4x4 mat_Realworld2ARworld;
     Matrix4x4 mat_plane; //마커 plane의 정면을 카메라로 향하도록 하는 변환.
 
@@ -105,7 +106,7 @@ public class TrackerClientManager : MonoBehaviour
 #if UNITY_EDITOR
         if (!runTracking)
         {
-            LocalizationbyImageTracker_Psuedo();
+            mat_Realworld2ARworld = LocalizationbyImageTracker_Psuedo();
             runTracking = true;
         }
 
@@ -128,11 +129,11 @@ public class TrackerClientManager : MonoBehaviour
         {
            //image tracker를 이용한 localize.
             if (lastestTrackedImage != null)
-                LocalizationbyImageTracker();
+                mat_Realworld2ARworld = LocalizationbyImageTracker();
 
             // real world를 ar world에 맞게 변환한다.(ARFoundation의 다양한 기능들을 사용하려면 AR Session Origin은 바뀌어선 안되기 때문에)
-            //realworldTransform.position = mat_Realworld2ARworld.GetColumn(3);
-            //realworldTransform.rotation = mat_Realworld2ARworld.rotation;
+            realworldTransform.position = mat_Realworld2ARworld.GetColumn(3);
+            realworldTransform.rotation = mat_Realworld2ARworld.rotation;
 
             Matrix4x4 mat_transformed = mat_Realworld2ARworld.inverse * arCamera.transform.localToWorldMatrix;
 
@@ -193,7 +194,7 @@ public class TrackerClientManager : MonoBehaviour
     }
 
 
-    void LocalizationbyImageTracker_Psuedo()
+    Matrix4x4 LocalizationbyImageTracker_Psuedo()
     {
         int layerMask = 1 << LayerMask.NameToLayer("Image Anchor Pseudo");
 
@@ -220,13 +221,13 @@ public class TrackerClientManager : MonoBehaviour
         }
 
         //Realworld Origin에서의  마커 Pose.
-        Matrix4x4 mat_ImageAnchorfromRealWorld = GetGlobalPoseMatrixfromTrackedImage(lastestTrackedImage_guid); 
-        
+        Matrix4x4 mat_ImageAnchorfromRealWorld = GetGlobalPoseMatrixfromTrackedImage(lastestTrackedImage_guid);
+
         //Transform : Real world ->  AR world
-        mat_Realworld2ARworld = mat_ImageAnchorfromARworld * mat_ImageAnchorfromRealWorld.inverse;
+        return mat_ImageAnchorfromARworld * mat_ImageAnchorfromRealWorld.inverse;
     }
 
-    void LocalizationbyImageTracker()
+    Matrix4x4 LocalizationbyImageTracker()
     {
         Debug.Log("in LocalizationbyImageTracker");
         if (scanModeOn && lastestTrackedImage.trackingState == TrackingState.Tracking) //Tracking Compelte condition.
@@ -243,7 +244,7 @@ public class TrackerClientManager : MonoBehaviour
         Matrix4x4 mat_ImageAnchorfromRealWorld = GetGlobalPoseMatrixfromTrackedImage(lastestTrackedImage_guid); //mat_palne : unity plane의 방향 보상.
 
         //Transform : Real world ->  AR world
-        mat_Realworld2ARworld = mat_ImageAnchorfromARworld * mat_ImageAnchorfromRealWorld.inverse;
+        return mat_ImageAnchorfromARworld * mat_ImageAnchorfromRealWorld.inverse; ;
     }
 
     Matrix4x4 GetGlobalPoseMatrixfromTrackedImage(string guid)
@@ -319,8 +320,9 @@ public class TrackerClientManager : MonoBehaviour
 
     public void UpdateGlobalPositionManually(int dir)
     {
-        float dist = 0.2f; //20cm
+        float dist = 1f; //20cm
         Vector3 addedPos = Vector3.zero;
+        Quaternion addRot = Quaternion.identity;
         switch(dir)
         {
             case 0:
@@ -337,12 +339,33 @@ public class TrackerClientManager : MonoBehaviour
             case 3:
                 addedPos = Vector3.back * dist;
                 break;
+
+            case 4:
+                addRot = Quaternion.Euler(0, -5, 0);
+                break;
+            case 5:
+                addRot = Quaternion.Euler(0, 5, 0);
+                break;
+
         }
+        Vector3 gl_pos = GlobalARCameraInfo.Instance.globalPosition;
+        Quaternion gl_rot = GlobalARCameraInfo.Instance.globalRotation;
 
-        Matrix4x4 positionMat = Matrix4x4.identity;
-        positionMat.SetColumn(3, new Vector4(addedPos.x, addedPos.y, addedPos.z, 1));
+        Matrix4x4 gl_mat = Matrix4x4.TRS(gl_pos, gl_rot, new Vector3(1, 1, 1));
 
-        mat_Realworld2ARworld *= positionMat.inverse;
+        Matrix4x4 add_mat = Matrix4x4.TRS(addedPos, addRot, new Vector3(1, 1, 1));
+
+        mat_Realworld2ARworld = arCamera.transform.localToWorldMatrix * add_mat.inverse * gl_mat.inverse;
+
+        realworldTransform.position = mat_Realworld2ARworld.GetColumn(3);
+        realworldTransform.rotation = mat_Realworld2ARworld.rotation;
+
+        //Matrix4x4 positionMat = Matrix4x4.identity;
+        //positionMat.SetColumn(3, new Vector4(addedPos.x, addedPos.y, addedPos.z, 1));
+
+        //mat_Realworld2ARworld *= positionMat.inverse;
+
+
     }
     public IEnumerator WriteTrajectory(string filename, float delay)
     {
