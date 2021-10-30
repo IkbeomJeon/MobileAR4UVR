@@ -29,11 +29,14 @@ class TrackerClient : Client
     {
         base.Connect(server_IP, port);
 
-        // Inform 'Register' to Server.
-        SendData(RequestType.RegisterClient, ClientType.Tracker, new TransformData());
-
-        byte[] buffer = new byte[bufSize];
-        socket.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref epFrom, new AsyncCallback(ReceieveCallBack), buffer);
+        if(isConnected)
+        {
+            // Inform 'Register' to Server.
+            SendData(RequestType.RegisterClient, ClientType.Tracker, new TransformData());
+            byte[] buffer = new byte[bufSize];
+            socket.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref epFrom, new AsyncCallback(ReceieveCallBack), buffer);
+        }
+      
     }
     public void Broadcast(TransformData transformData)
     {
@@ -117,7 +120,8 @@ class TrackerClient : Client
         }
         catch (Exception exp)
         {
-            Debug.LogError(exp.ToString());
+            Debug.LogError(exp.StackTrace);
+            Debug.LogError(exp.Message.ToString());
         }
 
     }
