@@ -14,6 +14,8 @@ public class SetConfigurationValue : MonoBehaviour
     public TMP_InputField stepsize_position;
     public TMP_InputField stepsize_rotation;
     public TMP_InputField distance_visible_anchor;
+    public TMP_InputField distance_to_remove_midle_waypoint;
+
     public Toggle use_terrain_height;
 
     // Start is called before the first frame update
@@ -27,7 +29,10 @@ public class SetConfigurationValue : MonoBehaviour
         stepsize_position = transform.Find("stepsize_position/InputField (TMP)").GetComponent<TMP_InputField>();
         stepsize_rotation = transform.Find("stepsize_rotation/InputField (TMP)").GetComponent<TMP_InputField>();
         distance_visible_anchor = transform.Find("distance_visible_anchor/InputField (TMP)").GetComponent<TMP_InputField>();
+        distance_to_remove_midle_waypoint = transform.Find("distance_to_remove_midle_waypoint/InputField (TMP)").GetComponent<TMP_InputField>();
+
         use_terrain_height = transform.Find("Toggle_terrain").GetComponent<Toggle>();
+        
 
         Load();
     }
@@ -42,13 +47,14 @@ public class SetConfigurationValue : MonoBehaviour
         stepsize_position.text = ConfigurationManager.Instance.stepsize_position.ToString();
         stepsize_rotation.text = ConfigurationManager.Instance.stepsize_rotation.ToString();
         distance_visible_anchor.text = ConfigurationManager.Instance.distance_visible_anchor.ToString();
+        distance_to_remove_midle_waypoint.text = ConfigurationManager.Instance.distance_to_remove_midle_waypoint.ToString();
         use_terrain_height.isOn = ConfigurationManager.Instance.use_terrain_height == 1 ? true : false;
     }
     public void Save()
     {
         ConfigurationManager.Instance.Save(float.Parse(size_anchors.text), float.Parse(height_user.text), float.Parse(height_anchors.text),
-            float.Parse(height_navigation_3d.text), float.Parse(stepsize_position.text), float.Parse(stepsize_rotation.text), float.Parse(distance_visible_anchor.text)
-            , use_terrain_height.isOn?1:0);
+            float.Parse(height_navigation_3d.text), float.Parse(stepsize_position.text), float.Parse(stepsize_rotation.text),
+            float.Parse(distance_visible_anchor.text), float.Parse(distance_to_remove_midle_waypoint.text), use_terrain_height.isOn ? 1 : 0);
 
         Load();
 

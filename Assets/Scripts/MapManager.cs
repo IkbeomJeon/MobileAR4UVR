@@ -19,7 +19,6 @@ public class MapManager : MonoBehaviour
     public GameObject userPin;
     public List<WayPoint> waypoints = new List<WayPoint>();
     public List<GameObject> poi_num = new List<GameObject>();
-    public float distance_remove_waypoint = 5;
     public bool navigationOn;
     //public float height_way3D = 0.5f;
     public float height_way2D = 1;
@@ -188,7 +187,7 @@ public class MapManager : MonoBehaviour
                 var worldPos_wp = new Vector3(wpos_wp.x, wpos_wp.y + height_way3D, wpos_wp.z);
                 Vector3 result_pos_wp = mat_Realworld2ARworld.MultiplyPoint(new Vector4(worldPos_wp.x, worldPos_wp.y, worldPos_wp.z));
 
-                if (Vector3.Distance(result_pos_user, result_pos_wp) < distance_remove_waypoint)
+                if (Vector3.Distance(result_pos_user, result_pos_wp) < ConfigurationManager.Instance.distance_to_remove_midle_waypoint)
                     waypoints.RemoveAt(0);
             }
         }
