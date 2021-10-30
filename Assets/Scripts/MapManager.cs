@@ -17,6 +17,8 @@ public class MapManager : MonoBehaviour
     public Transform poiNumParent;
     public GameObject mapCamera;
     public GameObject userPin;
+
+    public Dictionary<WayPoint, GameObject> poi_numObject = new Dictionary<WayPoint, GameObject>();
     public List<WayPoint> waypoints = new List<WayPoint>();
     public List<GameObject> poi_num = new List<GameObject>();
     public bool navigationOn;
@@ -111,20 +113,23 @@ public class MapManager : MonoBehaviour
         foreach (var point in points)
         {
             waypoints.Add(point);
-
-            if(point.isPOI)
+            
+            if (point.isPOI)
             {
                 //create number object.
-                GameObject poiPoint = Instantiate(ResourceLoader.Instance.poiPoint, poiNumParent);
+                GameObject poi = Instantiate(ResourceLoader.Instance.poiPoint, poiNumParent);
                 var wPos = map.GeoToWorldPosition(point.pos);
                 var mapPos_waypoint = new Vector3(wPos.x, height_way2D, wPos.z);
 
-                poiPoint.transform.position = mapPos_waypoint;
-                poiPoint.transform.Find("Text").GetComponent<TextMeshPro>().text = (++poiNum).ToString();
-
-                poi_num.Add(poiPoint);
+                poi.transform.position = mapPos_waypoint;
+                poi.transform.Find("Text").GetComponent<TextMeshPro>().text = (++poiNum).ToString();
+                poi_numObject.Add(point, poi);
+                
+                //poi_num.Add(poiPoint);
             }
-          
+            
+
+
         }
             //DrawNavigationRouteOn2DMap(map.transform.localScale.x);
             //DrawNavigationRouteOnWorld();
@@ -141,21 +146,18 @@ public class MapManager : MonoBehaviour
         var wPos_user = map.GeoToWorldPosition(geoPos_user);
         var mapPos_user = new Vector3(wPos_user.x, height_way2D, wPos_user.z);
         lr2D.SetPosition(0, mapPos_user);
-
-        int poiNum = 0;
+       
         for (int i=0; i< waypoints.Count; i++)
         {
             var wPos = map.GeoToWorldPosition(waypoints[i].pos);
             var mapPos_waypoint = new Vector3(wPos.x, height_way2D, wPos.z);
 
-            if (waypoints[i].isPOI)
+            if(poi_numObject.ContainsKey(waypoints[i]))
             {
-                poi_num[poiNum].transform.position = mapPos_waypoint;
-                Vector3 ex_scale = poi_num[poiNum].transform.localScale;
-                poi_num[poiNum].transform.localScale = new Vector3(5 / scale, 5 / scale, 5 / scale); ;
-                poiNum++;
+                poi_numObject[waypoints[i]].transform.position = mapPos_waypoint;
+                poi_numObject[waypoints[i]].transform.localScale = new Vector3(5 / scale, 5 / scale, 5 / scale);
             }
-
+            
             lr2D.SetPosition(i+1, mapPos_waypoint);
 
         }
@@ -211,6 +213,7 @@ public class MapManager : MonoBehaviour
             DestroyImmediate(poi);
 
         waypoints.Clear();
+        poi_numObject.Clear();
         stories.Clear();
         poi_num.Clear();
         spaceTellingIndex = 0;
