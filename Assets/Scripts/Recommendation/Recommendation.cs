@@ -37,6 +37,8 @@ public class Recommendation : MonoBehaviour
 
     private Dictionary<string, List<Token>> anchorTokens;
 
+    Dictionary<string, List<double>> midpoints;
+
     public int recommendationType;
 
     // Start is called before the first frame update
@@ -189,10 +191,13 @@ public class Recommendation : MonoBehaviour
 
         Anchor currentFixed = stories[index];
         Anchor nextFixed = stories[index + 1];
+        String anchor_trajectory_ids = currentFixed.id.ToString() + "-" + nextFixed.id.ToString();
+
         List<double> boundingBox = getBoundingBox(currentFixed.point, nextFixed.point);
         List<double> recomPosition = getMidddle(currentFixed.point, nextFixed.point);
+        recomPosition = midpoints[anchor_trajectory_ids];
 
-        String anchor_trajectory_ids = currentFixed.id.ToString() + "-" + nextFixed.id.ToString();
+        
         List<AnchorRecom> anchor_recoms = new List<AnchorRecom>();
 
         int recomIndex = -1;
@@ -362,7 +367,7 @@ public class Recommendation : MonoBehaviour
 
         List<double> boundingBox = getBoundingBox(currentFixed.point, nextFixed.point);
         //List<double> recomPosition = getMidddle(currentFixed.point, nextFixed.point);
-        List<double> recomPosition = getMidddle(anchor_trajectory_ids);
+        List<double> recomPosition = getMidddle(currentFixed.point, nextFixed.point);
 
         int recomIndex = -1;
         double recomScore = -1;
@@ -626,25 +631,48 @@ public class Recommendation : MonoBehaviour
         }
     }
 
-    private List<double> getMidddle(String trajectorySegment)
+    public void calMidPoints(List<Anchor> stories, List<WayPoint> waypoints)
     {
-        List<double> recomPosition = new List<double>();
+        //List<Anchor> stories = navOptions.GetComponent<MapManager>().stories;
+        //List<WayPoint> waypoints = navOptions.GetComponent<MapManager>().waypoints;
 
-        Dictionary<String, double[]> midpoints = new Dictionary<String, double[]>();
-        midpoints["3144-3147"] = new double[] {36.368605, 127.364395};
-        midpoints["3147-3151"] = new double[] {36.36854754, 127.3631116};
-        midpoints["3151-3171"] = new double[] {36.37049389, 127.3620723};
-        
-        midpoints["3161-3165"] = new double[] {36.37356649, 127.3610764};
-        midpoints["3165-3168"] = new double[] {36.37356675, 127.3599696};
-        midpoints["3168-3170"] = new double[] {36.37283422, 127.3596441};
+        List<Segment> segments = new List<Segment>();
+        List<string> anchorIds = new List<string>();
 
-        double[] position = midpoints[trajectorySegment];
+        List<String> points = new List<String>();
+        int k = 0;
+        for (int i=0; i< waypoints.Count; i++) 
+        {
+            if (waypoints[i].isPOI)
+            {
+                anchorIds.Add(stories[k].id.ToString());
+                k++;
+            }
 
-        recomPosition.Add(position[0]);
-        recomPosition.Add(position[1]);
+            String point = waypoints[i].pos[0].ToString() + ',' + waypoints[i].pos[1].ToString();
 
-        return recomPosition;
+            points.Add(point);
+
+            if(anchorIds.Count == 2)
+            {
+                string trajAnchors = string.Join("-", anchorIds.ToArray());
+                anchorIds = new List<string>();
+
+                Segment segment = new Segment();
+                segment.points = points;
+                segment.anchorIds = trajAnchors;
+                segments.Add(segment);
+
+                points = new List<String>();
+                points.Add(point);
+                anchorIds.Add(stories[k - 1].id.ToString());
+            }
+        }
+
+        TrajectorySegment trajectorySegment = new TrajectorySegment();
+        trajectorySegment.segments = segments;
+
+        StartCoroutine(getMidPoints(trajectorySegment));
     }
    
     private List<double> getMidddle(Point point1, Point point2)
@@ -1084,6 +1112,32 @@ public class Recommendation : MonoBehaviour
         request.SetRequestHeader("Content-Type", "application/json");
         yield return request.SendWebRequest();
         Debug.Log("Status Code: " + request.responseCode);
+    }
+
+    public IEnumerator getMidPoints(TrajectorySegment segments)
+    { 
+
+        string url = string.Format("http://kctmrecomapp-env.eba-6p3axegk.us-east-1.elasticbeanstalk.com/getmidpoints");
+        
+        string storingJson = JsonUtility.ToJson(segments);
+
+        UnityWebRequest request = new UnityWebRequest(url, "POST");
+        byte[] bodyRaw = Encoding.UTF8.GetBytes(storingJson);
+        request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+        request.downloadHandler = new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
+        yield return request.SendWebRequest();
+
+        if (request.isNetworkError || request.isHttpError || request.responseCode >= 400)
+        {
+            Debug.Log(request.error);
+        }
+        else
+        {
+            midpoints = new Dictionary<string, List<double>>();
+            midpoints = JsonConvert.DeserializeObject<Dictionary<string, List<double>>>(request.downloadHandler.text);
+            Debug.Log("done");
+        }
     }
 
     public IEnumerator Upload(StoringInfo storingInfo)

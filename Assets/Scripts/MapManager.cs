@@ -127,8 +127,11 @@ public class MapManager : MonoBehaviour
             }
           
         }
-            //DrawNavigationRouteOn2DMap(map.transform.localScale.x);
-            //DrawNavigationRouteOnWorld();
+
+        GameObject recom = GameObject.Find("Recommendation");
+        recom.GetComponent<Recommendation>().calMidPoints(stories, waypoints);
+        //DrawNavigationRouteOn2DMap(map.transform.localScale.x);
+        //DrawNavigationRouteOnWorld();
     }
 
     public void DrawNavigationRouteOn2DMap(float scale)
