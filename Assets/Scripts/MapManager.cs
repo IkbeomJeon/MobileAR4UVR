@@ -20,7 +20,7 @@ public class MapManager : MonoBehaviour
 
     public Dictionary<WayPoint, GameObject> poi_numObject = new Dictionary<WayPoint, GameObject>();
     public List<WayPoint> waypoints = new List<WayPoint>();
-    public List<GameObject> poi_num = new List<GameObject>();
+   
     public bool navigationOn;
     //public float height_way3D = 0.5f;
     public float height_way2D = 1;
@@ -212,13 +212,13 @@ public class MapManager : MonoBehaviour
     {
         navigationOn = false;
 
-        foreach (GameObject poi in poi_num)
+        foreach(GameObject poi in poi_numObject.Values)
             DestroyImmediate(poi);
 
         waypoints.Clear();
         poi_numObject.Clear();
         stories.Clear();
-        poi_num.Clear();
+        
         spaceTellingIndex = 0;
 
         lr2D.positionCount = 0;
