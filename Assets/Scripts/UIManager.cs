@@ -16,7 +16,7 @@ public class UIManager : MonoBehaviour
     public GameObject mapPanel;
     public GameObject configurationPanel;
     public GameObject contentPanel;
-
+    public GameObject FullscreenPanel;
     public GameObject navStopButton;
 
 
@@ -31,6 +31,13 @@ public class UIManager : MonoBehaviour
         navStopButton = transform.Find("StopNavButton").gameObject;
         contentPanel = transform.Find("ContentPanel").gameObject;
         configurationPanel = transform.Find("ConfigPanel").gameObject;
+        FullscreenPanel = transform.Find("FullscreenPanel").gameObject;
+
+        var button_fs = FullscreenPanel.transform.Find("Fullscreen").GetComponent<Button>();
+        button_fs.onClick.RemoveAllListeners();
+        button_fs.onClick.AddListener(delegate {
+            FullscreenPanel.SetActive(false);
+        });
 
         capturePanel.SetActive(false);
         searchPanel.SetActive(false);
@@ -38,6 +45,7 @@ public class UIManager : MonoBehaviour
         navStopButton.SetActive(false);
         contentPanel.SetActive(false);
         configurationPanel.SetActive(false);
+        FullscreenPanel.SetActive(false);
 
     }
  
@@ -110,6 +118,22 @@ public class UIManager : MonoBehaviour
         contentPanel.SetActive(false);
         
     }
+
+    public void ShowFullScreenPanel(Image image, float scale)
+    {
+        //pullScreenPanel.transform.
+
+        FullscreenPanel.SetActive(true);
+      
+
+      
+        var button_img = FullscreenPanel.transform.Find("Main").gameObject;
+        button_img.GetComponent<AspectRatioFitter>().aspectRatio = scale;
+        button_img.GetComponent<RawImage>().texture = image.mainTexture;
+
+    }
+
+
     public void ChangeARButtonState(bool flag)
     {
         navStopButton.SetActive(flag);
