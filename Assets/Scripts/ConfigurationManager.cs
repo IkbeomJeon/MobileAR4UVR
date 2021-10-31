@@ -12,6 +12,7 @@ public class ConfigurationManager : MonoBehaviour
     public float stepsize_position = 1; //metric.
     public float stepsize_rotation = 1f; //degree.
     public float distance_visible_anchor = 30; //metric.
+    public float distance_to_remove_midle_waypoint = 20;
     public int use_terrain_height = 0;
 
     float default_size_anchors = 1f; //meter
@@ -21,6 +22,8 @@ public class ConfigurationManager : MonoBehaviour
     float default_stepsize_position = 1; //metric.
     float default_stepsize_rotation = 1f; //degree.
     float default_distance_visible_anchor = 30; //metric.
+    float default_distance_to_remove_midle_waypoint = 20;
+
     int default_use_terrain_height = 0;
 
     private void Awake()
@@ -93,6 +96,12 @@ public class ConfigurationManager : MonoBehaviour
         else
             distance_visible_anchor = default_distance_visible_anchor;
 
+        if (PlayerPrefs.HasKey("distance_to_remove_midle_waypoint"))
+            distance_to_remove_midle_waypoint = PlayerPrefs.GetFloat("distance_to_remove_midle_waypoint");
+        else
+            distance_to_remove_midle_waypoint = default_distance_to_remove_midle_waypoint;
+
+
         if (PlayerPrefs.HasKey("use_terrain_height"))
             use_terrain_height = PlayerPrefs.GetInt("use_terrain_height");
         else
@@ -109,10 +118,11 @@ public class ConfigurationManager : MonoBehaviour
         PlayerPrefs.DeleteKey("stepsize_position");
         PlayerPrefs.DeleteKey("stepsize_rotation");
         PlayerPrefs.DeleteKey("distance_visible_anchor");
+        PlayerPrefs.DeleteKey("distance_to_remove_midle_waypoint");
         PlayerPrefs.DeleteKey("use_terrain_height");
     }
     public void Save(float size_anchors, float height_user, float height_anchors, float height_navigation_3d, float stepsize_position, float stepsize_rotation, float distance_visible_anchor,
-        int use_terrain_height)
+        float distance_to_remove_midle_waypoint, int use_terrain_height)
     {
         PlayerPrefs.SetFloat("size_anchors", size_anchors);
         PlayerPrefs.SetFloat("height_user", height_user);
@@ -121,6 +131,7 @@ public class ConfigurationManager : MonoBehaviour
         PlayerPrefs.SetFloat("stepsize_position", stepsize_position);
         PlayerPrefs.SetFloat("stepsize_rotation", stepsize_rotation);
         PlayerPrefs.SetFloat("distance_visible_anchor", distance_visible_anchor);
+        PlayerPrefs.SetFloat("distance_to_remove_midle_waypoint", distance_to_remove_midle_waypoint);
         PlayerPrefs.SetInt("use_terrain_height", use_terrain_height);
 
         PlayerPrefs.Save();
