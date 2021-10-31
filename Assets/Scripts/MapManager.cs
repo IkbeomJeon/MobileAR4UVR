@@ -49,17 +49,7 @@ public class MapManager : MonoBehaviour
         if (mapActive)
         {
             //show user pin on map.
-            //Debug.Log("Track");
-            var geoPos = new Vector2d(GlobalARCameraInfo.Instance.latitude, GlobalARCameraInfo.Instance.longitude);
-            //map.SetCenterLatitudeLongitude(geoPos);
-
-            var mapPos_user = map.GeoToWorldPosition(geoPos);
-            userPin.transform.position = new Vector3(mapPos_user.x, height_way2D, mapPos_user.z);
-            //lr.SetPosition(0, worldPos_user);
-
-            Vector3 angle = GlobalARCameraInfo.Instance.globalRotation.eulerAngles;
-            userPin.transform.rotation = Quaternion.Euler(90f, angle.y, 0f);
-
+            
             if (navigationOn)
             {
                 DrawNavigationRouteOn2DMap(map.transform.localScale.x);
@@ -80,7 +70,16 @@ public class MapManager : MonoBehaviour
         var pos = new Vector2d(GlobalARCameraInfo.Instance.latitude, GlobalARCameraInfo.Instance.longitude);
         //map.SetZoom(17);
         map.SetCenterLatitudeLongitude(pos);
+        //map.SetZoom(15);
+        map.UpdateMap();
         //map.transform.localScale = new Vector3(1, 1, 1);
+
+        StartCoroutine(WaitUntil(0.1f));
+        //
+    }
+    IEnumerator WaitUntil(float time)
+    {
+        yield return new WaitForSeconds(time);
     }
     public void DeactivateMap()
     {
@@ -98,7 +97,15 @@ public class MapManager : MonoBehaviour
   
     public void StartNavigation(List<WayPoint> points, List<Anchor> stories)
     {
+      
         StopNavigation();
+
+        var pos = new Vector2d(GlobalARCameraInfo.Instance.latitude, GlobalARCameraInfo.Instance.longitude);
+        //map.SetZoom(17);
+        map.SetCenterLatitudeLongitude(pos);
+        //StartCoroutine(WaitUntil(0.1f));
+        //map.transform.localScale = new
+
 
         navigationOn = true;
 
@@ -106,7 +113,7 @@ public class MapManager : MonoBehaviour
         foreach(var anchor in stories)
         {
             this.stories.Add(anchor);
-        }
+        }   
 
         //deep copy.
         int poiNum = 0;
@@ -142,12 +149,20 @@ public class MapManager : MonoBehaviour
     {
         lr2D.positionCount = waypoints.Count + 1;
 
-        lr2D.startWidth = 1f * scale;
-        lr2D.endWidth = 1f * scale;
+        lr2D.startWidth = 2f * scale;
+        lr2D.endWidth = 2 * scale;
 
         var geoPos_user = new Vector2d(GlobalARCameraInfo.Instance.latitude, GlobalARCameraInfo.Instance.longitude);
         var wPos_user = map.GeoToWorldPosition(geoPos_user);
         var mapPos_user = new Vector3(wPos_user.x, height_way2D, wPos_user.z);
+    
+        //lr.SetPosition(0, worldPos_user);
+
+        Vector3 angle = GlobalARCameraInfo.Instance.globalRotation.eulerAngles;
+        userPin.transform.position = mapPos_user;
+        userPin.transform.rotation = Quaternion.Euler(90f, angle.y, 0f);
+        userPin.transform.localScale = new Vector3(1f / scale, 1f/ scale, 1f/ scale);
+
         lr2D.SetPosition(0, mapPos_user);
        
         for (int i=0; i< waypoints.Count; i++)
@@ -158,10 +173,10 @@ public class MapManager : MonoBehaviour
             if(poi_numObject.ContainsKey(waypoints[i]))
             {
                 poi_numObject[waypoints[i]].transform.position = mapPos_waypoint;
-                poi_numObject[waypoints[i]].transform.localScale = new Vector3(5 / scale, 5 / scale, 5 / scale);
+                poi_numObject[waypoints[i]].transform.localScale = new Vector3(1 / scale, 1 / scale, 1 / scale);
             }
-            
-            lr2D.SetPosition(i+1, mapPos_waypoint);
+
+            lr2D.SetPosition(i + 1, mapPos_waypoint);
 
         }
     }

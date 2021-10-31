@@ -126,8 +126,9 @@ public class GroupCard : NormalCard
         //uiManager.SendMessage("StartNavigation", anchor_posList);
         //네비게이션 생성
 
-        mapManager.GetComponent<MapManager>().StartNavigation(anchor_posList, story);
         mapManager.GetComponent<MapManager>().ActivateMap();
+        mapManager.GetComponent<MapManager>().StartNavigation(anchor_posList, story);
+        
 
         
         //Create POI Icons.
