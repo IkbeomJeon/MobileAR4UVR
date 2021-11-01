@@ -194,8 +194,16 @@ public class Recommendation : MonoBehaviour
         String anchor_trajectory_ids = currentFixed.id.ToString() + "-" + nextFixed.id.ToString();
 
         List<double> boundingBox = getBoundingBox(currentFixed.point, nextFixed.point);
-        List<double> recomPosition = getMidddle(currentFixed.point, nextFixed.point);
-        recomPosition = midpoints[anchor_trajectory_ids];
+        List<double> recomPosition = new List<double>();
+        if (midpoints.ContainsKey(anchor_trajectory_ids))
+        {
+            recomPosition = midpoints[anchor_trajectory_ids];
+        }
+        else
+        {
+            recomPosition = getMidddle(currentFixed.point, nextFixed.point);
+        }
+
 
         
         List<AnchorRecom> anchor_recoms = new List<AnchorRecom>();
@@ -279,10 +287,20 @@ public class Recommendation : MonoBehaviour
 
         Anchor currentFixed = stories[index];
         Anchor nextFixed = stories[index + 1];
-        List<double> boundingBox = getBoundingBox(currentFixed.point, nextFixed.point);
-        List<double> recomPosition = getMidddle(currentFixed.point, nextFixed.point);
-
         String anchor_trajectory_ids = currentFixed.id.ToString() + "-" + nextFixed.id.ToString();
+
+        List<double> boundingBox = getBoundingBox(currentFixed.point, nextFixed.point);
+        List<double> recomPosition = new List<double>();
+        if (midpoints.ContainsKey(anchor_trajectory_ids))
+        {
+            recomPosition = midpoints[anchor_trajectory_ids];
+        }
+        else
+        {
+            recomPosition = getMidddle(currentFixed.point, nextFixed.point);
+        }
+
+
         List<AnchorRecom> anchor_recoms = new List<AnchorRecom>();
 
         int recomIndex = -1;
@@ -367,7 +385,15 @@ public class Recommendation : MonoBehaviour
 
         List<double> boundingBox = getBoundingBox(currentFixed.point, nextFixed.point);
         //List<double> recomPosition = getMidddle(currentFixed.point, nextFixed.point);
-        List<double> recomPosition = getMidddle(currentFixed.point, nextFixed.point);
+        List<double> recomPosition = new List<double>();
+        if (midpoints.ContainsKey(anchor_trajectory_ids))
+        {
+            recomPosition = midpoints[anchor_trajectory_ids];
+        }
+        else
+        {
+            recomPosition = getMidddle(currentFixed.point, nextFixed.point);
+        }
 
         int recomIndex = -1;
         double recomScore = -1;
@@ -447,10 +473,20 @@ public class Recommendation : MonoBehaviour
 
         Anchor currentFixed = stories[index];
         Anchor nextFixed = stories[index + 1];
-        List<double> boundingBox = getBoundingBox(currentFixed.point, nextFixed.point);
-        List<double> recomPosition = getMidddle(currentFixed.point, nextFixed.point);
-
         String anchor_trajectory_ids = currentFixed.id.ToString() + "-" + nextFixed.id.ToString();
+
+        List<double> boundingBox = getBoundingBox(currentFixed.point, nextFixed.point);
+        List<double> recomPosition = new List<double>();
+        if (midpoints.ContainsKey(anchor_trajectory_ids))
+        {
+           recomPosition = midpoints[anchor_trajectory_ids];
+        }
+        else
+        {
+            recomPosition = getMidddle(currentFixed.point, nextFixed.point);
+        }
+
+       
         List<AnchorRecom> anchor_recoms = new List<AnchorRecom>();
 
         int recomIndex = -1;
@@ -549,10 +585,19 @@ public class Recommendation : MonoBehaviour
 
         Anchor currentFixed = stories[index];
         Anchor nextFixed = stories[index + 1];
-        List<double> boundingBox = getBoundingBox(currentFixed.point, nextFixed.point);
-        List<double> recomPosition = getMidddle(currentFixed.point, nextFixed.point);
-
         String anchor_trajectory_ids = currentFixed.id.ToString() + "-" + nextFixed.id.ToString();
+        List<double> boundingBox = getBoundingBox(currentFixed.point, nextFixed.point);
+        List<double> recomPosition = new List<double>();
+        if (midpoints.ContainsKey(anchor_trajectory_ids))
+        {
+            recomPosition = midpoints[anchor_trajectory_ids];
+        }
+        else
+        {
+            recomPosition = getMidddle(currentFixed.point, nextFixed.point);
+        }
+
+
         List<AnchorRecom> anchor_recoms = new List<AnchorRecom>();
 
         int recomIndex = -1;
