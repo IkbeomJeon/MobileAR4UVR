@@ -12,7 +12,7 @@ public class PreviewCard : BaseCard
 {
     public DateTime start;
 
-    private int userLiked = 0;
+    private int userLiked = 1;
     public Text likeNumber;
     public Image likeImage;
     public Button likeButton;

@@ -99,9 +99,9 @@ namespace KCTM
                 }
 
 
-                turningWeight = getTurningWeight(fixedARScene, recomARScenes);
+                //turningWeight = getTurningWeight(fixedARScene, recomARScenes);
 
-                behaviouFactor = (standingWeight + movingWeight + turningWeight) / 3;
+                behaviouFactor = (standingWeight + movingWeight) / 2;
 
             }
 

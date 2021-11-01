@@ -82,7 +82,12 @@ public class Recommendation : MonoBehaviour
         //    return;
         //}
 
-        Debug.Log("Recommendation size " + recomList.Count);
+        //Debug.Log("Recommendation size " + recomList.Count);
+
+        if (isTrajectoryContent(visitedContent, stories))
+        {
+            return;
+        }
 
         int insertedIndex = checkAlreadyVisited(visitedContent);
         if (insertedIndex == -1)
@@ -112,11 +117,6 @@ public class Recommendation : MonoBehaviour
             Debug.Log("It was already visited");
 
         }
-
-        if (latestVisistedContents.Count > 2)
-        {
-            Debug.Log("Size is two");
-        }
     }
 
     private int checkAlreadyVisited(VisitedContent visitedContent)
@@ -135,6 +135,21 @@ public class Recommendation : MonoBehaviour
         return visitedIndex;
     }
 
+    private bool isTrajectoryContent(VisitedContent visitedContent, List<Anchor> stories)
+    {
+        bool isTrajCon = false;
+
+        for (int i = 0; i < stories.Count; i++)
+        {
+            if (stories[i].id == visitedContent.anchor.id)
+            {
+                isTrajCon = true;
+                break;
+            }
+        }
+        return isTrajCon;
+    }
+    
     private void checkVisitedContent(int insertedIndex, VisitedContent visitedContent)
     {
         double totalTime = latestVisistedContents[insertedIndex].userVisitedTime + visitedContent.userVisitedTime;
@@ -161,10 +176,10 @@ public class Recommendation : MonoBehaviour
                 realTimeRecommendation();
                 break;
             case 2:
-                historyRateRecommendation();
+                historyRecommendation();
                 break;
             case 3:
-                hybridRateRecommendation();
+                hybridRecommendation();
                 break;
         }
 
@@ -203,8 +218,6 @@ public class Recommendation : MonoBehaviour
         {
             recomPosition = getMidddle(currentFixed.point, nextFixed.point);
         }
-
-
         
         List<AnchorRecom> anchor_recoms = new List<AnchorRecom>();
 
@@ -249,6 +262,7 @@ public class Recommendation : MonoBehaviour
                 anchorRecom.weight = score;
 
                 anchor_recoms.Add(anchorRecom);
+                Debug.Log(arScene.id.ToString() + " " + getTagsString(arScene));
             }
         }
 
@@ -265,6 +279,18 @@ public class Recommendation : MonoBehaviour
         {
             setRecommendation(ars, recomIndex, recomPosition);
         }
+    }
+
+    private string getTagsString(Anchor anchor) 
+    {
+        string tagString = "";
+        for (int j = 0; j < anchor.tags.Count; j++)
+        {
+            tagString += anchor.tags[j].tag + ";";
+        
+        }
+
+        return tagString;
     }
 
     private void historyRecommendation()
@@ -774,7 +800,7 @@ public class Recommendation : MonoBehaviour
 
     private List<double> getBoundingBox(Point point1, Point point2)
     {
-        double r = (1 * 0.1) /111.2;
+        double r = (1.3 * 0.1) /111.2;
         //doublr r = (5 * 0.1) / 6378.1;
 
         List<double> boundingBox = new List<double>();
@@ -892,7 +918,7 @@ public class Recommendation : MonoBehaviour
 
         return result;
     }
-
+   
     private void getStoryPlaceTags()
     {
         storyPlaceTags = new List<string>();
