@@ -43,10 +43,10 @@ namespace KCTM
             private double turningWeight = 0.0;
 
             
-            public double calFactors(Anchor fixedARScene, List<Anchor> recomARScenes)
+            public double calFactors(List<String> storyPlaceTags)
             {
                 calInteractionFactors();
-                calBehaviorFactor(fixedARScene, recomARScenes);
+                calBehaviorFactor(storyPlaceTags);
 
                 finalFactor =  behaviouFactor + interactionFactor;
                 return finalFactor;
@@ -105,6 +105,33 @@ namespace KCTM
 
             }
 
+            public void calBehaviorFactor(List<String> storyPlaceTags)
+            {
+                string anchorPlaceTage = "";
+                for (int i = 0; i < anchor.tags.Count; i++)
+                {
+                    if (anchor.tags[i].category == "PlaceTag")
+                    {
+                        anchorPlaceTage = anchor.tags[i].tag;
+                        break;
+                    }
+                }
+
+
+                if (storyPlaceTags.Contains(anchorPlaceTage))
+                {
+                    standingWeight = 0.7;
+                    movingWeight = 0.0;
+                }
+                else
+                {
+                    movingWeight = 1;
+                    standingWeight = 0.0;
+                }
+
+                behaviouFactor = (standingWeight + movingWeight) / 2;
+
+            }
 
             private double getStandingWeight(Anchor fixedARScene)
             {
@@ -121,7 +148,6 @@ namespace KCTM
 
                 return weight;
             }
-
 
             private double getMovingWeight(List<Anchor> recomARScenes)
             {
@@ -202,7 +228,6 @@ namespace KCTM
 
                 return isNeartoARScene;
             }
-
 
             private void closestPointToUser(List<Anchor> fixedARScenes, List<Anchor> recomARScenes)
             {
@@ -285,6 +310,7 @@ namespace KCTM
             {
                 string[] strArr = anchor.description.Split(" "[0]);
                 contentTime = strArr.Length * 0.3;
+                contentTime += 3;
             }
 
         }

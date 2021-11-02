@@ -1,9 +1,9 @@
 {
-    "m_SelectedDeviceId": "R39M30MH88B",
+    "m_SelectedDeviceId": "2808208910217ece",
     "m_SelectedPackage": {
-        "deviceId": "R39M30MH88B",
+        "deviceId": "2808208910217ece",
         "name": "com.ARRC.MobileAR4UVR",
-        "processId": 1720,
+        "processId": 24315,
         "exited": false
     },
     "m_SelectedPriority": 0,
@@ -30,6 +30,30 @@
             "deviceId": "R39M30MH88B",
             "name": "com.ARRC.MobileAR4UVR",
             "processId": 1720,
+            "exited": false
+        },
+        {
+            "deviceId": "2808208910217ece",
+            "name": "com.ARRC.MobileAR4UVR",
+            "processId": 5465,
+            "exited": false
+        },
+        {
+            "deviceId": "2808208910217ece",
+            "name": "com.ARRC.MobileAR4UVR",
+            "processId": 19252,
+            "exited": false
+        },
+        {
+            "deviceId": "2808208910217ece",
+            "name": "com.ARRC.MobileAR4UVR",
+            "processId": 22343,
+            "exited": false
+        },
+        {
+            "deviceId": "2808208910217ece",
+            "name": "com.ARRC.MobileAR4UVR",
+            "processId": 24315,
             "exited": false
         }
     ],

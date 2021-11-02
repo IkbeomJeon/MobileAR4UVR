@@ -27,6 +27,7 @@ public class Recommendation : MonoBehaviour
 
     public List<Anchor> anchorList;
     public List<Anchor> recomList;
+    private List<int> allRecomIndexes;
 
     private List<VisitedContent> latestVisistedContents;
     private List<VisitedContent> allVisistedContents;
@@ -45,13 +46,15 @@ public class Recommendation : MonoBehaviour
     void Start()
     {
         maxUserFactor = 0.0;
-        recommendationType = 1;
+        recommendationType = 3;
         Dictionary<long, Anchor> userHistoryAnchor = new Dictionary<long, Anchor>();
         
         //postRequest = new PostRequest();
         latestVisistedContents = new List<VisitedContent>();
         allVisistedContents = new List<VisitedContent>();
-        
+        allRecomIndexes = new List<int>();
+
+
         getAnchorTokens();
         Debug.Log("My Recommendation --- Maryam");
 
@@ -101,7 +104,7 @@ public class Recommendation : MonoBehaviour
             //visitedContent.calInteractionFactors();
             //visitedContent.calBehaviorFactor(stories[index], recomList);
 
-            double weight = visitedContent.calFactors(stories[index], recomList);
+            double weight = visitedContent.calFactors(storyPlaceTags);
 
             if(weight > maxUserFactor)
             {
@@ -117,7 +120,7 @@ public class Recommendation : MonoBehaviour
             Debug.Log("It was already visited");
 
         }
-    }
+    } 
 
     private int checkAlreadyVisited(VisitedContent visitedContent)
     {
@@ -167,8 +170,6 @@ public class Recommendation : MonoBehaviour
 
     public void additionalRecommendation()
     {
-
-        getStoryPlaceTags();
 
         switch (recommendationType)
         {
@@ -220,7 +221,8 @@ public class Recommendation : MonoBehaviour
         }
         
         List<AnchorRecom> anchor_recoms = new List<AnchorRecom>();
-
+        Dictionary<int, double> scoreDictionary = new Dictionary<int, double>();
+        
         int recomIndex = -1;
         double recomScore = -1;
 
@@ -260,9 +262,11 @@ public class Recommendation : MonoBehaviour
                 AnchorRecom anchorRecom = new AnchorRecom();
                 anchorRecom.anchor_id = arScene.id;
                 anchorRecom.weight = score;
-
                 anchor_recoms.Add(anchorRecom);
-                Debug.Log(arScene.id.ToString() + " " + getTagsString(arScene));
+
+                scoreDictionary[i] = score;
+
+                Debug.Log(i.ToString() + " " + arScene.id.ToString() + " " + getTagsString(arScene));
             }
         }
 
@@ -275,10 +279,34 @@ public class Recommendation : MonoBehaviour
 
         StartCoroutine(StoreTransition(transition));
 
-        if (recomIndex != -1)
+        if (scoreDictionary.Count != 0)
         {
-            setRecommendation(ars, recomIndex, recomPosition);
+            List<int> recommended = getBestRecommended(scoreDictionary);
+            setRecommendation(ars, recommended, recomPosition);
         }
+    }
+
+    private List<int> getBestRecommended(Dictionary<int, double> scoreDictionary)
+    {
+         
+        List<int> recommendedIndexes = new List<int>();
+        Dictionary <int, double> sorted = scoreDictionary.OrderByDescending(x => x.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+        foreach (int key in sorted.Keys)
+        {
+            //Debug.Log(key + " " + sorted[key]);
+            if (!allRecomIndexes.Contains(key))
+            {
+                recommendedIndexes.Add(key);
+                allRecomIndexes.Add(key);
+            }
+            
+            if(recommendedIndexes.Count == 3)
+            {
+                break;
+            }
+        }
+
+        return recommendedIndexes;
     }
 
     private string getTagsString(Anchor anchor) 
@@ -328,6 +356,7 @@ public class Recommendation : MonoBehaviour
 
 
         List<AnchorRecom> anchor_recoms = new List<AnchorRecom>();
+        Dictionary<int, double> scoreDictionary = new Dictionary<int, double>();
 
         int recomIndex = -1;
         double recomScore = -1;
@@ -350,10 +379,16 @@ public class Recommendation : MonoBehaviour
                     sumScores += s;
                 }
 
+                for (int j = 0; j < allVisistedContents.Count; j++)
+                {
+                    double s = getSimilarity(arScene, allVisistedContents[j].anchor);
+                    sumScores += s;
+                }
+
                 double score = 0.0;
                 if (sumScores != 0)
                 {
-                    score = sumScores / userhistory.Count;
+                    score = sumScores / (userhistory.Count + allVisistedContents.Count);
                 }
 
                 if (score > recomScore)
@@ -367,6 +402,8 @@ public class Recommendation : MonoBehaviour
                 anchorRecom.weight = score;
 
                 anchor_recoms.Add(anchorRecom);
+
+                scoreDictionary[i] = score;
             }
         }
 
@@ -379,9 +416,10 @@ public class Recommendation : MonoBehaviour
 
         StartCoroutine(StoreTransition(transition));
 
-        if (recomIndex != -1)
+        if (scoreDictionary.Count != 0)
         {
-            setRecommendation(ars, recomIndex, recomPosition);
+            List<int> recommended = getBestRecommended(scoreDictionary);
+            setRecommendation(ars, recommended, recomPosition);
         }
     }
 
@@ -514,6 +552,7 @@ public class Recommendation : MonoBehaviour
 
        
         List<AnchorRecom> anchor_recoms = new List<AnchorRecom>();
+        Dictionary<int, double> scoreDictionary = new Dictionary<int, double>();
 
         int recomIndex = -1;
         double recomScore = -1;
@@ -531,7 +570,7 @@ public class Recommendation : MonoBehaviour
                 for (int j = 0; j < allVisistedContents.Count; j++)
                 {
                     double s = getSimilarity(arScene, allVisistedContents[j].anchor);
-                    sumBehaviorScores += (s * (allVisistedContents[j].behaviouFactor + allVisistedContents[j].interactionFactor));
+                    sumBehaviorScores += (s * (allVisistedContents[j].getNormalizedWeight(maxUserFactor)));
                     sumBehaviorSimilarities += s;
 
                     Debug.Log("Maryam Similarity: " + s);
@@ -572,6 +611,8 @@ public class Recommendation : MonoBehaviour
                 anchorRecom.weight = finalScore;
 
                 anchor_recoms.Add(anchorRecom);
+
+                scoreDictionary[i] = finalScore;
             }
         }
 
@@ -584,9 +625,10 @@ public class Recommendation : MonoBehaviour
 
         StartCoroutine(StoreTransition(transition));
 
-        if (recomIndex != -1)
+        if (scoreDictionary.Count != 0)
         {
-            setRecommendation(ars, recomIndex, recomPosition);
+            List<int> recommended = getBestRecommended(scoreDictionary);
+            setRecommendation(ars, recommended, recomPosition);
         }
     }
 
@@ -704,8 +746,7 @@ public class Recommendation : MonoBehaviour
 
     public void calMidPoints(List<Anchor> stories, List<WayPoint> waypoints)
     {
-        //List<Anchor> stories = navOptions.GetComponent<MapManager>().stories;
-        //List<WayPoint> waypoints = navOptions.GetComponent<MapManager>().waypoints;
+        getStoryPlaceTags();
 
         List<Segment> segments = new List<Segment>();
         List<string> anchorIds = new List<string>();
@@ -800,7 +841,7 @@ public class Recommendation : MonoBehaviour
 
     private List<double> getBoundingBox(Point point1, Point point2)
     {
-        double r = (1.3 * 0.1) /111.2;
+        double r = (1.5 * 0.1) /111.2;
         //doublr r = (5 * 0.1) / 6378.1;
 
         List<double> boundingBox = new List<double>();
@@ -909,7 +950,6 @@ public class Recommendation : MonoBehaviour
             }
         }
 
-        
 
         if(storyPlaceTags.Contains(arsceTag))
         {
@@ -1094,6 +1134,35 @@ public class Recommendation : MonoBehaviour
             //script2.updateIcon();
             recomList.Add(script.anchor);
         }
+
+        latestVisistedContents.Clear();
+    }
+
+    private void setRecommendation(GameObject ars, List<int> recommendedIndexes, List<double> recomPosition)
+    {
+        double distance = 0.0009 / 111.2;
+        List<List<double>> positions = new List<List<double>>();
+        double latitude = recomPosition[0];
+        double longitude = recomPosition[1];
+
+        positions.Add(recomPosition);
+        positions.Add(new List<double>{latitude + distance, longitude + distance }) ;
+        positions.Add(new List<double> {latitude - distance, longitude - distance});
+
+        for (int i = 0; i < recommendedIndexes.Count; i++) 
+        {
+            GameObject ar = ars.transform.GetChild(recommendedIndexes[i]).gameObject;
+            var script = ar.GetComponent<IconManager>();
+
+            if (script != null)
+            {
+                createRecomObject(script.anchor, positions[i]);
+                //script2.updateIcon();
+                recomList.Add(script.anchor);
+            }
+
+        }
+
 
         latestVisistedContents.Clear();
     }
