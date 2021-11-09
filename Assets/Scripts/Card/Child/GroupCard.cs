@@ -136,12 +136,12 @@ public class GroupCard : NormalCard
     public void OnStartNavigation()
     {
         //메뉴매니저에 UI변경
-        uiManager.GetComponent<UIManager>().ChangeSearchPanelState(false);
-        uiManager.GetComponent<UIManager>().ChangeMapPanelState(true);
-        uiManager.GetComponent<UIManager>().ChangeARButtonState(true);
+        panelManager.GetComponent<PanelManager>().ChangeSearchPanelState(false);
+        panelManager.GetComponent<PanelManager>().ChangeMapPanelState(true);
+        panelManager.GetComponent<PanelManager>().ChangeARButtonState(true);
 
-        //uiManager.GetComponent<UIManager>().StartNavigation(anchor_posList);
-        //uiManager.SendMessage("StartNavigation", anchor_posList);
+        //panelManager.GetComponent<PanelManager>().StartNavigation(anchor_posList);
+        //panelManager.SendMessage("StartNavigation", anchor_posList);
         //네비게이션 생성
 
         mapManager.GetComponent<MapManager>().ActivateMap();

@@ -46,8 +46,8 @@ public class PreviewCard : BaseCard
     }
     public virtual void OnDetail()
     {
-        uiManager.GetComponent<UIManager>().ShowContentPanel(this); 
-        gameObject.SetActive(false);
+        panelManager.GetComponent<PanelManager>().ShowContentPanel(this); 
+        //gameObject.SetActive(false);
     }
     public virtual void OnNext()
     {

@@ -97,8 +97,8 @@ public class ImageCard_Preview_Maryam : PreviewCard
     }
     public override void OnDetail()
     {
-        //Recommendation ( addToVisitedContent() is called in UIManager/CloseContentPanel() )
-        uiManager.GetComponent<UIManager>().ShowContentPanel(this);
+        //Recommendation ( addToVisitedContent() is called in PanelManager/CloseContentPanel() )
+        panelManager.GetComponent<PanelManager>().ShowContentPanel(this);
         gameObject.SetActive(false);
     }
     public override void OnNext()

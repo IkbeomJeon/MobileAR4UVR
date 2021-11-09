@@ -56,6 +56,6 @@ public class ImageCard : NormalCard
 
     public void EnterFullScreen(Image image, float scale)
     {
-        uiManager.GetComponent<UIManager>().ShowFullScreenPanel(image, scale);
+        panelManager.GetComponent<PanelManager>().ShowFullScreenPanel(image, scale);
     }
 }

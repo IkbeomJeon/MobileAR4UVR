@@ -12,7 +12,7 @@ public class BaseCard : MonoBehaviour
 
     public Anchor anchor;
     public GameObject loader;
-    public GameObject uiManager;
+    public GameObject panelManager;
     public GameObject mapManager;
 
     public GameObject cardContent;
@@ -24,7 +24,7 @@ public class BaseCard : MonoBehaviour
         this.anchor = anchor;
         cardContent = GameObject.Find("CardContent");
         loader = GameObject.Find("Loader");
-        uiManager = GameObject.Find("UI");
+        panelManager = GameObject.Find("Panels");
         mapManager = GameObject.Find("MapManager");
 
         title = transform.Find(parentName+"Title").GetComponent<Text>();

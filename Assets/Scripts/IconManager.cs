@@ -17,7 +17,6 @@ public class IconManager : MonoBehaviour
 
     public bool isSpacetelling;
     public int index_spacetelling;
-    
 
     private void OnEnable()
     {
@@ -42,7 +41,6 @@ public class IconManager : MonoBehaviour
     public void Init(Anchor anchor, string category, Transform cameraTransform, bool spacetelling = false, int index_poi = 0)
     {
         buttonImage = transform.Find("Canvas/Button").GetComponent<Image>();
-
         ///// set position
         double lon = anchor.point.longitude;
         double lat = anchor.point.latitude;
@@ -79,16 +77,18 @@ public class IconManager : MonoBehaviour
 
     public void OnButtonClick()
     {
+        Transform uiParent = GameObject.Find("UI").transform;
+
         GameObject previewCard;
         switch (anchor.contentinfos[0].content.mediatype)
         {
             case "IMAGE":
-                previewCard = Instantiate(ResourceLoader.Instance.card_Image_preview);
+                previewCard = Instantiate(ResourceLoader.Instance.card_Image_preview, uiParent);
                 previewCard.AddComponent<ImageCard_Preview>().Init(anchor, isSpacetelling, index_spacetelling);
                 break;
 
             case "VIDEO":
-                previewCard = Instantiate(ResourceLoader.Instance.card_Video_preview);
+                previewCard = Instantiate(ResourceLoader.Instance.card_Video_preview, uiParent);
                 previewCard.AddComponent<VideoCard_Preview>().Init(anchor, isSpacetelling, index_spacetelling);
                 break;
         }

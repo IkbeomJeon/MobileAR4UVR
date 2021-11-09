@@ -8,7 +8,7 @@ using UnityEngine.UI;
 using UnityEngine.Video;
 
 public enum PanelType { search, map };
-public class UIManager : MonoBehaviour
+public class PanelManager : MonoBehaviour
 {
     // Start is called before the first frame update
     //public GameObject menu;
@@ -116,7 +116,7 @@ public class UIManager : MonoBehaviour
             case "VIDEO":
             default:
                 newCard = Instantiate(ResourceLoader.Instance.card_Video, cardParent);
-                newCard.AddComponent<VideoCard>().Init(previewCard.anchor, "", false);
+                newCard.AddComponent<VideoCard>().Init(previewCard.anchor, "", false, previewCard);
                 break;
         }
         
@@ -132,7 +132,7 @@ public class UIManager : MonoBehaviour
 
         //Recommendation
         //previewCard.addToVisitedContent();
-        DestroyImmediate(previewCard.gameObject);
+        //DestroyImmediate(previewCard.gameObject);
         contentPanel.SetActive(false);
         
     }
