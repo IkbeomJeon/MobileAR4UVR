@@ -9,8 +9,6 @@ using UnityEngine.UI;
 
 public class LoadARScenes : MonoBehaviour
 {
-    public float default_height = 1.5f;
-
     // For debuggin login. Set true for login using debug email/password 
     public bool autoLogin = false;
     // Debug login info
@@ -42,9 +40,12 @@ public class LoadARScenes : MonoBehaviour
 
         else
         {
+            email = PlayerPrefs.GetString("email");
+            password = PlayerPrefs.GetString("password");
             Debug.Log("Email: " + PlayerPrefs.GetString("email"));
             Debug.Log("password: " + PlayerPrefs.GetString("password"));
         }
+      
     }
 
     // Update is called once per frame
@@ -58,6 +59,9 @@ public class LoadARScenes : MonoBehaviour
         arScenesParent_poi = GameObject.Find("ARSceneParent_Target").transform;
         recommendedParent = GameObject.Find("RecommendedParent").transform;
 
+        arScenesParent.localPosition = new Vector3(0, ConfigurationManager.Instance.height_anchors, 0);
+        arScenesParent_poi.localPosition = new Vector3(0, ConfigurationManager.Instance.height_anchors, 0);
+        recommendedParent.localPosition = new Vector3(0, ConfigurationManager.Instance.height_anchors, 0);
 
         uri = ServerURL.Instance.uri;
         
@@ -138,7 +142,7 @@ public class LoadARScenes : MonoBehaviour
         recom.GetComponent<Recommendation>().anchorList = campustour_anchors.ToList();
         recom.GetComponent<Recommendation>().loadUserHistory();
 
-        StartCoroutine(CreateAnchorIcon(campustour_anchors.ToList(), false));
+        StartCoroutine(CreateAnchorIcon_Mariam(campustour_anchors.ToList(), false));
     }
 
     public void GetARSceneResultList_Recommendation(Result result)
@@ -148,31 +152,102 @@ public class LoadARScenes : MonoBehaviour
         //recommendation anchors.
         var recommendation_anchors = anchorList.Where(_anchors => (_anchors.tags.Exists(tags => tags.tag == "recommendation") && _anchors.contentinfos.Count != 0));
 
-        StartCoroutine(CreateAnchorIcon(recommendation_anchors.ToList(), true));
+        StartCoroutine(CreateAnchorIcon_Mariam(recommendation_anchors.ToList(), true));
     }
     public void GetARSceneResultList_DramaKAIST(Result result)
     {
         var anchorList = JsonConvert.DeserializeObject<List<Anchor>>(result.result.ToString());
-        var target_anchors = anchorList.Where(e => (e.tags.Exists(e2 => e2.tag == "DramaKAIST") && e.contentinfos.Count != 0));
+        var media_anchor = anchorList.Where(e => (e.contentinfos[0].content.mediatype == "IMAGE" || e.contentinfos[0].content.mediatype == "VIDEO"));
+        var target_anchors = media_anchor.Where(e => (e.tags.Exists(e2 => e2.tag == "DramaKAIST") && e.contentinfos.Count != 0));
  
-        StartCoroutine(CreateAnchorIcon(target_anchors.ToList(), false));
+        StartCoroutine(CreateAnchorIcon_Hyerim(target_anchors.ToList()));
     }
-
-    public IEnumerator CreateAnchorIcon(List<Anchor> anchors, bool isRecommended)
+    public IEnumerator CreateAnchorIcon_Hyerim(List<Anchor> anchors)
     {
 
         foreach (Anchor anchor in anchors)
         {
-            //string mediaType = anchor.contentinfos[0].content.mediatype; //must be "IMAGE"
-            string category = anchor.tags.Where(t1 => t1.category == "InterestTag").Select(t2=>t2.tag).ToArray()[0];
+            string mediaType = anchor.contentinfos[0].content.mediatype; //must be "IMAGE" or "VIDEO"
+            GameObject newIcon = Instantiate(ResourceLoader.Instance.icon, Vector3.zero, Quaternion.identity, arScenesParent);
+            var script = newIcon.AddComponent<IconManager_Heyrim>();
+            script.Init(anchor, mediaType, cameraTransform);
+            newIcon.SetActive(false);
 
+            yield return null;
+        }
+        Debug.Log("Icon Creation Done.");
+    }
+    public IEnumerator CreateAnchorIcon_Mariam(List<Anchor> anchors, bool isRecommended)
+    {
+
+        foreach (Anchor anchor in anchors)
+        {
+
+            //string mediaType = anchor.contentinfos[0].content.mediatype; //must be "IMAGE"
+            string category = anchor.tags.Where(t1 => t1.category == "InterestTag").Select(t2 => t2.tag).ToArray()[0];
             GameObject newIcon = Instantiate(ResourceLoader.Instance.icon, Vector3.zero, Quaternion.identity, arScenesParent);
             var script = newIcon.AddComponent<IconManager_Maryam>();
-            script.Init(anchor, category, cameraTransform, default_height);
+            script.Init(anchor, category, cameraTransform, isRecommended);
             newIcon.SetActive(false);
           
             yield return null;
-            
+
+
+        //    if (isRecommended)
+        //    {
+        //        Debug.Log("recommendation anchor count : " + anchors.Count.ToString());
+        //        GameObject newIcon = Instantiate(ResourceLoader.Instance.icon_recommendation, Vector3.zero, Quaternion.identity, recommendedParent);
+        //        var script = newIcon.GetComponent<IconManager>();
+        //        script.Init(anchor, "recommendation", cameraTransform);
+        //    }
+
+        //    else
+        //    {
+        //        string mediaType = anchor.contentinfos[0].content.mediatype;
+        //        string category = anchor.tags.Where(t1 => t1.category == "InterestTag").Select(t2 => t2.tag).ToArray()[0];
+
+        //        if (mediaType == "IMAGE")
+        //        {
+        //            GameObject newIcon;
+        //            switch (category)
+        //            {
+        //                case "Admission":
+        //                    newIcon = Instantiate(ResourceLoader.Instance.icon_admission, Vector3.zero, Quaternion.identity, arScenesParent);
+        //                    break;
+        //                case "Research":
+        //                    newIcon = Instantiate(ResourceLoader.Instance.icon_research, Vector3.zero, Quaternion.identity, arScenesParent);
+        //                    break;
+        //                case "Campus life":
+        //                    newIcon = Instantiate(ResourceLoader.Instance.icon_campusLife, Vector3.zero, Quaternion.identity, arScenesParent);
+        //                    break;
+        //                case "News":
+        //                    newIcon = Instantiate(ResourceLoader.Instance.icon_news, Vector3.zero, Quaternion.identity, arScenesParent);
+        //                    break;
+        //                case "Education":
+        //                case " Education":
+        //                    newIcon = Instantiate(ResourceLoader.Instance.icon_education, Vector3.zero, Quaternion.identity, arScenesParent);
+        //                    break;
+        //                default:
+        //                    newIcon = Instantiate(ResourceLoader.Instance.icon_about, Vector3.zero, Quaternion.identity, arScenesParent);
+        //                    break;
+        //            }
+        //            var script = newIcon.GetComponent<IconManager>();
+        //            script.Init(anchor, category, cameraTransform);
+        //            newIcon.SetActive(false);
+        //        }
+        //        else if (mediaType == "VIDEO")
+        //        {
+        //            GameObject newIcon = Instantiate(ResourceLoader.Instance.icon_video, Vector3.zero, Quaternion.identity, arScenesParent);
+        //            var script = newIcon.GetComponent<IconManager>();
+        //            script.Init(anchor, null, cameraTransform);
+        //            newIcon.SetActive(false);
+        //        }
+        //        else
+        //        {
+        //            Debug.LogError("WWW");
+        //        }
+        //        yield return null;
+        //    }
         }
         Debug.Log("Icon Creation Done.");
        
@@ -222,7 +297,7 @@ public class LoadARScenes : MonoBehaviour
                 LoadARIcons_Campustour();
             }
             //Hyerim's icons.
-            else if (inputfield.text == "드라마 카이스트")
+            else if (inputfield.text == "드라마투어")
             {
                 LoadARIcons_DramaKAIST();
             }
@@ -264,7 +339,7 @@ public class LoadARScenes : MonoBehaviour
         var anchor = JsonConvert.DeserializeObject<Anchor>(result.result.ToString(), new AnchorConverter(true));
 
         var card = Instantiate(ResourceLoader.Instance.card_Group, cardContentParent);
-        var script = card.GetComponent<GroupCard>();
+        var script = card.AddComponent<GroupCard>();
         script.Init(anchor, true);
     }
 
@@ -281,6 +356,10 @@ public class LoadARScenes : MonoBehaviour
                 //card.GetComponent<ImageCardNavPrefab>().searchPanel = searchPanel;
                 //var script = card.GetComponent<ImageCard>();
                 //script.Init(anchor);
+                break;
+            case "VIDEO":
+            default:
+                card = Instantiate(ResourceLoader.Instance.card_Video, cardContentParent);
                 break;
         }
       

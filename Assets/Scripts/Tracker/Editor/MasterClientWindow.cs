@@ -228,7 +228,7 @@ public class MasterClientWindow : EditorWindow
                         world = new GameObject("Real World");
 
                     go = Instantiate(Resources.Load("MasterClient/Tracker Client") as GameObject);
-                    go.transform.parent = world.transform;
+                    //go.transform.parent = world.transform;
                     go.name = go.name + "_" + item.Key;
                     dicConnectedClientsGO.Add(item.Key, go);
                 }

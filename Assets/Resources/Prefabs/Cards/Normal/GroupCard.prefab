@@ -279,9 +279,9 @@ RectTransform:
   m_Father: {fileID: 1074954999353177781}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 296, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 296, y: -184}
   m_SizeDelta: {x: 512, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &2861309450184190239
@@ -610,9 +610,9 @@ RectTransform:
   m_Father: {fileID: 2386188029490120784}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 296, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 296, y: -329}
   m_SizeDelta: {x: 592, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1820089690896852824
@@ -1084,7 +1084,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7173876315011545495}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: GroupCard, Assembly-CSharp
         m_MethodName: OnStartNavigation
         m_Mode: 1
@@ -1218,7 +1218,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7173876315011545495}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: GroupCard, Assembly-CSharp
         m_MethodName: OnMore
         m_Mode: 1
@@ -1516,7 +1516,6 @@ GameObject:
   - component: {fileID: 3039363676961260337}
   - component: {fileID: 5155501773275305639}
   - component: {fileID: 8141934701482486284}
-  - component: {fileID: 7173876315011545495}
   m_Layer: 0
   m_Name: GroupCard
   m_TagString: Untagged
@@ -1593,49 +1592,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &7173876315011545495
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5060977837453451803}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7de173a0fa578ba4789d1d84f4027927, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  title: {fileID: 0}
-  author: {fileID: 0}
-  upload: {fileID: 0}
-  anchor:
-    id: 0
-    uploadedtime: 0
-    updatedtime: 0
-    sharingtype: 
-    description: 
-    title: 
-    enablelike: 0
-    enablecomment: 0
-    linkedAnchors: []
-    contentinfos: []
-    contenttype: 
-    contentdepth: 
-    age: 0
-    experiencetime: 0
-    season: 0
-    weather: 0
-    prefertime: 0
-    companion: 0
-    status: new
-  loader: {fileID: 0}
-  uiManager: {fileID: 0}
-  mapManager: {fileID: 0}
-  cardContent: {fileID: 0}
-  tagParent: {fileID: 0}
-  description: {fileID: 0}
-  moreButtonImage: {fileID: 0}
-  timeToExp: {fileID: 0}
 --- !u!1 &5395611913483825616
 GameObject:
   m_ObjectHideFlags: 0
@@ -1979,9 +1935,9 @@ RectTransform:
   m_Father: {fileID: 1074954999353177781}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 40, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 40, y: -52}
   m_SizeDelta: {x: 0, y: 64}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &6708067780625778479
@@ -2078,9 +2034,9 @@ RectTransform:
   m_Father: {fileID: 2386188029490120784}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 296, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 296, y: -159.5}
   m_SizeDelta: {x: 592, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6988752813923543509

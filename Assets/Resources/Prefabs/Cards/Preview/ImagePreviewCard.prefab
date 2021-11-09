@@ -120,7 +120,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4164425296515666359}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PreviewCard, Assembly-CSharp
         m_MethodName: OnClose
         m_Mode: 1
@@ -331,7 +331,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4164425296515666359}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PreviewCard, Assembly-CSharp
         m_MethodName: OnLike
         m_Mode: 1
@@ -791,7 +791,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4164425296515666359}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PreviewCard, Assembly-CSharp
         m_MethodName: OnMore
         m_Mode: 1
@@ -897,7 +897,6 @@ GameObject:
   - component: {fileID: 8739457087167288516}
   - component: {fileID: 4527851718601870086}
   - component: {fileID: 6009891176038519697}
-  - component: {fileID: 4164425296515666359}
   m_Layer: 0
   m_Name: ImagePreviewCard
   m_TagString: Untagged
@@ -986,49 +985,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &4164425296515666359
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6616125648426118465}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2458b52fd28809249b33452363cebf0d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  title: {fileID: 0}
-  author: {fileID: 0}
-  upload: {fileID: 0}
-  anchor:
-    id: 0
-    uploadedtime: 0
-    updatedtime: 0
-    sharingtype: 
-    description: 
-    title: 
-    enablelike: 0
-    enablecomment: 0
-    linkedAnchors: []
-    contentinfos: []
-    contenttype: 
-    contentdepth: 
-    age: 0
-    experiencetime: 0
-    season: 0
-    weather: 0
-    prefertime: 0
-    companion: 0
-    status: new
-  loader: {fileID: 0}
-  uiManager: {fileID: 0}
-  mapManager: {fileID: 0}
-  cardContent: {fileID: 0}
-  likeNumber: {fileID: 0}
-  likeImage: {fileID: 0}
-  likeButton: {fileID: 0}
-  image: {fileID: 0}
 --- !u!1 &6955778885656103227
 GameObject:
   m_ObjectHideFlags: 0
@@ -1186,7 +1142,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4164425296515666359}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PreviewCard, Assembly-CSharp
         m_MethodName: OnNext
         m_Mode: 1

@@ -161,7 +161,7 @@ namespace KCTM
                     request.responseCode >= 400)
                 {
                     Debug.LogError(request.responseCode);
-                    failureHandler?.Invoke(ResponseToResult(request.downloadHandler.data));
+                    //failureHandler?.Invoke(ResponseToResult(request.downloadHandler.data));
                 }
                 else
                 {

@@ -187,6 +187,10 @@ public class IntroManager : MonoBehaviour
         data.Add("email", email);
         data.Add("password", password);
 
+        PlayerPrefs.SetString("email", email);
+        PlayerPrefs.SetString("password", password);
+        PlayerPrefs.Save();
+
         NetworkManager.Instance.Post("/user/signin", data, ResponseHandler, LoginCallback, LoginFailHandler);
 
     }
@@ -205,6 +209,10 @@ public class IntroManager : MonoBehaviour
         data.Add("email", eMail);
         data.Add("password", passWord);
 
+        PlayerPrefs.SetString("email", eMail);
+        PlayerPrefs.SetString("password", passWord);
+        PlayerPrefs.Save();
+
         NetworkManager.Instance.Post("/user/signin", data, ResponseHandler, LoginCallback, LoginFailHandler);
 
     }
@@ -221,10 +229,8 @@ public class IntroManager : MonoBehaviour
     {
         AccountInfo.Instance.user = JsonConvert.DeserializeObject<User>(result.result.ToString());
 
-        PlayerPrefs.SetString("email", email);
-        PlayerPrefs.SetString("password", password);
-
-        PlayerPrefs.Save();
+        //var email = PlayerPrefs.GetString("email");
+        //var password = PlayerPrefs.GetString("password");
 
         GetFriendList(AccountInfo.Instance.user.id);
 

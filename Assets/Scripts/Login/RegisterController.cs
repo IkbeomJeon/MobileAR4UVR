@@ -163,7 +163,7 @@ public class RegisterController : MonoBehaviour
 
     private void FailureHandler(Result result)
     {
-        //Debug.LogError(result.error + " : " + result.msg);
+        Debug.LogError(result.error + " : " + result.msg);
         errorPanel.SetActive(true);
         errorPanel.transform.Find("Text").gameObject.GetComponent<Text>().text = "Registration Failed. Please check your information.";
     }

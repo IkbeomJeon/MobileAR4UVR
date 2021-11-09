@@ -21,13 +21,7 @@ public class ImageCard_Preview : PreviewCard
         //Debug.Log(anchor.contentinfos[0].content.updatedtime);
     }
 
-    /*
-     * Function: SaveHistory
-     *
-     * Details:
-     * - Save clicked arscene id.
-     * - Not used since server keeps track of requests.
-     */
+
     /*
      * Function: GetARScene
      *
@@ -44,22 +38,7 @@ public class ImageCard_Preview : PreviewCard
         GetTexture(anchor.contentinfos[0].content.uri);
     }
 
-    private void SaveHistory()
-    {
-        List<History> history;
-        if (PlayerPrefs.HasKey("history"))
-        {
-            history = JsonConvert.DeserializeObject<List<History>>(PlayerPrefs.GetString("history"));
-        }
-        else
-        {
-            history = new List<History>();
-        }
-        history.Add(new History(anchor.id, anchor.contenttype, anchor.contentdepth));
-
-        PlayerPrefs.SetString("history", JsonConvert.SerializeObject(history));
-        PlayerPrefs.Save();
-    }
+  
     // Update is called once per frame
     void GetTexture(string uri)
     {

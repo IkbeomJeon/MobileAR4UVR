@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Video;
 
 public enum PanelType { search, map };
 public class UIManager : MonoBehaviour
@@ -14,8 +15,9 @@ public class UIManager : MonoBehaviour
     public GameObject capturePanel;
     public GameObject searchPanel;
     public GameObject mapPanel;
+    public GameObject configurationPanel;
     public GameObject contentPanel;
-
+    public GameObject FullscreenPanel;
     public GameObject navStopButton;
 
 
@@ -29,12 +31,22 @@ public class UIManager : MonoBehaviour
         mapPanel = transform.Find("MapPanel").gameObject;
         navStopButton = transform.Find("StopNavButton").gameObject;
         contentPanel = transform.Find("ContentPanel").gameObject;
+        configurationPanel = transform.Find("ConfigPanel").gameObject;
+        FullscreenPanel = transform.Find("FullscreenPanel").gameObject;
+
+        var button_fs = FullscreenPanel.transform.Find("Fullscreen").GetComponent<Button>();
+        button_fs.onClick.RemoveAllListeners();
+        button_fs.onClick.AddListener(delegate {
+            FullscreenPanel.SetActive(false);
+        });
 
         capturePanel.SetActive(false);
         searchPanel.SetActive(false);
         mapPanel.SetActive(false);
         navStopButton.SetActive(false);
         contentPanel.SetActive(false);
+        configurationPanel.SetActive(false);
+        FullscreenPanel.SetActive(false);
 
     }
  
@@ -56,6 +68,15 @@ public class UIManager : MonoBehaviour
             mapPanel.SetActive(true);
     }
 
+    public void SwitchConfigurationPanelState()
+    {
+        if (configurationPanel.activeSelf)
+            configurationPanel.SetActive(false);
+
+        else
+            configurationPanel.SetActive(true);
+    }
+
     public void ChangeSearchPanelState(bool flag)
     {
         searchPanel.SetActive(flag);
@@ -66,10 +87,12 @@ public class UIManager : MonoBehaviour
     }
     public void ShowContentPanel(PreviewCard previewCard)
     {
+        contentPanel.SetActive(true);
+
         //remove exsisting card.
         var cardParent = contentPanel.transform.Find("CardObject/Scroll View/Viewport/Card");
         foreach (Transform child in cardParent)
-            DestroyImmediate(child.gameObject);
+            Destroy(child.gameObject);
         
         //reset canvas and create card.
         contentPanel.transform.Find("Title").GetComponent<Text>().text = previewCard.anchor.contentinfos[0].content.mediatype;
@@ -80,46 +103,68 @@ public class UIManager : MonoBehaviour
             CloseContentPanel(previewCard);
         });
 
-        var newCard = Instantiate(ResourceLoader.Instance.card_Image, cardParent);
-        newCard.GetComponent<ImageCard>().Init(previewCard.anchor, "", false);
+        string type = previewCard.anchor.contentinfos[0].content.mediatype;
+        GameObject newCard;
 
-        contentPanel.SetActive(true);
+        switch (type)
+        {
+            case "IMAGE":
+                newCard = Instantiate(ResourceLoader.Instance.card_Image, cardParent);
+                newCard.AddComponent<ImageCard>().Init(previewCard.anchor, "", false);
+
+                break;
+            case "VIDEO":
+            default:
+                newCard = Instantiate(ResourceLoader.Instance.card_Video, cardParent);
+                newCard.AddComponent<VideoCard>().Init(previewCard.anchor, "", false);
+                break;
+        }
+        
+
+       
     }
 
     public void CloseContentPanel(PreviewCard previewCard)
     {
         var cardParent = contentPanel.transform.Find("CardObject/Scroll View/Viewport/Card");
         foreach (Transform child in cardParent)
-            DestroyImmediate(child.gameObject);
+            Destroy(child.gameObject);
 
         //Recommendation
-        previewCard.addToVisitedContent();
+        //previewCard.addToVisitedContent();
         DestroyImmediate(previewCard.gameObject);
         contentPanel.SetActive(false);
         
     }
+
+    public void ShowFullScreenPanel(Image image, float scale)
+    {
+        //pullScreenPanel.transform.
+
+        FullscreenPanel.SetActive(true); 
+
+         var button_img = FullscreenPanel.transform.Find("Main").gameObject;
+        button_img.GetComponent<AspectRatioFitter>().aspectRatio = scale;
+        button_img.GetComponent<RawImage>().texture = image.mainTexture;
+
+    }
+    public void ShowFullScreenPanel(VideoPlayer video)
+    {
+        //pullScreenPanel.transform.
+
+        FullscreenPanel.SetActive(true);
+
+        var button_img = FullscreenPanel.transform.Find("Main").gameObject;
+        button_img.GetComponent<AspectRatioFitter>().aspectRatio = (float)video.width/ video.height;
+        button_img.GetComponent<RawImage>().texture = video.targetTexture;
+
+
+
+    }
+
     public void ChangeARButtonState(bool flag)
     {
         navStopButton.SetActive(flag);
     }
     
-    //public void StartNavigation(List<Vector2d> waypoints)
-    //{
-    //    Debug.Log(waypoints.Count);
-    //    searchPanel.SetActive(false);
-    //    panelState[searchPanel] = false;
-
-    //    mapPanel.SetActive(true);
-    //    panelState[mapPanel] = true;
-
-    //    //foreach (var panel in panelState.Keys)
-    //    //{
-    //    //    panelState[panel] = false;
-    //    //    panel.SetActive(false);
-    //    //}
-
-    //    //turn on map panel;
-    //    //SwitchPanelState(mapPanel);
-    //    mapPanel.GetComponent<MapManager>().DrawNavigationRoute(waypoints);
-    //}
 }

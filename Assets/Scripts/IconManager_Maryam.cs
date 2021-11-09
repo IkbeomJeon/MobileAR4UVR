@@ -15,9 +15,9 @@ public class IconManager_Maryam : IconManager
     bool recommended;
     private int userLiked = 1;
    
-    public void Init(Anchor anchor, string type, Transform cameraTransform, float default_height = 0, bool spacetelling = false, int index_poi = 0, bool isRecommned=false)
+    public void Init(Anchor anchor, string type, Transform cameraTransform, bool spacetelling = false, int index_poi = 0, bool isRecommned=false)
     {
-        base.Init(anchor, type, cameraTransform, default_height, spacetelling, index_poi);
+        base.Init(anchor, type, cameraTransform, spacetelling, index_poi);
 
         Sprite sprite;
 
@@ -56,7 +56,11 @@ public class IconManager_Maryam : IconManager
         if (!string.IsNullOrEmpty(type)) //if it's null, it is poi anchor.
         {
             var tag_image = transform.Find("Canvas/Summary/Tag_Image").GetComponent<Image>();
-            tag_image.color = getTagColor(type);
+            if (isRecommned)
+                tag_image.color = getTagColor("Recommenation");
+            else
+                tag_image.color = getTagColor(type);
+
 
             var tag_text = transform.Find("Canvas/Summary/Tag_Image/Tag").GetComponent<TextMeshProUGUI>();
             tag_text.text = type;

@@ -1291,7 +1291,6 @@ GameObject:
   - component: {fileID: 4569382564839204783}
   - component: {fileID: 2105907233196808016}
   - component: {fileID: 6816477470682602755}
-  - component: {fileID: 7294609921841389809}
   m_Layer: 0
   m_Name: ImageCard
   m_TagString: Untagged
@@ -1402,48 +1401,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 0
   m_VerticalFit: 1
---- !u!114 &7294609921841389809
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6561588799227515429}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e7fe137fc7155346b1f0d87d7483a4c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  title: {fileID: 0}
-  author: {fileID: 0}
-  upload: {fileID: 0}
-  anchor:
-    id: 0
-    uploadedtime: 0
-    updatedtime: 0
-    sharingtype: 
-    description: 
-    title: 
-    enablelike: 0
-    enablecomment: 0
-    linkedAnchors: []
-    contentinfos: []
-    contenttype: 
-    contentdepth: 
-    age: 0
-    experiencetime: 0
-    season: 0
-    weather: 0
-    prefertime: 0
-    companion: 0
-    status: new
-  loader: {fileID: 0}
-  uiManager: {fileID: 0}
-  mapManager: {fileID: 0}
-  cardContent: {fileID: 0}
-  tagParent: {fileID: 0}
-  description: {fileID: 0}
-  image: {fileID: 0}
 --- !u!1 &6644432528222673763
 GameObject:
   m_ObjectHideFlags: 0

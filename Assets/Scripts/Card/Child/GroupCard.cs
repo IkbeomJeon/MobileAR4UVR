@@ -41,10 +41,25 @@ public class GroupCard : NormalCard
         if (goButton!=null)
         {
             goButton.gameObject.SetActive(false);
-            
-            if(showGoButton)
+
+          
+            goButton.gameObject.GetComponent<Button>().onClick.RemoveAllListeners();
+
+            goButton.gameObject.GetComponent<Button>().onClick.AddListener(delegate {
+                OnStartNavigation();
+            });
+
+            if (showGoButton)
                 goButton.gameObject.SetActive(true);
         }
+
+        Button more_button = transform.Find("Card/BottomInfo/MoreButton").gameObject.GetComponent<Button>();
+        more_button.onClick.RemoveAllListeners();
+        more_button.onClick.AddListener(delegate {
+            OnMore();
+        });
+
+
 
         moreButtonText = transform.Find("Card/BottomInfo/MoreButton/Text").gameObject.GetComponent<Text>();
         moreButtonImage = transform.Find("Card/BottomInfo/MoreButton/Image").gameObject.GetComponent<Image>();
@@ -53,8 +68,6 @@ public class GroupCard : NormalCard
 
         stepCard = transform.Find("StepCards").gameObject;
         GetStoryTelling(anchor);
-
-    
     }
  
     private void GetStoryTelling(Anchor anchor)
@@ -100,6 +113,11 @@ public class GroupCard : NormalCard
             moreFlag = true;
             moreButtonImage.sprite = ResourceLoader.Instance.moreUp;
             moreButtonText.text = "감추기";
+
+            foreach(Transform child in stepCard.transform)
+            {
+                child.gameObject.GetComponent<NormalCard>().DownloadContent();
+            }
         }
         else
         {
@@ -126,35 +144,41 @@ public class GroupCard : NormalCard
         //uiManager.SendMessage("StartNavigation", anchor_posList);
         //네비게이션 생성
 
-        mapManager.GetComponent<MapManager>().StartNavigation(anchor_posList, story);
         mapManager.GetComponent<MapManager>().ActivateMap();
+        mapManager.GetComponent<MapManager>().StartNavigation(anchor_posList, story);
+        
 
         
         //Create POI Icons.
         var parentTargetARScene = GameObject.Find("ARSceneParent_Target").transform;
-        foreach (Transform child in parentTargetARScene)
-            DestroyImmediate(child.gameObject);
 
-        for(int i=0; i<story.Count;i++)
+        foreach (Transform child in parentTargetARScene)
+            Destroy(child.gameObject);
+
+        for (int i=0; i<story.Count;i++)
         {
             var poi = Instantiate(ResourceLoader.Instance.icon_poi, parentTargetARScene);
-            poi.AddComponent<IconManager>().Init(story[i], "", GameObject.FindGameObjectWithTag("MainCamera").transform, 1.5f, true, i+1);
+            poi.GetComponent<IconManager>().Init(story[i], "", GameObject.FindGameObjectWithTag("MainCamera").transform, true, i+1);
         }
        
     }
    
     private void CreateSmallCardObject(Anchor anchor, int indexCount, int index)
     {
+        GameObject small_card;
         switch (anchor.contentinfos[indexCount].content.mediatype)
         {
-            case "IMAGE":
-                var small_card = Instantiate(ResourceLoader.Instance.card_Image_small, stepCard.transform);
-                small_card.GetComponent<ImageCard_Small>().Init(anchor, index+1);
 
-                //card.GetComponent<ImageCardNavPrefab>().arScene = anchor;
-                //card.GetComponent<ImageCardNavPrefab>().indexContent = index;
-                //card.GetComponent<ImageCardNavPrefab>().navigation = navigation;
-                //card.GetComponent<ImageCardNavPrefab>().searchPanel = searchPanel;
+            case "IMAGE":
+                small_card = Instantiate(ResourceLoader.Instance.card_Image_small, stepCard.transform);
+                small_card.AddComponent<ImageCard_Small>().Init(anchor, index+1);
+
+             
+                break;
+            case "VIDEO":
+            default:
+                small_card = Instantiate(ResourceLoader.Instance.card_Video_small, stepCard.transform);
+                small_card.AddComponent<VideoCard_Small>().Init(anchor, index + 1);
                 break;
         }
     }

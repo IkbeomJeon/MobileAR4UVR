@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class ImageCard : NormalCard
 {
     public Image image;
+    public GameObject fullScreenButton;
     
     public void Init(Anchor anchor, string parentName = "", bool showGoButton=false)
     {
@@ -23,8 +24,9 @@ public class ImageCard : NormalCard
         }
 
         image = transform.Find(parentName+"ImageObject/Image").GetComponent<Image>();
-       
+        fullScreenButton = image.transform.Find(parentName + "Button").gameObject;
 
+        Debug.Log(anchor.contentinfos[0].content.uri);
         GetTexture(anchor.contentinfos[0].content.uri);
    
     }
@@ -43,14 +45,17 @@ public class ImageCard : NormalCard
         {
             image.GetComponent<AspectRatioFitter>().aspectRatio = scale;
             image.sprite = sprite;
+
+            fullScreenButton.SetActive(true);
+                fullScreenButton.GetComponent<Button>().onClick.AddListener(delegate {
+                    EnterFullScreen(image, scale);
+                });
         }
   
     }
 
-    private void FailTextCallback(string result)
+    public void EnterFullScreen(Image image, float scale)
     {
-        //Debug.Log("error in: " + arScene.id);
-        Debug.LogError(result);
+        uiManager.GetComponent<UIManager>().ShowFullScreenPanel(image, scale);
     }
-
 }

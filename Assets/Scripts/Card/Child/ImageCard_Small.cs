@@ -18,14 +18,13 @@ public class ImageCard_Small : NormalCard
         image = transform.Find("Card/ImageObject/Image").GetComponent<Image>();
         indexText = transform.Find("Index/Text").GetComponent<Text>();
         indexText.text = number.ToString();
-
-        GetTexture(anchor.contentinfos[0].content.uri);
-
     
     }
-    void GetTexture(string uri)
+
+    public override void DownloadContent()
     {
-        NetworkManager.Instance.GetTexture(uri, SuccessDownloadTexture, FailTextCallback);
+        base.DownloadContent();
+        NetworkManager.Instance.GetTexture(anchor.contentinfos[0].content.uri, SuccessDownloadTexture, FailTextCallback);
     }
     public void SuccessDownloadTexture(Texture2D texture)
     {

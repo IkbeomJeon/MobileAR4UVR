@@ -12,12 +12,12 @@ public class IconManager : MonoBehaviour
 {
     public Anchor anchor;
     Transform cameraTransform;
-
+    public Transform buttonTransform;
     public Image buttonImage;
 
     public bool isSpacetelling;
     public int index_spacetelling;
-
+    
 
     private void OnEnable()
     {
@@ -39,7 +39,7 @@ public class IconManager : MonoBehaviour
         }
     }
 
-    public virtual void Init(Anchor anchor, string category, Transform cameraTransform, float default_height = 0, bool spacetelling = false, int index_poi = 0)
+    public void Init(Anchor anchor, string category, Transform cameraTransform, bool spacetelling = false, int index_poi = 0)
     {
         buttonImage = transform.Find("Canvas/Button").GetComponent<Image>();
 
@@ -49,12 +49,15 @@ public class IconManager : MonoBehaviour
 
         //convert "lon,lat" to "x, y" in unity.
         Vector3 pos = TerrainUtils.LatLonToWorldWithElevation(TerrainContainer.Instance, lat, lon);
-        transform.localPosition = new Vector3(pos.x, pos.y + default_height, pos.z);
-
+        transform.localPosition = new Vector3(pos.x, pos.y, pos.z);
+        float size = ConfigurationManager.Instance.size_anchors;
+        transform.localScale = new Vector3(size, size, size);
         this.cameraTransform = cameraTransform;
         this.anchor = anchor;
-        
+
         //get components
+
+        buttonTransform = transform.Find("Canvas/Button").transform;
         var title_text = transform.Find("Canvas/Summary/Title").GetComponent<TMPro.TextMeshProUGUI>();
         title_text.text = anchor.title;
 
@@ -70,23 +73,23 @@ public class IconManager : MonoBehaviour
             index_text.text = index_poi.ToString();
         }
 
-        transform.Find("Canvas/Button").GetComponent<Button>().onClick.AddListener(delegate { ShowPreviewCard(); });
+        transform.Find("Canvas/Button").GetComponent<Button>().onClick.AddListener(delegate { OnButtonClick(); });
 
     }
 
-    public void ShowPreviewCard()
+    public void OnButtonClick()
     {
         GameObject previewCard;
         switch (anchor.contentinfos[0].content.mediatype)
         {
             case "IMAGE":
                 previewCard = Instantiate(ResourceLoader.Instance.card_Image_preview);
-                previewCard.GetComponent<ImageCard_Preview>().Init(anchor, isSpacetelling, index_spacetelling);
+                previewCard.AddComponent<ImageCard_Preview>().Init(anchor, isSpacetelling, index_spacetelling);
                 break;
 
             case "VIDEO":
-                previewCard = Instantiate(ResourceLoader.Instance.card_Image_preview);
-                previewCard.GetComponent<ImageCard_Preview>().Init(anchor, isSpacetelling, index_spacetelling);
+                previewCard = Instantiate(ResourceLoader.Instance.card_Video_preview);
+                previewCard.AddComponent<VideoCard_Preview>().Init(anchor, isSpacetelling, index_spacetelling);
                 break;
         }
     }

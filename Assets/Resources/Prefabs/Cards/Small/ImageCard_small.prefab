@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3396602412512962194
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1250,7 +1250,6 @@ GameObject:
   - component: {fileID: 1349951721815312013}
   - component: {fileID: 3942704994941525419}
   - component: {fileID: 875960550739200994}
-  - component: {fileID: 2771257871909006358}
   m_Layer: 0
   m_Name: ImageCard_small
   m_TagString: Untagged
@@ -1309,49 +1308,6 @@ MonoBehaviour:
   m_FlexibleWidth: 1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
---- !u!114 &2771257871909006358
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5384582229014146434}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 746eedf4b47cd134caf2d0eea5dac6b2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  title: {fileID: 0}
-  author: {fileID: 0}
-  upload: {fileID: 0}
-  anchor:
-    id: 0
-    uploadedtime: 0
-    updatedtime: 0
-    sharingtype: 
-    description: 
-    title: 
-    enablelike: 0
-    enablecomment: 0
-    linkedAnchors: []
-    contentinfos: []
-    contenttype: 
-    contentdepth: 
-    age: 0
-    experiencetime: 0
-    season: 0
-    weather: 0
-    prefertime: 0
-    companion: 0
-    status: new
-  loader: {fileID: 0}
-  uiManager: {fileID: 0}
-  mapManager: {fileID: 0}
-  cardContent: {fileID: 0}
-  tagParent: {fileID: 0}
-  description: {fileID: 0}
-  image: {fileID: 0}
-  indexText: {fileID: 0}
 --- !u!1 &5804235604801638610
 GameObject:
   m_ObjectHideFlags: 0
@@ -1462,7 +1418,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
