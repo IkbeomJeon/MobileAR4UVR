@@ -21,10 +21,10 @@ public class ImageCard_Small : NormalCard
     
     }
 
-    public override void DownloadContent()
+    public override IEnumerator DownloadContent()
     {
-        base.DownloadContent();
         NetworkManager.Instance.GetTexture(anchor.contentinfos[0].content.uri, SuccessDownloadTexture, FailTextCallback);
+        yield return null;
     }
     public void SuccessDownloadTexture(Texture2D texture)
     {

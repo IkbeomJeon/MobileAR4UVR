@@ -114,10 +114,7 @@ public class GroupCard : NormalCard
             moreButtonImage.sprite = ResourceLoader.Instance.moreUp;
             moreButtonText.text = "감추기";
 
-            foreach(Transform child in stepCard.transform)
-            {
-                child.gameObject.GetComponent<NormalCard>().DownloadContent();
-            }
+            StartCoroutine(StartDownloadStepCardContent());
         }
         else
         {
@@ -131,6 +128,14 @@ public class GroupCard : NormalCard
         LayoutRebuilder.ForceRebuildLayoutImmediate(cardContent.GetComponent<RectTransform>());
         cardContent.GetComponent<VerticalLayoutGroup>().CalculateLayoutInputVertical();
         cardContent.GetComponent<ContentSizeFitter>().SetLayoutVertical();
+    }
+
+    IEnumerator StartDownloadStepCardContent()
+    {
+        foreach (Transform child in stepCard.transform)
+        {
+            yield return child.gameObject.GetComponent<NormalCard>().DownloadContent();
+        }
     }
 
     public void OnStartNavigation()

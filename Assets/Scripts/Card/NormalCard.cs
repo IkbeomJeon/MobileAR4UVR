@@ -11,7 +11,7 @@ public class NormalCard : BaseCard
 
     // Start is called before the first frame update
 
-    public virtual void DownloadContent() { }
+    public virtual IEnumerator DownloadContent() { yield return null; }
     public override void Init(Anchor anchor, string parentName = "")
     {
         base.Init(anchor, parentName);

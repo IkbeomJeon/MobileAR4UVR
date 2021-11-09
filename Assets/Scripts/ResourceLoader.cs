@@ -5,9 +5,7 @@ using UnityEngine;
 
 public class ResourceLoader : MonoBehaviour
 {
-    //public GameObject card_Audio;
     //cards
-    
     public GameObject card_Group;
     
     public GameObject card_Image;
@@ -19,23 +17,10 @@ public class ResourceLoader : MonoBehaviour
     public GameObject card_Video_small;
 
     public GameObject tagObj;
-    //public GameObject card_Model;
-    //public GameObject card_Text;
-    //public GameObject card_Video;
-
 
     //icons
     public GameObject icon;
     public GameObject icon_poi;
-//<<<<<<< HEAD
-    //public GameObject icon_about;
-    //public GameObject icon_admission;
-    //public GameObject icon_campusLife;
-    //public GameObject icon_education;
-    //public GameObject icon_news;
-    //public GameObject icon_research;
-
-    //public GameObject icon_recommendation;
 
     public Sprite sprite_about;
     public Sprite sprite_admission;
@@ -46,20 +31,13 @@ public class ResourceLoader : MonoBehaviour
     public Sprite sprite_poi;
     public Sprite sprite_recommendation;
 
-
-//=======
-//    public GameObject icon_recommendation;
-//    public GameObject icon_video;
-//>>>>>>> maryam
-
     //sprite
     public Sprite moreDown, moreUp;
     public Sprite likedSprite;
+
     //user pin
     public GameObject pinPoint;
     public GameObject poiPoint;
-
-
  
     private void Awake()
     {
@@ -81,10 +59,8 @@ public class ResourceLoader : MonoBehaviour
             tagObj = Resources.Load("Prefabs/Cards/TagObj") as GameObject;
 
             //icons
-//<<<<<<< HEAD
-
-            icon_poi = Resources.Load("Prefabs/Icon_POI") as GameObject;
-            icon = Resources.Load("Prefabs/Icon") as GameObject;
+            icon_poi = Resources.Load("Prefabs/Icons/Icon_POI") as GameObject;
+            icon = Resources.Load("Prefabs/Icons/Icon") as GameObject;
             Texture2D tex_about = Resources.Load("Textures/Icons/image peach icon3x") as Texture2D;
             Texture2D tex_admission = Resources.Load("Textures/Icons/image cyan icon3x") as Texture2D;
             Texture2D tex_campusLife = Resources.Load("Textures/Icons/image light pink icon3x") as Texture2D;
@@ -103,20 +79,7 @@ public class ResourceLoader : MonoBehaviour
             sprite_research = Sprite.Create(tex_research, new Rect(0, 0, tex_research.width, tex_research.height), Vector2.one * 0.5f, 1000f);
             sprite_poi = Sprite.Create(tex_poi, new Rect(0, 0, tex_poi.width, tex_poi.height), Vector2.one * 0.5f, 1000f);
             sprite_recommendation = Sprite.Create(tex_recommendation, new Rect(0, 0, tex_recommendation.width, tex_recommendation.height), Vector2.one * 0.5f, 1000f);
-            
-//=======
-//            icon_about = Resources.Load("Prefabs/Icons/Icon_About") as GameObject;
-//            icon_admission = Resources.Load("Prefabs/Icons/Icon_Admission") as GameObject;
-//            icon_campusLife = Resources.Load("Prefabs/Icons/Icon_CampusLife") as GameObject;
-//            icon_education = Resources.Load("Prefabs/Icons/Icon_Education") as GameObject;
-//            icon_news = Resources.Load("Prefabs/Icons/Icon_News") as GameObject;
-//            icon_research = Resources.Load("Prefabs/Icons/Icon_Research") as GameObject;
-//            icon_poi = Resources.Load("Prefabs/Icons/Icon_POI") as GameObject;
-//            icon_recommendation = Resources.Load("Prefabs/Icons/icon_Recommendation") as GameObject;
-//            icon_about = Resources.Load("Prefabs/Icons/Icon_About") as GameObject;
-//            icon_video = Resources.Load("Prefabs/Icons/Icon_Video") as GameObject;
-
-//>>>>>>> maryam
+         
             //textures
             Texture2D mUp = Resources.Load<Texture2D>("Textures/more - reversedarrow@3x");
             Texture2D mDown = Resources.Load<Texture2D>("Textures/more - arrow@3x");

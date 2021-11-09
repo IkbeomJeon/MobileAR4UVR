@@ -37,7 +37,7 @@ public class VideoPlayerManager : MonoBehaviour
         
         if (doInitVideoPlayer)
         {
-            yield return StartCoroutine(VideoPlayerInit(url));
+            yield return VideoPlayerInit(url);
         }
 
         videoTexture.texture = videoPlayer.texture;
@@ -45,7 +45,7 @@ public class VideoPlayerManager : MonoBehaviour
         videoPlayButton.SetActive(true);
         videoPauseButton.SetActive(false);
 
-        yield return StartCoroutine(VideoSliderUpdator());
+        yield return VideoSliderUpdator();
     }
  
 
