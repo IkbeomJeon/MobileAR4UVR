@@ -119,7 +119,6 @@ public class TrackerClientManager : MonoBehaviour
         {
             //초기 오리진 생성
             float user_height = ConfigurationManager.Instance.height_user;
-            //mat_Realworld2ARworld = GetInitialGlobalPoseMatrixfromSenser_pesudo(user_height, test_start_latlon.x, test_start_latlon.y, 0).inverse;
             mat_Realworld2ARworld = GetInitialGlobalPoseMatrixfromSenser(user_height).inverse;
             runTracking = true;
         }
