@@ -184,7 +184,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 0}
+  m_Texture: {fileID: 2800000, guid: 6ab618a0719858a488e8c2e8ebf86297, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -204,7 +204,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AspectMode: 3
-  m_AspectRatio: 1.6285714
+  m_AspectRatio: 1.3
 --- !u!1 &2051981181038141662
 GameObject:
   m_ObjectHideFlags: 0

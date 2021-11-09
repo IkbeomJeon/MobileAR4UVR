@@ -100,7 +100,7 @@ public class PanelManager : MonoBehaviour
         close_button.onClick.RemoveAllListeners();
 
         close_button.onClick.AddListener(delegate {
-            CloseContentPanel(previewCard);
+            CloseContentPanel();
         });
 
         string type = previewCard.anchor.contentinfos[0].content.mediatype;
@@ -124,7 +124,7 @@ public class PanelManager : MonoBehaviour
        
     }
 
-    public void CloseContentPanel(PreviewCard previewCard)
+    public void CloseContentPanel()
     {
         var cardParent = contentPanel.transform.Find("CardObject/Scroll View/Viewport/Card");
         foreach (Transform child in cardParent)

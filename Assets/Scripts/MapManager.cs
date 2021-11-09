@@ -48,12 +48,7 @@ public class MapManager : MonoBehaviour
     {
         if (mapActive)
         {
-            //show user pin on map.
-            
-            if (navigationOn)
-            {
-                DrawNavigationRouteOn2DMap(map.transform.localScale.x);
-            }
+            DrawNavigationRouteOn2DMap(map.transform.localScale.x);
         }
                 
         else if(navigationOn)
@@ -139,30 +134,30 @@ public class MapManager : MonoBehaviour
 
         }
 
-        GameObject recom = GameObject.Find("Recommendation");
-        recom.GetComponent<Recommendation>().calMidPoints(stories, waypoints);
+        // removed by Jeon. 201109.
+        //GameObject recom = GameObject.Find("Recommendation");
+        //recom.GetComponent<Recommendation>().calMidPoints(stories, waypoints);
         //DrawNavigationRouteOn2DMap(map.transform.localScale.x);
         //DrawNavigationRouteOnWorld();
     }
 
     public void DrawNavigationRouteOn2DMap(float scale)
     {
-        lr2D.positionCount = waypoints.Count + 1;
-
-        lr2D.startWidth = 2f * scale;
-        lr2D.endWidth = 2 * scale;
-
+        //Draw user position.
         var geoPos_user = new Vector2d(GlobalARCameraInfo.Instance.latitude, GlobalARCameraInfo.Instance.longitude);
         var wPos_user = map.GeoToWorldPosition(geoPos_user);
         var mapPos_user = new Vector3(wPos_user.x, height_way2D, wPos_user.z);
     
-        //lr.SetPosition(0, worldPos_user);
-
         Vector3 angle = GlobalARCameraInfo.Instance.globalRotation.eulerAngles;
         userPin.transform.position = mapPos_user;
         userPin.transform.rotation = Quaternion.Euler(90f, angle.y, 0f);
         userPin.transform.localScale = new Vector3(1f / scale, 1f/ scale, 1f/ scale);
 
+
+        //Draw navigation route.
+        lr2D.positionCount = waypoints.Count + 1;
+        lr2D.startWidth = 2f * scale;
+        lr2D.endWidth = 2 * scale;
         lr2D.SetPosition(0, mapPos_user);
        
         for (int i=0; i< waypoints.Count; i++)

@@ -30,9 +30,33 @@ public class LoadARScenes : MonoBehaviour
     public Transform cardContentParent;
     //public ResourceLoader resourceLoader;
     // Start is called before the first frame update
-    
+
+    public void Awake()
+    {
+        uri = ServerURL.Instance.uri;
+    }
+
     void Start()
     {
+
+        cameraTransform = GameObject.FindWithTag("MainCamera").transform;
+        worldParent = GameObject.Find("Real World").transform;
+
+        arScenesParent = GameObject.Find("ARSceneParent").transform;
+        arScenesParent_poi = GameObject.Find("ARSceneParent_Target").transform;
+
+        recommendedParent = GameObject.Find("RecommendedParent").transform;
+
+        arScenesParent.localPosition = new Vector3(0, ConfigurationManager.Instance.height_anchors, 0);
+        arScenesParent_poi.localPosition = new Vector3(0, ConfigurationManager.Instance.height_anchors, 0);
+        recommendedParent.localPosition = new Vector3(0, ConfigurationManager.Instance.height_anchors, 0);
+
+        //Initialize coordinate system.
+        double latFrom, lonFrom, latTo, lonTo;
+        ARRC_DigitalTwin_Generator.TerrainUtils.GetCoord(minLatitude, minLongitude, maxLatitude, maxLongitude, out latFrom, out lonFrom, out latTo, out lonTo);
+        ARRC_DigitalTwin_Generator.TerrainContainer.Instance.SetCoordinates(latFrom, lonFrom, latTo, lonTo);
+        ARRC_DigitalTwin_Generator.TerrainContainer.Instance.SetTerrain(GameObject.FindGameObjectWithTag("KAIST Terrain").GetComponent<Terrain>());
+
         NetworkManager.Instance.basicUri = uri;
 
         if (autoLogin)
@@ -48,29 +72,7 @@ public class LoadARScenes : MonoBehaviour
       
     }
 
-    // Update is called once per frame
 
-    private void Awake()
-    {
-        cameraTransform = GameObject.FindWithTag("MainCamera").transform;
-        worldParent = GameObject.Find("Real World").transform;
-
-        arScenesParent = GameObject.Find("ARSceneParent").transform;
-        arScenesParent_poi = GameObject.Find("ARSceneParent_Target").transform;
-        recommendedParent = GameObject.Find("RecommendedParent").transform;
-
-        arScenesParent.localPosition = new Vector3(0, ConfigurationManager.Instance.height_anchors, 0);
-        arScenesParent_poi.localPosition = new Vector3(0, ConfigurationManager.Instance.height_anchors, 0);
-        recommendedParent.localPosition = new Vector3(0, ConfigurationManager.Instance.height_anchors, 0);
-
-        uri = ServerURL.Instance.uri;
-        
-        //Initialize coordinate system.
-        double latFrom, lonFrom, latTo, lonTo;
-        ARRC_DigitalTwin_Generator.TerrainUtils.GetCoord(minLatitude, minLongitude, maxLatitude, maxLongitude, out latFrom, out lonFrom, out latTo, out lonTo);
-        ARRC_DigitalTwin_Generator.TerrainContainer.Instance.SetCoordinates(latFrom, lonFrom, latTo, lonTo);
-        ARRC_DigitalTwin_Generator.TerrainContainer.Instance.SetTerrain(GameObject.FindGameObjectWithTag("KAIST Terrain").GetComponent<Terrain>());
-    }
 
     /*
  * Function: Signin
