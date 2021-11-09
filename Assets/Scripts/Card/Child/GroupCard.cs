@@ -12,12 +12,14 @@ using UnityEngine.UI;
 public class WayPoint
 {
     public Vector2d pos;
+    public double elevation;
     public bool isPOI;
-
-    public WayPoint(Vector2d pos, bool isPOI)
+    
+    public WayPoint(Vector2d pos, double elevation, bool isPOI)
     {
         this.pos = pos;
         this.isPOI = isPOI;
+        this.elevation = elevation;
     }
 }
 public class GroupCard : NormalCard
@@ -84,7 +86,16 @@ public class GroupCard : NormalCard
             {
                 double lon = anchor.linkedAnchors[i].point.longitude;
                 double lat = anchor.linkedAnchors[i].point.latitude;
-                anchor_posList.Add(new WayPoint(new Vector2d(lat, lon), false));
+                double elevation = 0;
+
+                //////////////////////////////////////////////////////////////////////
+                ///추가할곳
+                //if(ConfigurationManager.Instance.use_anchors_height==1)
+                //    elevation = anchor.linkedAnchors[i].contentinfos[0].positiony;
+                /////////////////////////////////
+                ///
+
+                anchor_posList.Add(new WayPoint(new Vector2d(lat, lon), elevation, false));
             }
 
             //case : poi
@@ -95,8 +106,12 @@ public class GroupCard : NormalCard
 
                 double lon = linked_anchor.point.longitude;
                 double lat = linked_anchor.point.latitude;
+                double elevation = 0;
+                
+                if (ConfigurationManager.Instance.use_anchors_height == 1)
+                    elevation = linked_anchor.contentinfos[0].positiony;
 
-                anchor_posList.Add(new WayPoint(new Vector2d(lat, lon), true));
+                anchor_posList.Add(new WayPoint(new Vector2d(lat, lon), elevation, true));
 
                 CreateSmallCardObject(linked_anchor, 0, idx);
                
@@ -145,14 +160,10 @@ public class GroupCard : NormalCard
         panelManager.GetComponent<PanelManager>().ChangeMapPanelState(true);
         panelManager.GetComponent<PanelManager>().ChangeARButtonState(true);
 
-        //panelManager.GetComponent<PanelManager>().StartNavigation(anchor_posList);
-        //panelManager.SendMessage("StartNavigation", anchor_posList);
         //네비게이션 생성
 
         mapManager.GetComponent<MapManager>().ActivateMap();
         mapManager.GetComponent<MapManager>().StartNavigation(anchor_posList, story);
-        
-
         
         //Create POI Icons.
         var parentTargetARScene = GameObject.Find("ARSceneParent_Target").transform;
@@ -179,6 +190,21 @@ public class GroupCard : NormalCard
                 }
             }
         }
+
+        //User 높이 업데이트
+        float first_poi_height = (float) story[0].contentinfos[0].positiony;
+
+        if(ConfigurationManager.Instance.use_anchors_height ==1)
+        {
+            var trackerClientManager = GameObject.FindObjectsOfType<TrackerClientManager>();
+            if (trackerClientManager == null && trackerClientManager.Length != 1)
+            {
+                Debug.LogError("Can't find \"TrackerClientManager\" ");
+            }
+
+            trackerClientManager[0].UpdateGlobalHeightManually(first_poi_height);
+        }
+
     }
    
     private void CreateSmallCardObject(Anchor anchor, int indexCount, int index)

@@ -366,7 +366,6 @@ public class TrackerClientManager : MonoBehaviour
             case 5:
                 addRot = Quaternion.Euler(0, rot, 0);
                 break;
-
         }
 
         
@@ -377,7 +376,21 @@ public class TrackerClientManager : MonoBehaviour
 
         mat_Realworld2ARworld = mat_pos.inverse * mat_ar * mat_rot.inverse  * mat_ar.inverse * mat_Realworld2ARworld;
     }
-    public IEnumerator WriteTrajectory(string filename, float delay)
+
+    public void UpdateGlobalHeightManually(float user_height)
+    {
+        Vector3 addPos = Vector3.up * user_height;
+        Quaternion addRot = Quaternion.identity;
+
+        Matrix4x4 mat_pos = Matrix4x4.TRS(addPos, Quaternion.identity, new Vector3(1, 1, 1));
+        Matrix4x4 mat_rot = Matrix4x4.TRS(Vector3.zero, addRot, new Vector3(1, 1, 1));
+        Matrix4x4 mat_ar = Matrix4x4.identity;
+        mat_ar.SetTRS(arCamera.transform.position, Quaternion.identity, new Vector3(1, 1, 1));
+
+        mat_Realworld2ARworld = mat_pos.inverse * mat_ar * mat_rot.inverse * mat_ar.inverse * mat_Realworld2ARworld;
+    }
+
+     public IEnumerator WriteTrajectory(string filename, float delay)
     {
         while(true)
         {

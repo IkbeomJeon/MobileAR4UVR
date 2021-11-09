@@ -47,7 +47,13 @@ public class IconManager : MonoBehaviour
 
         //convert "lon,lat" to "x, y" in unity.
         Vector3 pos = TerrainUtils.LatLonToWorldWithElevation(TerrainContainer.Instance, lat, lon);
-        transform.localPosition = new Vector3(pos.x, pos.y, pos.z);
+
+        float elevation = 0;
+        if (ConfigurationManager.Instance.use_anchors_height == 1)
+            elevation = (float) anchor.contentinfos[0].positionz;
+
+        transform.localPosition = new Vector3(pos.x, pos.y + elevation, pos.z);
+
         float size = ConfigurationManager.Instance.size_anchors;
         transform.localScale = new Vector3(size, size, size);
         this.cameraTransform = cameraTransform;

@@ -8,7 +8,7 @@ public class TrajectoryWritor : MonoBehaviour
     // Start is called before the first frame update
     public static void WriteStringToFile(string str, string filename)
     {
-#if !WEB_BUILD && !UNITY_EDITOR
+//#if !WEB_BUILD && !UNITY_EDITOR
         string path = PathForDocumentsFile(filename);
         Debug.Log("saved file path : " + path);
 
@@ -20,7 +20,7 @@ public class TrajectoryWritor : MonoBehaviour
 
         sw.Close();
         file.Close();
-#endif
+//#endif
     }
 
 

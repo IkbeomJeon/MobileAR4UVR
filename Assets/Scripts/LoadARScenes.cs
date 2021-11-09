@@ -39,7 +39,6 @@ public class LoadARScenes : MonoBehaviour
 
     void Start()
     {
-
         cameraTransform = GameObject.FindWithTag("MainCamera").transform;
         worldParent = GameObject.Find("Real World").transform;
 
@@ -59,7 +58,7 @@ public class LoadARScenes : MonoBehaviour
         ARRC_DigitalTwin_Generator.TerrainContainer.Instance.SetTerrain(GameObject.FindGameObjectWithTag("KAIST Terrain").GetComponent<Terrain>());
 
         NetworkManager.Instance.basicUri = uri;
-
+        
         if (autoLogin)
             Signin();
 

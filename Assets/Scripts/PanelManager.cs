@@ -29,6 +29,7 @@ public class PanelManager : MonoBehaviour
         capturePanel = transform.Find("CapturePanel").gameObject;
         searchPanel = transform.Find("SearchPanel").gameObject;
         mapPanel = transform.Find("MapPanel").gameObject;
+        
         navStopButton = transform.Find("StopNavButton").gameObject;
         contentPanel = transform.Find("ContentPanel").gameObject;
         configurationPanel = transform.Find("ConfigPanel").gameObject;

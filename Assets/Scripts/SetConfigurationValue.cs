@@ -15,8 +15,10 @@ public class SetConfigurationValue : MonoBehaviour
     public TMP_InputField stepsize_rotation;
     public TMP_InputField distance_visible_anchor;
     public TMP_InputField distance_to_remove_midle_waypoint;
-
+    
+    
     public Toggle use_terrain_height;
+    public Toggle use_anchors_height;
 
     // Start is called before the first frame update
     void Start()
@@ -32,7 +34,7 @@ public class SetConfigurationValue : MonoBehaviour
         distance_to_remove_midle_waypoint = transform.Find("distance_to_remove_midle_waypoint/InputField (TMP)").GetComponent<TMP_InputField>();
 
         use_terrain_height = transform.Find("Toggle_terrain").GetComponent<Toggle>();
-        
+        use_anchors_height = transform.Find("Toggle_anchor_height").GetComponent<Toggle>();
 
         Load();
     }
@@ -49,12 +51,14 @@ public class SetConfigurationValue : MonoBehaviour
         distance_visible_anchor.text = ConfigurationManager.Instance.distance_visible_anchor.ToString();
         distance_to_remove_midle_waypoint.text = ConfigurationManager.Instance.distance_to_remove_midle_waypoint.ToString();
         use_terrain_height.isOn = ConfigurationManager.Instance.use_terrain_height == 1 ? true : false;
+        use_anchors_height.isOn = ConfigurationManager.Instance.use_anchors_height == 1 ? true : false;
     }
     public void Save()
     {
         ConfigurationManager.Instance.Save(float.Parse(size_anchors.text), float.Parse(height_user.text), float.Parse(height_anchors.text),
             float.Parse(height_navigation_3d.text), float.Parse(stepsize_position.text), float.Parse(stepsize_rotation.text),
-            float.Parse(distance_visible_anchor.text), float.Parse(distance_to_remove_midle_waypoint.text), use_terrain_height.isOn ? 1 : 0);
+            float.Parse(distance_visible_anchor.text), float.Parse(distance_to_remove_midle_waypoint.text)
+            , use_terrain_height.isOn ? 1 : 0, use_anchors_height.isOn ? 1 : 0);
 
         Load();
 
