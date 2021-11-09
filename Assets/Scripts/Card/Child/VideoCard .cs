@@ -20,7 +20,7 @@ public class VideoCard : NormalCard
         Slider videoSlider = transform.Find(parentName + "VideoObject/Video Player/Slider").GetComponent<Slider>();
         GameObject fullScreenButton = transform.Find(parentName + "VideoObject/Video Player/Fullscreen").gameObject;
         RawImage videoTexture = transform.Find(parentName + "VideoObject/Video Player").GetComponent<RawImage>();
-
+        AspectRatioFitter aspectRatioFilter = transform.Find("VideoObject/Video Player").GetComponent<AspectRatioFitter>();
 
         Transform goButton = transform.Find(parentName + "BottomInfo/GoButton");
         if (goButton != null)
@@ -37,14 +37,14 @@ public class VideoCard : NormalCard
         {
             videoPlayer = ((VideoCard_Preview)videoCard_Preview).gameObject.GetComponent<VideoPlayerManager>().videoPlayer;
             StartCoroutine(gameObject.AddComponent<VideoPlayerManager>().Init(videoPlayer,
-                videoPlayButton, videoPauseButton, videoSlider, videoTexture));
+                videoPlayButton, videoPauseButton, videoSlider, videoTexture, aspectRatioFilter));
         }
 
         else
         {
             videoPlayer = transform.Find(parentName + "VideoObject/Video Player").GetComponent<VideoPlayer>();
             StartCoroutine(gameObject.AddComponent<VideoPlayerManager>().Init(videoPlayer,
-               videoPlayButton, videoPauseButton, videoSlider, videoTexture, true, anchor.contentinfos[0].content.uri));
+               videoPlayButton, videoPauseButton, videoSlider, videoTexture, aspectRatioFilter, true, anchor.contentinfos[0].content.uri));
         }
 
         fullScreenButton.SetActive(true);

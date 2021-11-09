@@ -36,8 +36,11 @@ public class PreviewCard : BaseCard
         {
             transform.Find("Card/Button_Next").gameObject.SetActive(true);
             Button nextButton = transform.Find("Card/Button_Next").GetComponent<Button>();
+            nextButton.onClick.AddListener(delegate { OnNext(); });
         }
-            
+        else
+            transform.Find("Card/Button_Next").gameObject.SetActive(false);
+
     }
    
     public virtual void OnClose()

@@ -16,7 +16,7 @@ public class VideoCard_Small : NormalCard
     public GameObject videoPauseButton;
     public Slider videoSlider;
     public RawImage videoTexture;
-
+    public AspectRatioFitter aspectRatioFilter;
     public void Init(Anchor anchor, int number)
     {
         base.Init(anchor, "Card/");
@@ -26,13 +26,14 @@ public class VideoCard_Small : NormalCard
         videoPlayButton = transform.Find("Card/VideoObject/Video Player/PlayButton").gameObject;
         videoPauseButton = transform.Find("Card/VideoObject/Video Player/PauseButton").gameObject;
         videoTexture = transform.Find("Card/VideoObject/Video Player").GetComponent<RawImage>();
+        aspectRatioFilter = transform.Find("Card/VideoObject/Video Player").GetComponent<AspectRatioFitter>();
         indexText = transform.Find("Index/Text").GetComponent<Text>();
         indexText.text = number.ToString();
     }
     public override void DownloadContent()
     {
-        StartCoroutine(gameObject.AddComponent<VideoPlayerManager>().Init(videoPlayer, videoPlayButton, videoPauseButton, videoSlider, videoTexture
-          , true, anchor.contentinfos[0].content.uri));
+        StartCoroutine(gameObject.AddComponent<VideoPlayerManager>().Init(videoPlayer, videoPlayButton, videoPauseButton, videoSlider, videoTexture,
+          aspectRatioFilter, true, anchor.contentinfos[0].content.uri));
     }
 
 }

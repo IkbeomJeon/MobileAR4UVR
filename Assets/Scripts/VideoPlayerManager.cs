@@ -11,16 +11,19 @@ public class VideoPlayerManager : MonoBehaviour
     public GameObject videoPauseButton;
     public Slider videoSlider;
     public RawImage videoTexture;
+    public AspectRatioFitter aspectRatioFilter;
+
     public bool doInitVideoPlayer;
     public string url; 
 
-    public IEnumerator Init(VideoPlayer videoPlayer, GameObject videoPlayButton, GameObject videoPauseButton, Slider videoSlider, RawImage videoTexture, bool doInitVideoPlayer=false, string url="")
+    public IEnumerator Init(VideoPlayer videoPlayer, GameObject videoPlayButton, GameObject videoPauseButton, Slider videoSlider, RawImage videoTexture, AspectRatioFitter aspectRatioFilter, bool doInitVideoPlayer=false, string url="")
     {
         this.videoPlayer = videoPlayer;
         this.videoPlayButton = videoPlayButton;
         this.videoPauseButton = videoPauseButton;
         this.videoSlider = videoSlider;
         this.videoTexture = videoTexture;
+        this.aspectRatioFilter = aspectRatioFilter;
 
         Button btn_play = videoPlayButton.GetComponent<Button>();
         Button btn_pause = videoPauseButton.GetComponent<Button>();
@@ -64,7 +67,7 @@ public class VideoPlayerManager : MonoBehaviour
         int videoWidth = videoPlayer.texture.width;
         int videoHeight = videoPlayer.texture.height;
 
-        //videoPlayer.gameObject.GetComponent<AspectRatioFitter>().aspectRatio = (float)videoWidth / videoHeight;
+        aspectRatioFilter.aspectRatio = (float)videoWidth / videoHeight;
 
         videoPlayer.SetDirectAudioMute(0, true);
         videoPlayer.Play();
@@ -78,9 +81,6 @@ public class VideoPlayerManager : MonoBehaviour
         videoPlayer.time = 0;
         videoPlayer.SetDirectAudioMute(0, false);
         //RenderTexture.active = null;
-     
-
-       
     }
 
     public IEnumerator VideoSliderUpdator()

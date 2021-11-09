@@ -93,4 +93,9 @@ public class IconManager : MonoBehaviour
                 break;
         }
     }
+
+    internal void Select()
+    {
+        throw new NotImplementedException();
+    }
 }

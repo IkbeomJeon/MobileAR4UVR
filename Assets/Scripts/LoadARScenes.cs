@@ -20,7 +20,6 @@ public class LoadARScenes : MonoBehaviour
     public double minLatitude, minLongitude, maxLatitude, maxLongitude;
 
     GameObject errorPanel;
-    
     Transform worldParent;
     Transform cameraTransform;
 
@@ -28,8 +27,10 @@ public class LoadARScenes : MonoBehaviour
     public Transform arScenesParent_poi;
     public Transform recommendedParent;
     public Transform cardContentParent;
-    //public ResourceLoader resourceLoader;
-    // Start is called before the first frame update
+
+    public List<Anchor> targetAnchors;
+    //for maryam
+    public List<Anchor> targetAnchors_recommendation;
 
     public void Awake()
     {
@@ -137,14 +138,14 @@ public class LoadARScenes : MonoBehaviour
 
         //compustour anchors.
         var media_anchor = anchorList.Where(e => e.contentinfos[0].content.mediatype == "IMAGE");
-        var campustour_anchors = media_anchor.Where(anchors => (anchors.tags.Exists(tags => tags.tag == "CampusTour") && anchors.contentinfos.Count != 0));
+        targetAnchors = media_anchor.Where(anchors => (anchors.tags.Exists(tags => tags.tag == "CampusTour") && anchors.contentinfos.Count != 0)).ToList();
 
         //Recommendation
         GameObject recom = GameObject.Find("Recommendation");
-        recom.GetComponent<Recommendation>().anchorList = campustour_anchors.ToList();
+        recom.GetComponent<Recommendation>().anchorList = targetAnchors;
         recom.GetComponent<Recommendation>().loadUserHistory();
 
-        StartCoroutine(CreateAnchorIcon_Mariam(campustour_anchors.ToList(), false));
+        StartCoroutine(CreateAnchorIcon_Mariam(targetAnchors, false));
     }
 
     public void GetARSceneResultList_Recommendation(Result result)
@@ -152,17 +153,17 @@ public class LoadARScenes : MonoBehaviour
         var anchorList = JsonConvert.DeserializeObject<List<Anchor>>(result.result.ToString());
 
         //recommendation anchors.
-        var recommendation_anchors = anchorList.Where(_anchors => (_anchors.tags.Exists(tags => tags.tag == "recommendation") && _anchors.contentinfos.Count != 0));
+        targetAnchors_recommendation = anchorList.Where(_anchors => (_anchors.tags.Exists(tags => tags.tag == "recommendation") && _anchors.contentinfos.Count != 0)).ToList();
 
-        StartCoroutine(CreateAnchorIcon_Mariam(recommendation_anchors.ToList(), true));
+        StartCoroutine(CreateAnchorIcon_Mariam(targetAnchors_recommendation, true));
     }
     public void GetARSceneResultList_DramaKAIST(Result result)
     {
         var anchorList = JsonConvert.DeserializeObject<List<Anchor>>(result.result.ToString());
         var media_anchor = anchorList.Where(e => (e.contentinfos[0].content.mediatype == "IMAGE" || e.contentinfos[0].content.mediatype == "VIDEO"));
-        var target_anchors = media_anchor.Where(e => (e.tags.Exists(e2 => e2.tag == "DramaKAIST") && e.contentinfos.Count != 0));
+        targetAnchors = media_anchor.Where(e => (e.tags.Exists(e2 => e2.tag == "DramaKAIST") && e.contentinfos.Count != 0)).ToList();
  
-        StartCoroutine(CreateAnchorIcon_Hyerim(target_anchors.ToList()));
+        StartCoroutine(CreateAnchorIcon_Hyerim(targetAnchors));
     }
     public IEnumerator CreateAnchorIcon_Hyerim(List<Anchor> anchors)
     {
@@ -329,6 +330,7 @@ public class LoadARScenes : MonoBehaviour
     {
         string url;
         var searchList = JsonConvert.DeserializeObject<List<Anchor>>(result.result.ToString());
+
         for (int i = 0; i < searchList.Count; i++)
         {
             url = string.Format("/spacetelling?id=" + searchList[i].id);
@@ -339,7 +341,6 @@ public class LoadARScenes : MonoBehaviour
     private void GetSpaceTellingAnchor(Result result)
     {
         var anchor = JsonConvert.DeserializeObject<Anchor>(result.result.ToString(), new AnchorConverter(true));
-
         var card = Instantiate(ResourceLoader.Instance.card_Group, cardContentParent);
         var script = card.AddComponent<GroupCard>();
         script.Init(anchor, true);

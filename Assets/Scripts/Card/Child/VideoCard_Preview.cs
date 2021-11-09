@@ -16,6 +16,7 @@ public class VideoCard_Preview : PreviewCard
     public GameObject videoPauseButton;
     public Slider videoSlider;
     public RawImage videoTexture;
+    public AspectRatioFitter aspectRatioFilter;
 
     // Start is called before the first frame update
     public override void Init(Anchor anchor, bool isStory, int index_story)
@@ -27,6 +28,7 @@ public class VideoCard_Preview : PreviewCard
         videoPlayButton = transform.Find("Card/VideoObject/Video Player/PlayButton").gameObject;
         videoSlider = transform.Find("Card/VideoObject/Video Player/Slider").GetComponent<Slider>();
         videoTexture = transform.Find("Card/VideoObject/Video Player").GetComponent<RawImage>();
+        aspectRatioFilter = transform.Find("Card/VideoObject/Video Player").GetComponent<AspectRatioFitter>();
 
         string url = string.Format("/arscene?id={0}&secret=false", anchor.id);
         NetworkManager.Instance.Get(url, GetARScene, FailHandler);
@@ -46,8 +48,8 @@ public class VideoCard_Preview : PreviewCard
         base.anchor = anchor;
 
         likeNumber.text = string.Format("¡¡æ∆ø‰ : {0}", anchor.likes.Count.ToString());
-        StartCoroutine(gameObject.AddComponent<VideoPlayerManager>().Init(videoPlayer, videoPlayButton, videoPauseButton, videoSlider, videoTexture
-            , true, anchor.contentinfos[0].content.uri));
+        StartCoroutine(gameObject.AddComponent<VideoPlayerManager>().Init(videoPlayer, videoPlayButton, videoPauseButton, videoSlider, videoTexture,
+            aspectRatioFilter,true, anchor.contentinfos[0].content.uri));
     }
 
 }

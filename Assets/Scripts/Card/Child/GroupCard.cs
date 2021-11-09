@@ -4,6 +4,7 @@ using Mapbox.Json;
 using Mapbox.Utils;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -155,6 +156,7 @@ public class GroupCard : NormalCard
         
         //Create POI Icons.
         var parentTargetARScene = GameObject.Find("ARSceneParent_Target").transform;
+        var parentARScene = GameObject.Find("ARSceneParent").transform;
 
         foreach (Transform child in parentTargetARScene)
             Destroy(child.gameObject);
@@ -163,8 +165,20 @@ public class GroupCard : NormalCard
         {
             var poi = Instantiate(ResourceLoader.Instance.icon_poi, parentTargetARScene);
             poi.GetComponent<IconManager>().Init(story[i], "", GameObject.FindGameObjectWithTag("MainCamera").transform, true, i+1);
+
+            //remove existing icon.
+            //중복된거 제거.(저작도구에서 잘못 등록한 듯)
+            var list_IconManager = parentARScene.GetComponentsInChildren<IconManager>().Where(icon => icon.anchor.title == story[i].title).ToList();
+            
+            if(list_IconManager!=null && list_IconManager.Count > 0 )
+            {
+                foreach(var icon in list_IconManager)
+                {
+                    Debug.Log("removed duplicated icon : " + story[i].id);
+                    DestroyImmediate(icon.gameObject);
+                }
+            }
         }
-       
     }
    
     private void CreateSmallCardObject(Anchor anchor, int indexCount, int index)
