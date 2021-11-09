@@ -29,10 +29,10 @@ public class VideoCard_Small : NormalCard
         indexText = transform.Find("Index/Text").GetComponent<Text>();
         indexText.text = number.ToString();
     }
-    public override IEnumerator DownloadContent()
+    public override void DownloadContent()
     {
-        yield return gameObject.AddComponent<VideoPlayerManager>().Init(videoPlayer, videoPlayButton, videoPauseButton, videoSlider, videoTexture
-          , true, anchor.contentinfos[0].content.uri);
+        StartCoroutine(gameObject.AddComponent<VideoPlayerManager>().Init(videoPlayer, videoPlayButton, videoPauseButton, videoSlider, videoTexture
+          , true, anchor.contentinfos[0].content.uri));
     }
 
 }

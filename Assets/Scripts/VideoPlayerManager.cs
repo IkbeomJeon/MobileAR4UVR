@@ -45,7 +45,7 @@ public class VideoPlayerManager : MonoBehaviour
         videoPlayButton.SetActive(true);
         videoPauseButton.SetActive(false);
 
-        yield return VideoSliderUpdator();
+        StartCoroutine(VideoSliderUpdator());
     }
  
 
