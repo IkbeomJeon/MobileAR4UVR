@@ -82,7 +82,7 @@ public class GroupCard : NormalCard
             //Debug.Log(linked_anchor.point.latitude.ToString() + ", "+linked_anchor.point.longitude.ToString());
             
             //case : just middle point not poi.
-            if (anchor.linkedAnchors[i].linkedAnchors.Count == 0)
+            if (anchor.linkedAnchors[i].title == "Navigation")
             {
                 double lon = anchor.linkedAnchors[i].point.longitude;
                 double lat = anchor.linkedAnchors[i].point.latitude;
@@ -90,16 +90,25 @@ public class GroupCard : NormalCard
 
                 //////////////////////////////////////////////////////////////////////
                 ///추가할곳
-                //if(ConfigurationManager.Instance.use_anchors_height==1)
-                //    elevation = anchor.linkedAnchors[i].contentinfos[0].positiony;
+                if(ConfigurationManager.Instance.use_anchors_height==1)
+                    elevation = anchor.linkedAnchors[i].linkedAnchors[0].contentinfos[0].positionz;
                 /////////////////////////////////
-                ///
+                
 
                 anchor_posList.Add(new WayPoint(new Vector2d(lat, lon), elevation, false));
             }
 
-            //case : poi
-            for (int j = 0; j < anchor.linkedAnchors[i].linkedAnchors.Count; j++)
+            else if (anchor.linkedAnchors[i].linkedAnchors.Count == 0)
+            {
+                double lon = anchor.linkedAnchors[i].point.longitude;
+                double lat = anchor.linkedAnchors[i].point.latitude;
+                double elevation = 0;
+
+                anchor_posList.Add(new WayPoint(new Vector2d(lat, lon), elevation, false));
+            }
+
+                //case : poi
+             for (int j = 0; j < anchor.linkedAnchors[i].linkedAnchors.Count; j++)
             {
                 var linked_anchor = anchor.linkedAnchors[i].linkedAnchors[j];
                 story.Add(linked_anchor);
@@ -109,7 +118,7 @@ public class GroupCard : NormalCard
                 double elevation = 0;
                 
                 if (ConfigurationManager.Instance.use_anchors_height == 1)
-                    elevation = linked_anchor.contentinfos[0].positiony;
+                    elevation = linked_anchor.contentinfos[0].positionz;
 
                 anchor_posList.Add(new WayPoint(new Vector2d(lat, lon), elevation, true));
 
@@ -192,7 +201,7 @@ public class GroupCard : NormalCard
         }
 
         //User 높이 업데이트
-        float first_poi_height = (float) story[0].contentinfos[0].positiony;
+        float first_poi_height = (float) story[0].contentinfos[0].positionz;
 
         if(ConfigurationManager.Instance.use_anchors_height ==1)
         {
