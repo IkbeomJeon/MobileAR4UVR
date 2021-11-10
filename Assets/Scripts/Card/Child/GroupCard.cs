@@ -62,8 +62,6 @@ public class GroupCard : NormalCard
             OnMore();
         });
 
-
-
         moreButtonText = transform.Find("Card/BottomInfo/MoreButton/Text").gameObject.GetComponent<Text>();
         moreButtonImage = transform.Find("Card/BottomInfo/MoreButton/Image").gameObject.GetComponent<Image>();
         timeToExp = transform.Find("Card/BottomInfo/TimeToExp").GetComponent<Text>();
@@ -77,9 +75,9 @@ public class GroupCard : NormalCard
     {
         bool IsPOIAnchor(Anchor _anchor)
         {
-            if (_anchor.title == "Navigation"
+            if (_anchor.title == "Navigation" || _anchor.title == "navigation"
                     || _anchor.linkedAnchors.Count == 0
-                    || _anchor.linkedAnchors[0].title == "Navigation")
+                    || _anchor.linkedAnchors[0].title == "Navigation" || _anchor.linkedAnchors[0].title == "navigation")
                 return false;
             else
                 return true;
@@ -89,10 +87,7 @@ public class GroupCard : NormalCard
 
         for (int i = 0; i < anchor.linkedAnchors.Count; i++)
         {
-            //Debug.Log(linked_anchor.point.latitude.ToString() + ", "+linked_anchor.point.longitude.ToString());
-
             //case : just middle point not poi.
-
             Anchor linked_anchor = anchor.linkedAnchors[i];
 
             if (!IsPOIAnchor(linked_anchor))
@@ -195,7 +190,7 @@ public class GroupCard : NormalCard
             {
                 foreach(var icon in list_IconManager)
                 {
-                    Debug.Log("removed duplicated icon : " + story[i].id);
+                    Debug.Log("removed duplicated icon : " + icon.anchor.id);
                     DestroyImmediate(icon.gameObject);
                 }
             }

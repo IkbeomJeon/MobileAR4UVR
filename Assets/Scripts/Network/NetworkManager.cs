@@ -161,7 +161,7 @@ namespace KCTM
                     request.result == UnityWebRequest.Result.DataProcessingError ||
                     request.responseCode >= 400)
                 {
-                    Debug.LogError(request.responseCode + ":" + request.result.ToString());
+                    Debug.LogWarning(request.responseCode + ":" + request.result.ToString());
                     //failureHandler?.Invoke(ResponseToResult(request.downloadHandler.data));
                 }
                 else
