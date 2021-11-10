@@ -75,59 +75,56 @@ public class GroupCard : NormalCard
  
     private void GetStoryTelling(Anchor anchor)
     {
+        bool IsPOIAnchor(Anchor _anchor)
+        {
+            if (_anchor.title == "Navigation"
+                    || _anchor.linkedAnchors.Count == 0
+                    || _anchor.linkedAnchors[0].title == "Navigation")
+                return false;
+            else
+                return true;
+        }
+
         int idx = 0;
 
         for (int i = 0; i < anchor.linkedAnchors.Count; i++)
         {
             //Debug.Log(linked_anchor.point.latitude.ToString() + ", "+linked_anchor.point.longitude.ToString());
-            
+
             //case : just middle point not poi.
-            if (anchor.linkedAnchors[i].title == "Navigation")
+
+            Anchor linked_anchor = anchor.linkedAnchors[i];
+
+            if (!IsPOIAnchor(linked_anchor))
             {
-                double lon = anchor.linkedAnchors[i].point.longitude;
-                double lat = anchor.linkedAnchors[i].point.latitude;
+                double lon = linked_anchor.point.longitude;
+                double lat = linked_anchor.point.latitude;
                 double elevation = 0;
 
                 //////////////////////////////////////////////////////////////////////
                 ///추가할곳
-                if(ConfigurationManager.Instance.use_anchors_height==1)
-                    elevation = anchor.linkedAnchors[i].linkedAnchors[0].contentinfos[0].positiony;
+                if (ConfigurationManager.Instance.use_anchors_height == 1 && linked_anchor.linkedAnchors.Count > 0)
+                    elevation = linked_anchor.linkedAnchors[0].contentinfos[0].positiony;
                 /////////////////////////////////
-                
 
                 anchor_posList.Add(new WayPoint(new Vector2d(lat, lon), elevation, false));
             }
 
-            else if (anchor.linkedAnchors[i].linkedAnchors.Count == 0)
+            else
             {
-                double lon = anchor.linkedAnchors[i].point.longitude;
-                double lat = anchor.linkedAnchors[i].point.latitude;
+                story.Add(linked_anchor.linkedAnchors[0]);
+
+                double lon = linked_anchor.linkedAnchors[0].point.longitude;
+                double lat = linked_anchor.linkedAnchors[0].point.latitude;
                 double elevation = 0;
 
-                anchor_posList.Add(new WayPoint(new Vector2d(lat, lon), elevation, false));
-            }
-
-                //case : poi
-             for (int j = 0; j < anchor.linkedAnchors[i].linkedAnchors.Count; j++)
-            {
-                var linked_anchor = anchor.linkedAnchors[i].linkedAnchors[j];
-
-                if (anchor.linkedAnchors[i].title == "Navigation")
-                    continue;
-
-                story.Add(linked_anchor);
-
-                double lon = linked_anchor.point.longitude;
-                double lat = linked_anchor.point.latitude;
-                double elevation = 0;
-                
                 if (ConfigurationManager.Instance.use_anchors_height == 1)
-                    elevation = linked_anchor.contentinfos[0].positiony;
+                    elevation = linked_anchor.linkedAnchors[0].contentinfos[0].positiony;
 
                 anchor_posList.Add(new WayPoint(new Vector2d(lat, lon), elevation, true));
 
-                CreateSmallCardObject(linked_anchor, 0, idx);
-               
+                CreateSmallCardObject(linked_anchor.linkedAnchors[0], 0, idx);
+
                 idx++;
             }
             
