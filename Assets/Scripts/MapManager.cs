@@ -24,14 +24,15 @@ public class MapManager : MonoBehaviour
     public bool navigationOn;
     //public float height_way3D = 0.5f;
     public float height_way2D = 1;
-
+    public float width_line = 5f;
     //for recommendation.
     public List<Anchor> stories = new List<Anchor>();
     public int spaceTellingIndex = 0;
-
+    
     //public ResourceLoader rl;
     void Awake()
     {
+
         realworldTransform = GameObject.Find("Real World").transform;
         map = transform.Find("Map").gameObject.GetComponent<AbstractMap>();
         mapCamera = transform.Find("Map Camera").gameObject;
@@ -42,6 +43,8 @@ public class MapManager : MonoBehaviour
         //amapaamera = transform.Find("Map Camera").gameObject;
         lr2D = transform.Find("Line Renderer_2D").GetComponent<LineRenderer>();
         lr3D = transform.Find("Line Renderer_3D").GetComponent<LineRenderer>();
+        lr2D.startWidth = width_line;
+        lr2D.endWidth = width_line;
     }
     
     // Update is called once per frame
@@ -179,8 +182,7 @@ public class MapManager : MonoBehaviour
     public void DrawNavigationRouteOnWorld()
     {
         //float a = Time.time;
-        lr2D.startWidth = 5f;
-        lr2D.endWidth = 5f;
+       
         Matrix4x4 mat_Realworld2ARworld = realworldTransform.localToWorldMatrix;
 
         lr3D.positionCount = waypoints.Count + 1;

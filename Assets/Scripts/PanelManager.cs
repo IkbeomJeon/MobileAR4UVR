@@ -12,7 +12,6 @@ public class PanelManager : MonoBehaviour
 {
     // Start is called before the first frame update
     //public GameObject menu;
-    public GameObject capturePanel;
     public GameObject searchPanel;
     public GameObject mapPanel;
     public GameObject configurationPanel;
@@ -26,7 +25,6 @@ public class PanelManager : MonoBehaviour
     //public List<GameObject> panels = new List<GameObject>();
     public void Awake()
     {
-        capturePanel = transform.Find("CapturePanel").gameObject;
         searchPanel = transform.Find("SearchPanel").gameObject;
         mapPanel = transform.Find("MapPanel").gameObject;
         
@@ -41,7 +39,6 @@ public class PanelManager : MonoBehaviour
             FullscreenPanel.SetActive(false);
         });
 
-        capturePanel.SetActive(false);
         searchPanel.SetActive(false);
         mapPanel.SetActive(false);
         navStopButton.SetActive(false);
@@ -120,8 +117,6 @@ public class PanelManager : MonoBehaviour
                 newCard.AddComponent<VideoCard>().Init(previewCard.anchor, "", false, previewCard);
                 break;
         }
-        
-
        
     }
 
@@ -140,27 +135,19 @@ public class PanelManager : MonoBehaviour
 
     public void ShowFullScreenPanel(Image image, float scale)
     {
-        //pullScreenPanel.transform.
-
         FullscreenPanel.SetActive(true); 
 
-         var button_img = FullscreenPanel.transform.Find("Main").gameObject;
+        var button_img = FullscreenPanel.transform.Find("Main").gameObject;
         button_img.GetComponent<AspectRatioFitter>().aspectRatio = scale;
         button_img.GetComponent<RawImage>().texture = image.mainTexture;
-
     }
     public void ShowFullScreenPanel(VideoPlayer video)
     {
-        //pullScreenPanel.transform.
-
         FullscreenPanel.SetActive(true);
 
         var button_img = FullscreenPanel.transform.Find("Main").gameObject;
         button_img.GetComponent<AspectRatioFitter>().aspectRatio = (float)video.width/ video.height;
         button_img.GetComponent<RawImage>().texture = video.targetTexture;
-
-
-
     }
 
     public void ChangeARButtonState(bool flag)

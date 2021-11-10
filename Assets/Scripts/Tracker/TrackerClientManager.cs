@@ -161,8 +161,6 @@ public class TrackerClientManager : MonoBehaviour
                 //TrackerClient.Instance.UpdateCameraPose2Server(data);
                 TrackerClient.Instance.Broadcast(data);
             }
-           
-
         }
     }
 
@@ -196,7 +194,6 @@ public class TrackerClientManager : MonoBehaviour
             }
         }
     }
-
 
     Matrix4x4 LocalizationbyImageTracker_Psuedo()
     {
@@ -307,7 +304,6 @@ public class TrackerClientManager : MonoBehaviour
         return globalOrigin;
     }
 
-
     public void StartScanMode(GameObject _completehandler)
     {
         Debug.Log("in StartScanMode");
@@ -378,7 +374,8 @@ public class TrackerClientManager : MonoBehaviour
 
     public void UpdateGlobalHeightManually(float user_height)
     {
-        Vector3 addPos = Vector3.up * user_height;
+        float addY = user_height + ConfigurationManager.Instance.height_user - GlobalARCameraInfo.Instance.globalPosition.y;
+        Vector3 addPos = new Vector3(0, addY, 0);
         Quaternion addRot = Quaternion.identity;
 
         Matrix4x4 mat_pos = Matrix4x4.TRS(addPos, Quaternion.identity, new Vector3(1, 1, 1));
@@ -420,7 +417,6 @@ public class TrackerClientManager : MonoBehaviour
             yield return new WaitForSeconds(delay);
         }
     }
-
     IEnumerator CheckIsIconVisible()
     {
         while (true)

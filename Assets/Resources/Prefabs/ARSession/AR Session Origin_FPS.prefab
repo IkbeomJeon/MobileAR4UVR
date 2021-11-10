@@ -74,7 +74,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 665e1b9689d25944188237c2a90c5f2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  test_start_latlon: {x: 36.367973, y: 127.36225}
+  test_start_latlon: {x: 36.374123, y: 127.359474}
   server_ip: 54.180.31.56
   port: 65432
   arScenesParent: {fileID: 0}
