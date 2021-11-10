@@ -50,7 +50,7 @@ public class IconManager : MonoBehaviour
 
         float elevation = 0;
         if (ConfigurationManager.Instance.use_anchors_height == 1)
-            elevation = (float) anchor.contentinfos[0].positionz;
+            elevation = (float) anchor.contentinfos[0].positiony;
 
         transform.localPosition = new Vector3(pos.x, pos.y + elevation, pos.z);
 

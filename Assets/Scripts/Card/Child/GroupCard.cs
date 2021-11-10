@@ -91,7 +91,7 @@ public class GroupCard : NormalCard
                 //////////////////////////////////////////////////////////////////////
                 ///추가할곳
                 if(ConfigurationManager.Instance.use_anchors_height==1)
-                    elevation = anchor.linkedAnchors[i].linkedAnchors[0].contentinfos[0].positionz;
+                    elevation = anchor.linkedAnchors[i].linkedAnchors[0].contentinfos[0].positiony;
                 /////////////////////////////////
                 
 
@@ -111,6 +111,10 @@ public class GroupCard : NormalCard
              for (int j = 0; j < anchor.linkedAnchors[i].linkedAnchors.Count; j++)
             {
                 var linked_anchor = anchor.linkedAnchors[i].linkedAnchors[j];
+
+                if (anchor.linkedAnchors[i].title == "Navigation")
+                    continue;
+
                 story.Add(linked_anchor);
 
                 double lon = linked_anchor.point.longitude;
@@ -118,7 +122,7 @@ public class GroupCard : NormalCard
                 double elevation = 0;
                 
                 if (ConfigurationManager.Instance.use_anchors_height == 1)
-                    elevation = linked_anchor.contentinfos[0].positionz;
+                    elevation = linked_anchor.contentinfos[0].positiony;
 
                 anchor_posList.Add(new WayPoint(new Vector2d(lat, lon), elevation, true));
 
@@ -201,7 +205,7 @@ public class GroupCard : NormalCard
         }
 
         //User 높이 업데이트
-        float first_poi_height = (float) story[0].contentinfos[0].positionz;
+        float first_poi_height = (float) story[0].contentinfos[0].positiony;
 
         if(ConfigurationManager.Instance.use_anchors_height ==1)
         {
