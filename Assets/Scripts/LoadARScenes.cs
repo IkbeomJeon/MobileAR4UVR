@@ -159,9 +159,12 @@ public class LoadARScenes : MonoBehaviour
 
     public void GetARSceneResultList_DramaKAIST(Result result)
     {
+        long[] ignore_anchors_id = { 2972, 3002, 2994, 2995 };
+
         var anchorList = JsonConvert.DeserializeObject<List<Anchor>>(result.result.ToString());
         var media_anchor = anchorList.Where(e => (e.contentinfos[0].content.mediatype == "IMAGE" || e.contentinfos[0].content.mediatype == "VIDEO"));
-        targetAnchors = media_anchor.Where(e => e.tags.Exists(e2 => e2.tag == "DramaKAIST") && (e.contentinfos.Count != 0) && (e.id != 2972)).ToList();
+        targetAnchors = media_anchor.Where(e => e.tags.Exists(e2 => e2.tag == "DramaKAIST") && (e.contentinfos.Count != 0)
+        && (!ignore_anchors_id.Contains(e.id))).ToList();
 
         CreateAnchorIcon_Hyerim(targetAnchors);
     }
@@ -300,11 +303,6 @@ public class LoadARScenes : MonoBehaviour
         {
             case "IMAGE":
                 card = Instantiate(ResourceLoader.Instance.card_Image, cardContentParent);
-                //card.GetComponent<ImageCardNavPrefab>().arScene = anchor;
-                //card.GetComponent<ImageCardNavPrefab>().indexContent = index;
-                //card.GetComponent<ImageCardNavPrefab>().navigation = navigation;
-                //card.GetComponent<ImageCardNavPrefab>().searchPanel = searchPanel;
-                //var script = card.GetComponent<ImageCard>();
                 //script.Init(anchor);
                 break;
             case "VIDEO":

@@ -83,8 +83,7 @@ public class GroupCard : NormalCard
                 return true;
         }
 
-        int idx = 0;
-
+        int idx_smallcard = 0;
         for (int i = 0; i < anchor.linkedAnchors.Count; i++)
         {
             //case : just middle point not poi.
@@ -107,20 +106,22 @@ public class GroupCard : NormalCard
 
             else
             {
-                story.Add(linked_anchor.linkedAnchors[0]);
+                foreach (Anchor anchor_story in linked_anchor.linkedAnchors)
+                {
+                    story.Add(anchor_story);
 
-                double lon = linked_anchor.linkedAnchors[0].point.longitude;
-                double lat = linked_anchor.linkedAnchors[0].point.latitude;
-                double elevation = 0;
+                    double lon = anchor_story.point.longitude;
+                    double lat = anchor_story.point.latitude;
+                    double elevation = 0;
 
-                if (ConfigurationManager.Instance.use_anchors_height == 1)
-                    elevation = linked_anchor.linkedAnchors[0].contentinfos[0].positiony;
+                    if (ConfigurationManager.Instance.use_anchors_height == 1)
+                        elevation = anchor_story.contentinfos[0].positiony;
 
-                anchor_posList.Add(new WayPoint(new Vector2d(lat, lon), elevation, true));
+                    anchor_posList.Add(new WayPoint(new Vector2d(lat, lon), elevation, true));
 
-                CreateSmallCardObject(linked_anchor.linkedAnchors[0], 0, idx);
-
-                idx++;
+                    CreateSmallCardObject(anchor_story, 0, idx_smallcard++);
+                }
+                
             }
             
         }
@@ -177,6 +178,9 @@ public class GroupCard : NormalCard
         foreach (Transform child in parentTargetARScene)
             Destroy(child.gameObject);
 
+        //if(list_anchorIDs_to_create.Count > 0)
+
+
         for (int i=0; i<story.Count;i++)
         {
             var poi = Instantiate(ResourceLoader.Instance.icon_poi, parentTargetARScene);
@@ -185,7 +189,7 @@ public class GroupCard : NormalCard
             //remove existing icon.
             //중복된거 제거.(저작도구에서 잘못 등록한 듯)
             var list_IconManager = parentARScene.GetComponentsInChildren<IconManager>().Where(icon => icon.anchor.title == story[i].title).ToList();
-            
+
             if(list_IconManager!=null && list_IconManager.Count > 0 )
             {
                 foreach(var icon in list_IconManager)

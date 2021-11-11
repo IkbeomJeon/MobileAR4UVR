@@ -17,7 +17,7 @@ public class PanelManager : MonoBehaviour
     public GameObject configurationPanel;
     public GameObject contentPanel;
     public GameObject FullscreenPanel;
-    public GameObject navStopButton;
+    //public GameObject navStopButton;
 
 
     public delegate void ButtonCallBack();
@@ -28,7 +28,7 @@ public class PanelManager : MonoBehaviour
         searchPanel = transform.Find("SearchPanel").gameObject;
         mapPanel = transform.Find("MapPanel").gameObject;
         
-        navStopButton = transform.Find("StopNavButton").gameObject;
+        //navStopButton = transform.Find("StopNavButton").gameObject;
         contentPanel = transform.Find("ContentPanel").gameObject;
         configurationPanel = transform.Find("ConfigPanel").gameObject;
         FullscreenPanel = transform.Find("FullscreenPanel").gameObject;
@@ -41,7 +41,7 @@ public class PanelManager : MonoBehaviour
 
         searchPanel.SetActive(false);
         mapPanel.SetActive(false);
-        navStopButton.SetActive(false);
+        //navStopButton.SetActive(false);
         contentPanel.SetActive(false);
         configurationPanel.SetActive(false);
         FullscreenPanel.SetActive(false);
@@ -152,7 +152,7 @@ public class PanelManager : MonoBehaviour
 
     public void ChangeARButtonState(bool flag)
     {
-        navStopButton.SetActive(flag);
+        //navStopButton.SetActive(flag);
     }
     
 }
