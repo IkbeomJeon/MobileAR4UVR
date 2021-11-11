@@ -1016,7 +1016,7 @@ GameObject:
   m_Component:
   - component: {fileID: 177897137}
   - component: {fileID: 177897138}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Line Renderer_3D
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3539,7 +3539,7 @@ GameObject:
   m_Component:
   - component: {fileID: 758345948}
   - component: {fileID: 758345947}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: MapManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3841,7 +3841,6 @@ MonoBehaviour:
   configurationPanel: {fileID: 0}
   contentPanel: {fileID: 0}
   FullscreenPanel: {fileID: 0}
-  navStopButton: {fileID: 0}
 --- !u!1 &804174262
 GameObject:
   m_ObjectHideFlags: 0
