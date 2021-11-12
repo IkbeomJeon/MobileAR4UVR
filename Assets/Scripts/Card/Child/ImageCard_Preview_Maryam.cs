@@ -165,6 +165,7 @@ public class ImageCard_Preview_Maryam : PreviewCard
         visitedContent.userLat = userLatitude;
         visitedContent.userLon = userLongitude;
         visitedContent.user_id = PlayerPrefs.GetString("email");
+        Debug.Log(visitedContent.user_id);
 
         visitedContent.setContentTime();
 

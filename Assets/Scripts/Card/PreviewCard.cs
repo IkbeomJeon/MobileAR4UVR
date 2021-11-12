@@ -121,7 +121,8 @@ public class PreviewCard : BaseCard
         visitedContent.userLat = userLatitude;
         visitedContent.userLon = userLongitude;
         visitedContent.user_id = PlayerPrefs.GetString("email");
-
+        Debug.Log(visitedContent.user_id);
+            
         visitedContent.setContentTime();
 
         GameObject recom = GameObject.Find("Recommendation");

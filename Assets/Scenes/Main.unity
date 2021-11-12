@@ -5213,7 +5213,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 784cb2c781ba4e34b90e9dfac8b2b03b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  autoLogin: 1
+  autoLogin: 0
   email: asdf@asdf.com
   password: 123456
   minLatitude: 36.3648
@@ -8571,7 +8571,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1900011261
 Transform:
   m_ObjectHideFlags: 0

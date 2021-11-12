@@ -64,8 +64,9 @@ public class LoadARScenes : MonoBehaviour
 
         else
         {
-            var email = PlayerPrefs.GetString("email");
-            var password = PlayerPrefs.GetString("password");
+            email = PlayerPrefs.GetString("email");
+            password = PlayerPrefs.GetString("password");
+
             Debug.Log("Email: " + PlayerPrefs.GetString("email"));
             Debug.Log("password: " + PlayerPrefs.GetString("password"));
         }
@@ -159,7 +160,7 @@ public class LoadARScenes : MonoBehaviour
 
     public void GetARSceneResultList_DramaKAIST(Result result)
     {
-        long[] ignore_anchors_id = { 2972, 3002, 2994, 2995 };
+        long[] ignore_anchors_id = { 2972, 3002, 2994, 2995/*, 2944, 3335, 2973, 2945, 2946, 2947*/ };
 
         var anchorList = JsonConvert.DeserializeObject<List<Anchor>>(result.result.ToString());
         var media_anchor = anchorList.Where(e => (e.contentinfos[0].content.mediatype == "IMAGE" || e.contentinfos[0].content.mediatype == "VIDEO"));

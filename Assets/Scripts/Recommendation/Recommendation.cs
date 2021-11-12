@@ -104,12 +104,12 @@ public class Recommendation : MonoBehaviour
             //visitedContent.calInteractionFactors();
             //visitedContent.calBehaviorFactor(stories[index], recomList);
 
-            double weight = visitedContent.calFactors(storyPlaceTags);
+            //double weight = visitedContent.calFactors(storyPlaceTags);
 
-            if(weight > maxUserFactor)
-            {
-                maxUserFactor = weight;
-            }
+            //if(weight > maxUserFactor)
+            //{
+            //    maxUserFactor = weight;
+            //}
 
             latestVisistedContents.Add(visitedContent);
             allVisistedContents.Add(visitedContent);
