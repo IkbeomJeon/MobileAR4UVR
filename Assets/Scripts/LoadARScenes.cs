@@ -64,8 +64,8 @@ public class LoadARScenes : MonoBehaviour
 
         else
         {
-            email = PlayerPrefs.GetString("email");
-            password = PlayerPrefs.GetString("password");
+            var email = PlayerPrefs.GetString("email");
+            var password = PlayerPrefs.GetString("password");
             Debug.Log("Email: " + PlayerPrefs.GetString("email"));
             Debug.Log("password: " + PlayerPrefs.GetString("password"));
         }

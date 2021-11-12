@@ -14,9 +14,13 @@ public class PreviewCard : BaseCard
     public Image likeImage;
 
     public Button likeButton;
+    private int userLiked = 1;
+    public DateTime start;
+
 
     public virtual void Init(Anchor anchor,bool isStory, int index_story)
     {
+        start = DateTime.Now;
 
         base.Init(anchor, "Card/");
         likeNumber = transform.Find("Card/LikeNumber").gameObject.GetComponent<Text>();
@@ -42,9 +46,11 @@ public class PreviewCard : BaseCard
             transform.Find("Card/Button_Next").gameObject.SetActive(false);
 
     }
-   
+
+
     public virtual void OnClose()
     {
+        addToVisitedContent();
         DestroyImmediate(gameObject);
     }
     public virtual void OnDetail()
@@ -72,12 +78,16 @@ public class PreviewCard : BaseCard
 
         if (likedBefore)
         {
+            userLiked = 1;
+
             Texture2D likedTex = Resources.Load<Texture2D>("UI/Icon/Authoring/like - selected");
             likeImage.sprite = ResourceLoader.Instance.likedSprite;
             likeButton.interactable = false;
         }
         else
         {
+            userLiked = 10;
+ 
             WWWForm formData = new WWWForm();
             formData.AddField("anchorid", anchor.id.ToString());
 
@@ -94,7 +104,29 @@ public class PreviewCard : BaseCard
         likeButton.interactable = false;
     }
 
-   
+    //Recommendation -- Maryam
+    public void addToVisitedContent()
+    {
+        double userLatitude = GlobalARCameraInfo.Instance.latitude;
+        double userLongitude = GlobalARCameraInfo.Instance.longitude;
+
+        DateTime end = DateTime.Now;
+        double duration = end.Subtract(start).TotalSeconds;
+        VisitedContent visitedContent = new VisitedContent();
+
+        visitedContent.anchor = anchor;
+        visitedContent.visitedDateTime = start;
+        visitedContent.userVisitedTime = duration;
+        visitedContent.liked = userLiked;
+        visitedContent.userLat = userLatitude;
+        visitedContent.userLon = userLongitude;
+        visitedContent.user_id = PlayerPrefs.GetString("email");
+
+        visitedContent.setContentTime();
+
+        GameObject recom = GameObject.Find("Recommendation");
+        recom.GetComponent<Recommendation>().addToVisitedList(visitedContent);
+    }
 
 }
 

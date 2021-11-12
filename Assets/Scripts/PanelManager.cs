@@ -98,7 +98,7 @@ public class PanelManager : MonoBehaviour
         close_button.onClick.RemoveAllListeners();
 
         close_button.onClick.AddListener(delegate {
-            CloseContentPanel();
+            CloseContentPanel(previewCard);
         });
 
         string type = previewCard.anchor.contentinfos[0].content.mediatype;
@@ -120,15 +120,15 @@ public class PanelManager : MonoBehaviour
        
     }
 
-    public void CloseContentPanel()
+    public void CloseContentPanel(PreviewCard previewCard)
     {
         var cardParent = contentPanel.transform.Find("CardObject/Scroll View/Viewport/Card");
         foreach (Transform child in cardParent)
             Destroy(child.gameObject);
 
         //Recommendation
-        //previewCard.addToVisitedContent();
-        //DestroyImmediate(previewCard.gameObject);
+        previewCard.addToVisitedContent();
+        DestroyImmediate(previewCard.gameObject);
         contentPanel.SetActive(false);
         
     }

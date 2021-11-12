@@ -55,7 +55,7 @@ public class Recommendation : MonoBehaviour
         allRecomIndexes = new List<int>();
 
 
-        getAnchorTokens();
+       // getAnchorTokens();
         Debug.Log("My Recommendation --- Maryam");
 
         //Added by Ikbeom.
